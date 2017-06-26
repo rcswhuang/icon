@@ -1,0 +1,85 @@
+﻿#ifndef HICONTREEWIDGET_H
+#define HICONTREEWIDGET_H
+
+#include <QTreeWidget>
+#include <QTreeWidgetItem>
+#include <QContextMenuEvent>
+#include <QAction>
+#include <QUuid>
+#include "iconapi.h"
+#include "hicontemplate.h"
+#include "hiconbrower.h"
+class HIconMgr;
+/*
+ 测点
+  |-遥信
+     |--开关(HIconTemplate->HIconSymbol)
+         |-开关分（showPattern)
+         |-开关合
+         |-开关双位置分错
+         |-开关双位置合错
+  |-遥测
+  |-光字牌
+  |-遥控
+  |-遥脉
+  |-档位
+*/
+
+//#define ICON_TYPE_DIGITAL 0x001
+//#define
+
+
+class HIconTreeWidgetItem : public QTreeWidgetItem
+{
+public:
+    HIconTreeWidgetItem(HIconTreeWidget* parent = 0,int type = QTreeWidgetItem::UserType);
+    HIconTreeWidgetItem(HIconTreeWidgetItem* parent = 0,int type = QTreeWidgetItem::UserType);
+    void setUuid(QString uuid);
+    QString getUuid();
+private:
+    QString strUuid;
+
+};
+
+class HIconTreeWidget : public QTreeWidget
+{
+    Q_OBJECT
+public:
+    HIconTreeWidget(HIconMgr* iconMgr,QWidget* parent = 0,int type = QTreeWidgetItem::UserType);
+    ~HIconTreeWidget();
+public:
+    void init();
+    void initTemplateMenu(QContextMenuEvent *event);
+    void initTemplateChildMenu(QContextMenuEvent* event);
+    void addIconTreeWigetItem();
+    void delIconTreeWidgetItem();
+
+protected:
+    void contextMenuEvent(QContextMenuEvent *event);
+signals:
+    void IconNew(const QString& strName,const int& nIconType);
+    void IconDel(const QString& strName,const int& nIconType,const QString& strUuid);
+public slots:
+    void newIcon();
+    void deleteIcon();
+    void renameIcon();
+    void importIcon();
+
+public:
+    HIconTreeWidgetItem* digitalItem;
+    HIconTreeWidgetItem* analogueItem;
+    HIconTreeWidgetItem* lightItem;
+    HIconTreeWidgetItem* controlItem;
+    HIconTreeWidgetItem* pulseItem;//遥脉
+    HIconTreeWidgetItem* tapItem;
+    HIconTreeWidgetItem* paiItem;
+private:
+    QAction* newAct;
+    QAction* delAct;
+    QAction* renameAct;
+    QAction* importAct;
+
+    HIconMgr* pIconMgr;
+};
+
+#endif // HICONTREEWIDGET_H

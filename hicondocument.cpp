@@ -1,0 +1,72 @@
+﻿#include "hicondocument.h"
+
+HIconDocument::HIconDocument(HIconMgr* iconMgr):pIconMgr(iconMgr)
+{
+    pCurIconTemplate = NULL;
+}
+
+void HIconDocument::initIconType()
+{
+
+
+
+}
+
+
+HIconTemplate* HIconDocument::getCurrentTemplate()
+{
+    return pCurIconTemplate;
+}
+
+void HIconDocument::New(const QString &strTemplateName,int nTemplateType)
+{
+    //按照名字查找一下，如果存在，就不在新建
+
+    //如果当前图符文件有修改且未保存，提示进行保存
+
+    //新建新的文件
+    pCurIconTemplate = new HIconTemplate;
+    pCurIconTemplate->setAttrName(strTemplateName);//普通开关
+    pCurIconTemplate->setIconType(nTemplateType);//遥信类
+    QSizeF sizeF = pCurIconTemplate->getDefaultSize();
+    if(sizeF.width() > 0 && sizeF.height())
+    {
+        QSizeF newSizeF = pIconMgr->getIconFrame()->scale() * sizeF;
+        QRectF rectF = QRectF(-newSizeF.width()/2*10,-newSizeF.height()/2*10,newSizeF.width()*20,newSizeF.height()*20);
+        pCurIconTemplate->getSymbol()->setIconSymbolWidth(newSizeF.width());
+        pCurIconTemplate->getSymbol()->setIconSymbolHeight(newSizeF.height());
+        pIconMgr->setLogicRect(rectF);
+    }
+    pIconTemplateList.append(pCurIconTemplate);
+    //for(int i=0;i<pCurIconTemplate->getSymbol()->
+}
+
+void HIconDocument::Del(const QString &strTemplateName, int nTemplateType, const QString &strUuid)
+{
+    for(int i = 0; i < pIconTemplateList.size();i++)
+    {
+        HIconTemplate* pIconTemplate = (HIconTemplate*)pIconTemplateList.at(i);
+        if(!pIconTemplate)
+            return;
+        if(pIconTemplate->getIconType() == nTemplateType && pIconTemplate->getUuid().toString() == strUuid)
+        {
+            pIconTemplateList.removeOne(pIconTemplate);
+            delete pIconTemplate;
+        }
+    }
+}
+
+HIconTemplate* HIconDocument::findIconTemplateByTypeAndUuid(int nTemplateType, const QString &strUuid)
+{
+    for(int i = 0; i < pIconTemplateList.size();i++)
+    {
+        HIconTemplate* pIconTemplate = (HIconTemplate*)pIconTemplateList.at(i);
+        if(!pIconTemplate)
+            return NULL;
+        if(pIconTemplate->getIconType() == nTemplateType && pIconTemplate->getUuid().toString() == strUuid)
+        {
+            return pIconTemplate;
+        }
+    }
+    return NULL;
+}
