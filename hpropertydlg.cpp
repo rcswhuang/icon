@@ -38,19 +38,21 @@ void HPropertyDlg::initTab()
     DRAWSHAPE drawShape = pCurObj->getShapeType();
     if(drawShape == enumLine)
     {
+        ui->propertyTab->removeTab(0);
         ui->propertyTab->removeTab(2);
+        ui->xCoord_width->setEnabled(false);
+        ui->yCoord_height->setEnabled(false);
+        ui->x_rotate->setEnabled(false);
+        ui->groupBox_8->setEnabled(false);
     }
     else if(drawShape == enumArc || drawShape == enumPie)
     {
-        ui->groupBox_2->setVisible(false);
-        if(drawShape == enumPie)
-            ui->bCloseCheck->setVisible(false);
+        ui->propertyTab->removeTab(0);
         initShapeTab();
     }
     else
     {
-        ui->groupBox_2->setVisible(false);
-        ui->groupBox_8->setVisible(false);
+        ui->propertyTab->removeTab(0);
         initShapeTab();
     }
 }

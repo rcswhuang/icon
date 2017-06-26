@@ -117,35 +117,35 @@ void HIconMainWindow::createActions()
     lineAct = new QAction(QIcon(":/images/line.png"), tr("L&ine"), this);
 
     lineAct->setCheckable(true);
-    connect(lineAct,SIGNAL(triggered(bool)),this,SLOT(drawLine()));
+    connect(lineAct,SIGNAL(triggered()),this,SLOT(drawLine()));
 
     rectAct = new QAction(QIcon(":/images/rectangle.png"), tr("Rectangle"), this);
     rectAct->setCheckable(true);
-    connect(rectAct,SIGNAL(triggered(bool)),this,SLOT(drawRectangle()));
+    connect(rectAct,SIGNAL(triggered()),this,SLOT(drawRectangle()));
 
     ellipseAct = new QAction(QIcon(":/images/ellipse.png"), tr("L&ine"), this);
     ellipseAct->setCheckable(true);
-    connect(ellipseAct,SIGNAL(triggered(bool)),this,SLOT(drawEllipse()));
+    connect(ellipseAct,SIGNAL(triggered()),this,SLOT(drawEllipse()));
 
     circleAct = new QAction(QIcon(":/images/circle.png"),tr("&Circle"),this);
     circleAct->setCheckable(true);
-    connect(circleAct,SIGNAL(triggered(bool)),this,SLOT(drawCircle()));
+    connect(circleAct,SIGNAL(triggered()),this,SLOT(drawCircle()));
 
     hexagonAct = new QAction(QIcon(":/images/hexagon.png"),tr("&Hexagon"),this);
     hexagonAct->setCheckable(true);
-    connect(hexagonAct,SIGNAL(triggered(bool)),this,SLOT(drawHexagon()));
+    connect(hexagonAct,SIGNAL(triggered()),this,SLOT(drawHexagon()));
 
     arcAct = new QAction(QIcon(":/images/arc.png"), tr("Arc"), this);
     arcAct->setCheckable(true);
-    connect(arcAct,SIGNAL(triggered(bool)),this,SLOT(drawArc()));
+    connect(arcAct,SIGNAL(triggered()),this,SLOT(drawArc()));
 
     fanAct = new QAction(QIcon(":/images/fan.png"),tr("&Fan"),this);
     fanAct->setCheckable(true);
-    connect(fanAct,SIGNAL(triggered(bool)),this,SLOT(drawFan()));
+    connect(fanAct,SIGNAL(triggered()),this,SLOT(drawFan()));
 
     textAct = new QAction(QIcon(":/images/text.png"),tr("&Text"),this);
     textAct->setCheckable(true);
-    connect(textAct,SIGNAL(triggered(bool)),this,SLOT(drawText()));
+    connect(textAct,SIGNAL(triggered()),this,SLOT(drawText()));
 
     tileAct = new QAction(tr("&Tile"), this);
     tileAct->setStatusTip(tr("Tile the windows"));
@@ -216,7 +216,7 @@ void HIconMainWindow::createToolBars()
 
     drawToolBar = addToolBar(tr("drawToolBar"));
     drawToolBar->addAction(lineAct);
-    drawToolBar->addAction(circleAct);
+    //drawToolBar->addAction(circleAct);
     drawToolBar->addAction(rectAct);
     drawToolBar->addAction(ellipseAct);
     drawToolBar->addAction(hexagonAct);
@@ -321,16 +321,43 @@ void HIconMainWindow::showCenterLine()
 //draw tool
 void HIconMainWindow::drawLine()
 {
+
+    QList<QAction*> ActList = drawToolBar->actions();
+
+    QList<QAction*>::iterator it;
+    for(it = ActList.begin();it!=ActList.end();++it)
+    {
+        QAction* action = (QAction*)*it;
+        action->setChecked(false);
+    }
+    lineAct->setChecked(true);
     pIconMgr->getIconState()->setDrawShape(enumLine);
 }
 
 void HIconMainWindow::drawEllipse()
 {
+    QList<QAction*> ActList = drawToolBar->actions();
+
+    QList<QAction*>::iterator it;
+    for(it = ActList.begin();it!=ActList.end();++it)
+    {
+        QAction* action = (QAction*)*it;
+        action->setChecked(false);
+    }
+    ellipseAct->setChecked(true);
     pIconMgr->getIconState()->setDrawShape(enumEllipse);
 }
 
 void HIconMainWindow::drawRectangle()
 {
+    QList<QAction*> ActList = drawToolBar->actions();
+
+    QList<QAction*>::iterator it;
+    for(it = ActList.begin();it!=ActList.end();++it)
+    {
+        QAction* action = (QAction*)*it;
+        action->setChecked(false);
+    }
     pIconMgr->getIconState()->setDrawShape(enumRectangle);
 }
 

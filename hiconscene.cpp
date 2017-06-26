@@ -148,12 +148,12 @@ void HIconScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
     else if(drawShape == enumEllipse && ellipse != 0)
     {
         QRectF newRect = QRectF(ellipse->rect().topLeft(),mouseEvent->scenePos());
-      /*  if(mouseEvent->modifiers() == Qt::ShiftModifier)
+        if(mouseEvent->modifiers() == Qt::ShiftModifier)
         {
-            qreal dx = qAbs(mouseEvent->scenePos().x() - rectangle->rect().x());
-            qreal dy = qAbs(mouseEvent->scenePos().y() - rectangle->rect().y());
-            newRect = QRectF(rectangle->rect().topLeft(),QSize(qMin(dx,dy),qMin(dx,dy)));
-        }*/
+            qreal dx = qAbs(mouseEvent->scenePos().x() - ellipse->rect().x());
+            qreal dy = qAbs(mouseEvent->scenePos().y() - ellipse->rect().y());
+            newRect = QRectF(ellipse->rect().topLeft(),QSize(qMin(dx,dy),qMin(dx,dy)));
+        }
         ellipse->setRect(newRect);
     }
     else if(drawShape == enumPolygon && polygon != 0)
@@ -184,13 +184,13 @@ void HIconScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
             QGraphicsItem* pItem = itemList.first();
             if(pItem->type() == enumLine)
             {
-                HIconEllipseItem *eItem = static_cast<HIconEllipseItem*>(pItem);
+                HIconLineItem *eItem = static_cast<HIconLineItem*>(pItem);
                 QPointF pointF = mouseEvent->scenePos();
                 int location = eItem->pointInRect(pointF);
-                if(location == 1 || location == 4)
+                if(location == 1)
                     eItem->setCursor(QCursor(Qt::SizeFDiagCursor));
-                else if(location == 2 || location == 3)
-                    eItem->setCursor(QCursor(Qt::SizeBDiagCursor));
+                else if(location == 2)
+                    eItem->setCursor(QCursor(Qt::SizeFDiagCursor));
                 else
                     eItem->setCursor(QCursor(Qt::ArrowCursor));
             }
