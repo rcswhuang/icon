@@ -241,11 +241,12 @@ void HIconRectItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
 void HIconRectItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
     QPointF pt = event->scenePos() - pointStart;
-    qreal fRotageAngle = rotation();
-    qreal cosx = qCos(fRotageAngle);
-    qreal siny = qSin(fRotageAngle);
-    qreal deltaX = pt.x()*cosx;
-    qreal deltaY = pt.y()*siny;
+    //qreal fRotageAngle = rotation();
+    //qreal rad = qRadiansToDegrees(qTan(event->scenePos().x()/event->scenePos().y()));
+   // qreal cosx = qCos(45 - fRotageAngle);
+    //qreal siny = qSin(45 - fRotageAngle);
+    qreal deltaX = pt.x();//*cosx;
+    qreal deltaY = pt.y();//*siny;
     pointStart = event->scenePos();
     bool bShift = false;
     if(event->modifiers() == Qt::ShiftModifier)
@@ -253,14 +254,14 @@ void HIconRectItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     if(pointLocation == 1)
     {
         QRectF rectNew;
-        rectNew.setTopLeft(QPointF(rect().left() - deltaX,rect().top() - deltaY));
+        rectNew.setTopLeft(QPointF(rect().left() + deltaX,rect().top() + deltaY));
         rectNew.setBottomRight(rect().bottomRight());
         setRect(rectNew.normalized());
     }
     else if(pointLocation == 2)
     {
         QRectF rectNew;
-        rectNew.setTopRight(QPointF(rect().right() + deltaX,rect().top() - deltaY));
+        rectNew.setTopRight(QPointF(rect().right() + deltaX,rect().top() + deltaY));
         rectNew.setBottomLeft(rect().bottomLeft());
         setRect(rectNew.normalized());
     }
