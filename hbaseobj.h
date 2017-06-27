@@ -98,8 +98,9 @@ public:
 
     //是否旋转
     bool isRotated(qint8 nFlag);
+
     //旋转角度
-    void setRotateAngle();
+    void setRotateAngle(float rotate);
     float getRotateAngle();
 
     //增加一个角度

@@ -35,25 +35,34 @@ void HPropertyDlg::initTab()
     initTextTab();
     initBaseTab();
     initLineTab();
+    initShapeTab();
     DRAWSHAPE drawShape = pCurObj->getShapeType();
-    if(drawShape == enumLine)
+    if(drawShape == enumText)
     {
-        ui->propertyTab->removeTab(0);
-        ui->propertyTab->removeTab(2);
-        ui->xCoord_width->setEnabled(false);
-        ui->yCoord_height->setEnabled(false);
-        ui->x_rotate->setEnabled(false);
-        ui->groupBox_8->setEnabled(false);
+       ui->propertyTab->removeTab(2);
+    }
+    else if(drawShape == enumLine)
+    {   
+        ui->propertyTab->removeTab(0);//文字
+        ui->propertyTab->removeTab(2);//形状
+        ui->groupBox_8->hide();
+        ui->groupBox_8->hide();
+    }
+    else if(drawShape == enumRectangle || drawShape == enumEllipse)
+    {
+        ui->propertyTab->removeTab(0);//文字
+        ui->groupBox_2->hide();
+        ui->groupBox_8->hide();
     }
     else if(drawShape == enumArc || drawShape == enumPie)
     {
-        ui->propertyTab->removeTab(0);
-        initShapeTab();
+       ui->propertyTab->removeTab(0);//文字
+       ui->groupBox_2->hide();
+       ui->groupBox_8->move(ui->groupBox_2->x(),ui->groupBox_2->y());
     }
     else
     {
-        ui->propertyTab->removeTab(0);
-        initShapeTab();
+
     }
 }
 
@@ -531,6 +540,7 @@ void HPropertyDlg::ok_clicked()
     pCurObj->setFillColorName(strFillColor);
     quint8 tt = ui->fillDirection->currentData().toUInt();
     pCurObj->setFillDirection(ui->fillDirection->currentData().toUInt());
+    pCurObj->setRotateAngle(ui->x_rotate->value());
     if(drawShape == enumLine)
     {
         HLineObj* pLineObj = (HLineObj*)pCurObj;

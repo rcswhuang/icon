@@ -449,14 +449,14 @@ bool HBaseObj::isRotated(qint8 nFlag)
 }
 
 //旋转角度
-void HBaseObj::setRotateAngle()
+void HBaseObj::setRotateAngle(float rotate)
 {
-
+    fRotateAngle = rotate;
 }
 
 float HBaseObj::getRotateAngle()
 {
-    return 0;
+    return fRotateAngle;
 }
 
 //增加一个角度

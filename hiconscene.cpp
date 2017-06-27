@@ -194,7 +194,7 @@ void HIconScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
                 else
                     eItem->setCursor(QCursor(Qt::ArrowCursor));
             }
-            else if(pItem->type() == enumEllipse)
+            else if(pItem->type() == enumEllipse || pItem->type() == enumRectangle)
             {
                 HIconEllipseItem *eItem = static_cast<HIconEllipseItem*>(pItem);
                 QPointF pointF = mouseEvent->scenePos();

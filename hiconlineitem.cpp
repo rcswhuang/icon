@@ -53,6 +53,7 @@ void HIconLineItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
     pen.setCapStyle(capStyle);
     painter->setPen(pen);
     //
+
     //画箭头
     if(pLineObj->getArrowWidth() > 0 && pLineObj->getArrowHeight() > 0)
     {
