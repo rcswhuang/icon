@@ -256,7 +256,7 @@ void HIconRectItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
         QRectF rectNew;
         rectNew.setTopLeft(QPointF(rect().left() + deltaX,rect().top() + deltaY));
         rectNew.setBottomRight(rect().bottomRight());
-        setRect(rectNew.normalized());
+        setRect(rectNew.normalized());///
     }
     else if(pointLocation == 2)
     {
