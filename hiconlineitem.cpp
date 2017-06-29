@@ -6,7 +6,7 @@
 #include <math.h>
 #include "hpropertydlg.h"
 
-const qreal PI = 3.14;
+
 
 HIconLineItem::HIconLineItem(QGraphicsItem *parent):QGraphicsLineItem(parent)
 {

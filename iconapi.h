@@ -58,7 +58,7 @@
 #define BROWERWIDTH 100
 #define BROWERHEIGHT 100
 
-
+#define PI 3.14
 
 enum DRAWSHAPE
 {
