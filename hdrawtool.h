@@ -2,32 +2,92 @@
 #define HDRAWTOOL_H
 
 #include <QObject>
+#include <QGraphicsSceneMouseEvent>
+#include <hiconscene.h>
 #include "iconapi.h"
 //绘制工具基类
-#include "hevent.h"
-class HIconState;
+//class HIconState;
 
 class HDrawTool
 {
 public:
-    HDrawTool(HIconState* iconState,DRAWSHAPE drawShape,const QString& IconName,const QString& iconType,const QString& uuid);
-    virtual ~HDrawTool();
+    HDrawTool(DRAWSHAPE drawShape);
+
 public:
-    virtual DRAWSHAPE type() = 0;
-    virtual void clear();
-    virtual void OnEvent(HEvent &e);
+    virtual void mousePressEvent(QGraphicsSceneMouseEvent * event , HIconScene * scene ) ;
+    virtual void mouseMoveEvent(QGraphicsSceneMouseEvent * event , HIconScene * scene ) ;
+    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent * event , HIconScene * scene );
 
-    QString iconType() {return strIconType;}
-    QString Uuid() {return strUuid;}
-    HIconState* IconState(){return pIconState;}
-    DRAWSHAPE DrawShape(){return enDrawShape;}
+   DRAWSHAPE m_drawShape;
+   static HDrawTool * findTool( DRAWSHAPE drawShape );
+   static QList<HDrawTool*> drawToolList;
+   static QPointF c_down;
+   static quint32 c_nDownFlags;
+   static QPointF c_last;
+   static DRAWSHAPE c_drawShape;
 
-protected:
-    HIconState* pIconState;
-    DRAWSHAPE enDrawShape;//绘制的对象：直线 圆形
-    QString strIconType;//模板的类型：遥测
-    QString strUuid;//模板的id
-    QString strIconName;
 };
+
+class HSelectTool : public HDrawTool
+{
+// Constructors
+public:
+    HSelectTool();
+
+// Implementation
+    virtual void mousePressEvent(QGraphicsSceneMouseEvent * event , HIconScene * scene ) ;
+    virtual void mouseMoveEvent(QGraphicsSceneMouseEvent * event , HIconScene * scene ) ;
+    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent * event , HIconScene * scene );
+    virtual void OnEditProperties(HIconScene * scene);
+    virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent * event , HIconScene * scene);
+};
+
+class HRectTool : public HDrawTool
+{
+// Constructors
+public:
+    HRectTool(DRAWSHAPE drawShape);
+
+// Implementation
+    virtual void mousePressEvent(QGraphicsSceneMouseEvent * event , HIconScene * scene ) ;
+    virtual void mouseMoveEvent(QGraphicsSceneMouseEvent * event , HIconScene * scene ) ;
+    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent * event , HIconScene * scene );
+    virtual void OnEditProperties(HIconScene * scene);
+};
+
+class HLineTool : public HDrawTool
+{
+// Constructors
+public:
+    HLineTool(DRAWSHAPE drawShape);
+
+// Implementation
+    virtual void mousePressEvent(QGraphicsSceneMouseEvent * event , HIconScene * scene ) ;
+    virtual void mouseMoveEvent(QGraphicsSceneMouseEvent * event , HIconScene * scene ) ;
+    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent * event , HIconScene * scene );
+    virtual void OnEditProperties(HIconScene * scene);
+};
+
+
+
+
+
+/*
+class CPolyTool : public CDrawTool
+{
+// Constructors
+public:
+    CPolyTool();
+
+// Implementation
+    virtual void OnLButtonDown(CRCSRuleEditorView* pView, UINT nFlags, const CPoint& point);
+    virtual void OnLButtonDblClk(CRCSRuleEditorView* pView, UINT nFlags, const CPoint& point);
+    virtual void OnLButtonUp(CRCSRuleEditorView* pView, UINT nFlags, const CPoint& point);
+    virtual void OnMouseMove(CRCSRuleEditorView* pView, UINT nFlags, const CPoint& point);
+    virtual void OnCancel();
+
+    CDrawPoly* m_pDrawObj;
+};
+*/
 
 #endif // HDRAWTOOL_H
