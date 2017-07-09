@@ -277,6 +277,16 @@ void HBaseObj::setOY(double y)
     originY = y;
 }
 
+double HBaseObj::getOX()
+{
+    return originX;
+}
+
+double HBaseObj::getOY()
+{
+    return originY;
+}
+
 //形状类型
 DRAWSHAPE HBaseObj::getShapeType()
 {

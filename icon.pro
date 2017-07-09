@@ -14,7 +14,7 @@ HEADERS       = \
     hicontemplate.h \
     hicondocument.h \
     hnewicondlg.h \
-    hdrawtool.h \
+    #hdrawtool.h \
     hiconscene.h \
     #hevent.h \
     hiconmgr.h \
@@ -46,7 +46,7 @@ SOURCES       = main.cpp \
     hicontemplate.cpp \
     hicondocument.cpp \
     hnewicondlg.cpp \
-    hdrawtool.cpp \
+    #hdrawtool.cpp \
     hiconscene.cpp \
     #hevent.cpp \
     hiconmgr.cpp \

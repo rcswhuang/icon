@@ -128,7 +128,9 @@ public:
     virtual void setStackOrder(qint64 nStack);
 
     virtual void setOX(double x);
+    virtual double getOX();
     virtual void setOY(double y);
+    virtual double getOY();
 
     //当前画面的比例缩放
     double curZoomScale();

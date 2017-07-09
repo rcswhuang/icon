@@ -4,6 +4,7 @@
 #include <QColorDialog>
 #include <QFontDialog>
 #include <QVariant>
+#include <math.h>
 HPropertyDlg::HPropertyDlg(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::PropertyDlg)
@@ -45,6 +46,8 @@ void HPropertyDlg::initTab()
     {   
         ui->propertyTab->removeTab(0);//文字
         ui->propertyTab->removeTab(2);//形状
+        ui->xCoord_width->setEnabled(false);
+        ui->yCoord_height->setEnabled(false);
         ui->groupBox_8->hide();
         ui->groupBox_8->hide();
     }
@@ -96,8 +99,10 @@ void HPropertyDlg::initBaseTab()
         QPointF p2 = pLObj->pfTailPoint;
         double dx = (p1.x() + p2.x())/2;
         double dy = (p1.y() + p2.y())/2;
-        ui->xCoord->setValue(dx);
-        ui->yCoord->setValue(dy);
+        double angle = ::atan(dy/dx)*180/PI;
+        ui->x_rotate->setValue(angle);
+        ui->xCoord->setValue(pLObj->getOX());
+        ui->yCoord->setValue(pLObj->getOY());
     }
 }
 
