@@ -18,7 +18,8 @@ class HIconScene : public QGraphicsScene
     Q_OBJECT
 public:
     HIconScene(HIconMgr* iconMgr);
-
+public:
+    void delItemByPatternId(int nPatternID);
 protected:
 
     virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent);

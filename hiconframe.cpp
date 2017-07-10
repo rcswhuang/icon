@@ -123,3 +123,10 @@ bool HIconFrame::eventFilter( QObject *obj, QEvent *event)
     return false;
 }
 
+void HIconFrame::delItemByPatternId(int nPatternId)
+{
+    if(iconScene())
+    {
+        iconScene()->delItemByPatternId(nPatternId);
+    }
+}

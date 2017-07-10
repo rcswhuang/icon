@@ -47,6 +47,8 @@ public:
 
     void setLogicRect(QRectF& rectF);
 
+    void delItemByPatternId(int nPatternId);
+
     QRectF getLogicRect(){return sceneRect;}
 
     HIconScene* iconScene()

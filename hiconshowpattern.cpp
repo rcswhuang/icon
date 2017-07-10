@@ -25,7 +25,7 @@ void HIconShowPattern::addObj(HBaseObj* pObj)
 {
     if(!pObj)
         return;
-    pObj->setShowPattern(this);
+    pObj->nPattern.append(nPattern);
     pObjList.append(pObj);
 }
 

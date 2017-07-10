@@ -526,3 +526,8 @@ void HBaseObj::setStackOrder(qint64 nStack)
 
 }
 
+bool HBaseObj::contains(int nPatternId)
+{
+    return nPattern.contains(nPatternId);
+}
+

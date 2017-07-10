@@ -271,3 +271,22 @@ void HIconScene::wheelEvent(QGraphicsSceneWheelEvent *wheelEvent)
 
 }
 
+void HIconScene::delItemByPatternId(int nPatternID)
+{
+    QList<QGraphicsItem *> pItemList = items();
+    for(int i = 0; i < pItemList.count();i++)
+    {
+        QGraphicsItem* pItem = (QGraphicsItem*)pItemList[i];
+        if(pItem)
+        {
+            if(pItem->type() == enumLine)
+            {
+                HLineObj* pObj = ((HIconLineItem*)pItem)->pLineObj;
+                if(pObj->contains(nPatternID))
+                {
+                    removeItem(pItem);
+                }
+            }
+        }
+    }
+}

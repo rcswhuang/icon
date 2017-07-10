@@ -82,6 +82,7 @@ void HIconWidget::delShowPattern()
             int ret = QMessageBox::warning(NULL,QStringLiteral("警告"),strWarning,QMessageBox::Ok|QMessageBox::Cancel);
             if(QMessageBox::Ok == ret)
             {
+                pIconMgr->getIconFrame()->delItemByPatternId(data.toInt());
                 pTemplate->getSymbol()->delPattern(data.toInt());
                 pTabBar->removeTab(curIndex);
             }
