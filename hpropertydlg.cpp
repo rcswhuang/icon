@@ -99,10 +99,11 @@ void HPropertyDlg::initBaseTab()
         QPointF p2 = pLObj->pfTailPoint;
         double dx = (p1.x() + p2.x())/2;
         double dy = (p1.y() + p2.y())/2;
-        double angle = ::atan(dy/dx)*180/PI;
-        ui->x_rotate->setValue(angle);
-        ui->xCoord->setValue(pLObj->getOX());
-        ui->yCoord->setValue(pLObj->getOY());
+        QLineF lineF(p1,p2);
+        double angleLine = lineF.angle();
+        ui->x_rotate->setValue(angleLine);
+        ui->xCoord->setValue(dx);
+        ui->yCoord->setValue(dy);
     }
 }
 

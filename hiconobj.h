@@ -1,12 +1,12 @@
 ﻿#ifndef HICONOBJ_H_
 #define HICONOBJ_H_
 #include "hbaseobj.h"
-
+class HIconLineItem;
 class HLineObj : public HBaseObj
 {
 public:
-    HLineObj();
-
+    HLineObj(HIconLineItem* item);
+    ~HLineObj();
     //xml文件读写
     virtual void readXml(QDomElement* data);
     virtual void writeXml(QDomElement* data);
@@ -24,6 +24,7 @@ public:
     virtual QVariant getPropertyValue(int nId);
 
     virtual DRAWSHAPE getShapeType();
+    HIconLineItem* getIconLineItem(){return pLineItem;}
 public:
 
     void setArrowStart(quint8 start);
@@ -39,6 +40,7 @@ public:
     quint16 getArrowHeight();
 
 private:
+    HIconLineItem* pLineItem;
     quint8 arrowStart;
     quint8 arrowEnd;
     quint16 arrowWidth;

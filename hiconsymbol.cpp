@@ -72,11 +72,10 @@ void HIconSymbol::addObj(HBaseObj* pObj)
 {
     if(!pObj)
         return;
-    /*int objID = getObjID(pObj->getShapeType());
+    int objID = getObjID(pObj->getShapeType());
     pObj->setProperty("OBJID",QVariant(objID));
     QString strObjName = QString("%1_%2_%3").arg(pObj->TagName()).arg(pObj->getShapeType()).arg(objID);
     pObj->setProperty("Name",QVariant(strObjName));
-    pObjList.append(pObj);*/
     HIconShowPattern* pSP = getCurrentPatternPtr();
     if(!pSP)
         return;
@@ -104,12 +103,16 @@ int HIconSymbol::getObjID(int nObjType)
 
 bool HIconSymbol::findObjID(int nObjID)
 {
-    if(pObjList.count() == 0) return false;
-    for(int i = 0;i < pObjList.count();i++)
+    if(pShowPatternVector.count() == 0) return false;
+    for(int i = 0;i < pShowPatternVector.count();i++)
     {
-        HBaseObj* pObj = (HBaseObj*)pObjList[i];
-        if(pObj && pObj->getObjID() == nObjID)
-            return true;
+        HIconShowPattern* pattern = (HIconShowPattern*)pShowPatternVector[i];
+        for(int j = 0; j < pattern->pObjList.count();j++)
+        {
+            HBaseObj* pObj = (HBaseObj*)pattern->pObjList[j];
+            if(pObj && pObj->getObjID() == nObjID)
+                return true;
+        }
     }
     return false;
 }

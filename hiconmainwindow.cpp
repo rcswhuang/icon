@@ -422,7 +422,7 @@ void HIconMainWindow::Del(const QString& catalogName,const int& nIconType,const 
 {
     pIconMgr->Del(catalogName,nIconType,uuid);
     pIconTreeWidget->delIconTreeWidgetItem();
-    pIconWidget->delIconWidget();
+    pIconWidget->delShowPattern();
 }
 
 //撤销

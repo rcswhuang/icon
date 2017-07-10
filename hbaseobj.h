@@ -9,11 +9,12 @@
 #include <QPainterPath>
 #include <QPainter>
 #include "iconapi.h"
+class HIconShowPattern;
 class HBaseObj: public QObject
 {
 public:
     HBaseObj(QObject *parent = 0);
-   ~HBaseObj();
+    virtual ~HBaseObj();
 
 public:
     void init();
@@ -135,6 +136,8 @@ public:
     //当前画面的比例缩放
     double curZoomScale();
 
+    virtual void setShowPattern(HIconShowPattern* p){pattern = p;}
+    virtual HIconShowPattern* getShowPattern(){return pattern;}
 
 //绘制对象的属性
 public:
@@ -199,7 +202,7 @@ protected:
     //平面号
     QVector<qint8> m_nPlanes;
 
-    //分块索引号
+    HIconShowPattern* pattern;
 };
 
 

@@ -48,9 +48,11 @@ public:
 
 
     HIconTemplate* getIconTemplate()const {return pIconTemplate;}
+    //HIconShowPattern* getIconShowPattern() const {return pShowPatternVector;}
 public:
     QList<HBaseObj*> pObjList;
     HIconTemplate* pIconTemplate;
+    QVector<HIconShowPattern*> pShowPatternVector;
 private:
     QString strSymbolName;
     int usSymbolType;
@@ -65,7 +67,7 @@ private:
     QImage* pBackgroundImage;
     QString strBackgroundPath;*/
 
-    QVector<HIconShowPattern*> pShowPatternVector;
+//    QVector<HIconShowPattern*> pShowPatternVector;
     int nMaxPattern;
     int nCurPattern;
     HIconShowPattern* pCurPattern;

@@ -2,27 +2,34 @@
 #define HICONWIDGET_H
 
 #include <QWidget>
-#include "hiconmgr.h"
+
+#include "iconapi.h"
 class QTabBar;
 class HIconFrame;
-class QVBoxLayout;
+class HIconMgr;
 class HIconWidget : public QWidget
 {
     Q_OBJECT
 public:
     HIconWidget(HIconMgr* iconMgr);
     void newIconWidget();
-    void delIconWidget();
+
     void refreshIconWidget();
 
 
     QTabBar* getTabBar(){return pTabBar;}
+
+protected:
+    virtual bool eventFilter(QObject *watched, QEvent *event);
     //HIconFrame* getIconFrame(){return pIconFrame;}
+public slots:
+    void addShowPattern();
+    void delShowPattern();
+    void renameShowPattern();
+    void patternChanged(int curPatternId);
 private:
     HIconMgr* pIconMgr;
     QTabBar* pTabBar;
-    //HIconFrame* pIconFrame;
-    QVBoxLayout* layout1;
 };
 
 #endif // HICONWIDGET_H

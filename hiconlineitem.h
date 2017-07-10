@@ -3,7 +3,7 @@
 
 #include <QGraphicsLineItem>
 #include "iconapi.h"
-#include "hiconobj.h"
+class HLineObj;
 class HIconLineItem : public QGraphicsLineItem
 {
 public:

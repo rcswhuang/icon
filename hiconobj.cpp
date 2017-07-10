@@ -1,11 +1,17 @@
 ﻿#include "hiconobj.h"
+#include "hiconlineitem.h"
 #include <QVariant>
-HLineObj::HLineObj()
+HLineObj::HLineObj(HIconLineItem* item):pLineItem(item)
 {
     arrowHeight = 0;
     arrowWidth = 0;
     arrowStart = 0;
     arrowEnd = 0;
+}
+
+HLineObj::~HLineObj()
+{
+   pLineItem = NULL;
 }
 
 void HLineObj::readXml(QDomElement* data)

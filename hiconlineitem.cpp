@@ -5,7 +5,7 @@
 #include <QKeyEvent>
 #include <math.h>
 #include "hpropertydlg.h"
-
+#include "hiconobj.h"
 
 
 HIconLineItem::HIconLineItem(QGraphicsItem *parent):QGraphicsLineItem(parent)
@@ -21,7 +21,7 @@ HIconLineItem::HIconLineItem(const QLineF &line, QGraphicsItem *parent):QGraphic
     setFlag(QGraphicsItem::ItemIsSelectable,true);
     setFlag(QGraphicsItem::ItemSendsGeometryChanges,true);
     setFlag(QGraphicsItem::ItemIsFocusable,true);
-    pLineObj = new HLineObj();
+    pLineObj = new HLineObj(this);
     //bSelected = false;
     setSelected(false);
 }

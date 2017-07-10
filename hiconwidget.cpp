@@ -1,45 +1,172 @@
 ﻿#include "hiconwidget.h"
 #include <QVBoxLayout>
-#include "hiconframe.h"
 #include <QTabBar>
+#include <QInputDialog>
+#include <QMenu>
+#include <QContextMenuEvent>
+#include <QMessageBox>
+#include "hiconframe.h"
+#include "hiconmgr.h"
+#include "hicontemplate.h"
+#include "hiconsymbol.h"
+#include "hiconshowpattern.h"
+#include "hiconobj.h"
+#include "hiconlineitem.h"
 HIconWidget::HIconWidget(HIconMgr* iconMgr):pIconMgr(iconMgr)
 {
     pTabBar = new QTabBar;
-    layout1 = new QVBoxLayout;
-    layout1->setContentsMargins(0,0,0,0);
-    layout1->setSpacing(0);
-    setLayout(layout1);
+    pTabBar->installEventFilter(this);
+    connect(pTabBar,SIGNAL(currentChanged(int)),this,SLOT(patternChanged(int)));
+
 }
 
 void HIconWidget::newIconWidget()
 {
-    pTabBar->addTab(QStringLiteral("缺省"));
-    layout1->addWidget(pTabBar);
-    pTabBar->show();
-    layout1->addWidget(pIconMgr->getIconFrame());
-    pIconMgr->getIconFrame()->show();
+
+    HIconSymbol* pSymbol = (HIconSymbol*)(pIconMgr->getIconTemplate()->getSymbol());
+    if(!pSymbol)
+        return;
+    QString strName = QStringLiteral("缺省");
+    HIconShowPattern* pattern = (HIconShowPattern*)(pSymbol->newPattern(strName));
+    if(!pattern)
+        return;
+    int index = pTabBar->addTab(strName);
+    pTabBar->setTabData(index,pSymbol->getCurrentPattern());
+    pTabBar->setCurrentIndex(index);
+
+    QVBoxLayout *layout = new QVBoxLayout;
+    layout->setContentsMargins(0,0,0,0);
+    layout->setSpacing(0);
+    layout->addWidget(pTabBar);
+    layout->addWidget(pIconMgr->getIconFrame());
+    setLayout(layout);
+
 }
 
-void HIconWidget::delIconWidget()
+void HIconWidget::addShowPattern()
 {
+    HIconSymbol* pSymbol = (HIconSymbol*)(pIconMgr->getIconTemplate()->getSymbol());
+    if(!pSymbol)
+        return;
+    bool ok;
+    QString strName = QInputDialog::getText(this,QStringLiteral("输入显示方案名称"),QStringLiteral("显示方案名称:"),QLineEdit::Normal,"",&ok);
+    HIconShowPattern* pattern = (HIconShowPattern*)(pSymbol->newPattern(strName));
+    if(!pattern)
+        return;
+    int index = pTabBar->addTab(strName);
+    pTabBar->setTabData(index,pSymbol->getCurrentPattern());
+    pTabBar->setCurrentIndex(index);
 
+}
+
+void HIconWidget::delShowPattern()
+{
     if(pTabBar)
     {
-        int tabBarCount = pTabBar->count();
-        while (tabBarCount--) {
-            pTabBar->removeTab(tabBarCount);
+        int curIndex = pTabBar->currentIndex();
+        if(curIndex == 0)
+        {
+            QMessageBox::warning(NULL,QStringLiteral("警告"),QStringLiteral("缺省样式不能删除!"),QMessageBox::Ok);
+            return;
+        }
+        else
+        {
+            QVariant data = pTabBar->tabData(curIndex);
+            if(!data.isValid())
+                return;
+            if(!pIconMgr->getIconFrame()||!pIconMgr->getIconTemplate()||!pIconMgr->getIconTemplate()->getSymbol())
+                return;
+            HIconTemplate* pTemplate = pIconMgr->getIconTemplate();
+            QString strPatternName = pTemplate->getSymbol()->getCurrentPatternPtr()->strName;
+            QString strWarning = QString(QStringLiteral("确定删除%1显示方案?")).arg(strPatternName);
+            int ret = QMessageBox::warning(NULL,QStringLiteral("警告"),strWarning,QMessageBox::Ok|QMessageBox::Cancel);
+            if(QMessageBox::Ok == ret)
+            {
+                pTemplate->getSymbol()->delPattern(data.toInt());
+                pTabBar->removeTab(curIndex);
+            }
         }
     }
-    if(layout1)
-    {
-        layout1->removeWidget(pTabBar);
-        layout1->removeWidget(pIconMgr->getIconFrame());
-        pTabBar->hide();
-        pIconMgr->getIconFrame()->hide();
-    }
+}
+
+void HIconWidget::renameShowPattern()
+{
+
 }
 
 void HIconWidget::refreshIconWidget()
 {
 
+}
+
+
+void HIconWidget::patternChanged(int index)
+{
+    if(!pTabBar||!pIconMgr->getIconFrame()||!pIconMgr->getIconTemplate()||!pIconMgr->getIconTemplate()->getSymbol())
+        return;
+    bool ok;
+    QVariant data = pTabBar->tabData(index);
+    if(!data.isValid())
+        return;
+    int newPatternId = data.toInt(&ok);
+    if(!ok)
+        return;
+    HIconTemplate* pTemplate = pIconMgr->getIconTemplate();
+    //int oldPatternId = pTemplate->getSymbol()->getCurrentPattern();
+    for(int i = 0; i < pTemplate->getSymbol()->pShowPatternVector.count();i++)
+    {
+        HIconShowPattern* pattern = (HIconShowPattern*)pTemplate->getSymbol()->pShowPatternVector[i];
+        if(pattern)
+        {
+            pattern->setObjItemVisible(newPatternId);
+        }
+    }
+    pTemplate->getSymbol()->setCurrentPattern(newPatternId);
+
+   /* //显示新的部分
+    pTemplate->getSymbol()->setCurrentPattern(newPatternId);
+    HIconShowPattern* pattern = pTemplate->getSymbol()->findPatternById(newPatternId);
+    if(pattern)
+    {
+        for(int i = 0; i < pattern->pObjList.count();i++)
+        {
+            HBaseObj* pObj = (HBaseObj*)pattern->pObjList.at(i);
+            if(pObj )
+            {
+                if(pObj->getShapeType() == enumLine)
+                {
+                    HLineObj* pLineObj = (HLineObj*)pObj;
+                    HIconLineItem* pItem = (HIconLineItem*)(pLineObj->getIconLineItem());
+                    if(pItem)
+                    {
+                        pItem->setVisible(true);
+                    }
+                }
+            }
+        }
+    }*/
+
+    //刷新
+    if(pIconMgr->getIconFrame())
+    {
+        pIconMgr->getIconFrame()->view()->invalidateScene(pIconMgr->getIconFrame()->view()->sceneRect());
+    }
+}
+
+bool HIconWidget::eventFilter(QObject *obj, QEvent *event)
+{
+    if(obj == pTabBar)
+    {
+        if(event->type() == QEvent::ContextMenu)
+        {
+            QMenu menu(pTabBar);
+            menu.addAction(QStringLiteral("增加"),this,SLOT(addShowPattern()));
+            menu.addAction(QStringLiteral("删除"),this,SLOT(delShowPattern()));
+            menu.addAction(QStringLiteral("改名"),this,SLOT(renameShowPattern()));
+
+            menu.exec(((QContextMenuEvent*)event)->globalPos());
+            return true;
+        }
+    }
+    return false;
 }
