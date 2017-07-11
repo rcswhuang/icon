@@ -5,7 +5,7 @@
 #include <QDockWidget>
 #include <QStatusBar>
 #include <QInputDialog>
-
+#include <QIntValidator>
 
 HIconMainWindow::HIconMainWindow(HIconMgr *parent) : pIconMgr(parent)
 {
@@ -100,6 +100,8 @@ void HIconMainWindow::createActions()
     zoomOriAct = new QAction(QIcon(":/images/zoom_original.png"), QStringLiteral("自由缩放"), this);
     zoomOriAct->setCheckable(true);
     scaleComboBox = new QComboBox(this);
+    QIntValidator *validator = new QIntValidator(10,500);
+    scaleComboBox->setValidator(validator);
     scaleComboBox->setEditable(true);
     scaleComboBox->addItem(tr("50%"),0.5);
     scaleComboBox->addItem(tr("70%"),0.75);
@@ -108,6 +110,7 @@ void HIconMainWindow::createActions()
     scaleComboBox->addItem(tr("200%"),2);
     scaleComboBox->addItem(tr("300%"),3);
     scaleComboBox->addItem(tr("400%"),4);
+    connect(scaleComboBox,SIGNAL(currentIndexChanged(int)),this,SLOT(scaleChanged(int)));
 
     //其他项
     selectAct = new QAction(QIcon(":/images/select.png"), QStringLiteral("选择"), this);
@@ -602,6 +605,15 @@ void HIconMainWindow::viewMousePosChanged(const QPoint& pos,const QPointF &logPo
     QString strViewPos = QString("x=%1,y=%2").arg((int)pos.x()).arg((int)pos.y());
     QString strLogicPos =  QString("log:x=%1,y=%2").arg(logPos.x(),0,'f',1).arg(logPos.y(),0,'f',1);
     statusBar()->showMessage(strLogicPos + " " + strViewPos);
+}
+
+void HIconMainWindow::scaleChanged(int index)
+{
+    QVariant curData = scaleComboBox->currentData();
+    if(!curData.isValid())
+        return;
+    //qreal scaleValue = curData.toDouble();
+    //pIconFrame->setLogicRect();
 }
 
 void HIconMainWindow::itemInserted(int type)

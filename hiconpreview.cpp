@@ -3,7 +3,7 @@
 #include "hicontemplate.h"
 #include "hbaseobj.h"
 #include "hiconobj.h"
-#include <QTimer>
+#include <QIntValidator>
 HIconPreview::HIconPreview(HIconMgr* iconMgr,QWidget *parent) :
     QDialog(parent),
     ui(new Ui::IconPreview),pIconMgr(iconMgr)
@@ -11,16 +11,22 @@ HIconPreview::HIconPreview(HIconMgr* iconMgr,QWidget *parent) :
     ui->setupUi(this);
 
     ui->widget->installEventFilter(this);
-    ui->widthSpinBox->setMaximum(1000);
-    ui->heightSpinBox->setMaximum(1000);
+    ui->widthSpinBox->setRange(0,50);
+    ui->heightSpinBox->setRange(0,50);
 
     connect(ui->widthSpinBox,SIGNAL(editingFinished()),this,SLOT(onDefaultSizeChanged()));
     connect(ui->heightSpinBox,SIGNAL(editingFinished()),this,SLOT(onDefaultSizeChanged()));
-    connect(ui->radioBtn,SIGNAL(clicked(bool)),this,SLOT(onRaditChanged()));
+    connect(ui->refreshBtn,SIGNAL(clicked(bool)),this,SLOT(onRefreshChanged()));
 
    // QTimer *timer = new QTimer(this);
   //  connect(timer,SIGNAL(timeout()),this,SLOT(refresh()));
   //  timer->start(5000);
+    if(pIconMgr && pIconMgr->getIconTemplate())
+    {
+        QSizeF sizeF = pIconMgr->getIconTemplate()->getDefaultSize();
+        ui->widthSpinBox->setValue(sizeF.width());
+        ui->heightSpinBox->setValue(sizeF.height());
+    }
 
 }
 
@@ -39,10 +45,15 @@ void HIconPreview::refresh()
 
 void HIconPreview::onDefaultSizeChanged()
 {
-
+    int width = ui->widthSpinBox->value();
+    int height = ui->heightSpinBox->value();
+    if(pIconMgr && pIconMgr->getIconTemplate())
+    {
+        pIconMgr->getIconTemplate()->setDefaultSize(QSizeF(width,height));
+    }
 }
 
-void HIconPreview::onRaditChanged()
+void HIconPreview::onRefreshChanged()
 {
     if(!pIconMgr) return;
     HIconTemplate* pTemplate = pIconMgr->getIconTemplate();
@@ -62,7 +73,7 @@ void HIconPreview::onRaditChanged()
     p.drawRect(pixRect);
     p.restore();
     drawIcon(&p);
-    ui->widget->update();
+    ui->widget->update();//重绘操作
 }
 
 void HIconPreview::drawIcon(QPainter *p)
