@@ -5,7 +5,7 @@ class HIconLineItem;
 class HLineObj : public HBaseObj
 {
 public:
-    HLineObj(HIconLineItem* item);
+    HLineObj();
     ~HLineObj();
     //xml文件读写
     virtual void readXml(QDomElement* data);
@@ -176,7 +176,7 @@ class HPieObj : public HBaseObj
 {
 public:
     HPieObj();
-
+    virtual ~HPieObj();
     //xml文件读写
     virtual void readXml(QDomElement* data);
     virtual void writeXml(QDomElement* data);
@@ -208,7 +208,7 @@ class HTextObj : public HBaseObj
 {
 public:
     HTextObj();
-
+    virtual ~HTextObj();
     //xml文件读写
     virtual void readXml(QDomElement* data);
     virtual void writeXml(QDomElement* data);

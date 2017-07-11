@@ -9,7 +9,9 @@
 #include "hiconpieitem.h"
 #include "hiconstate.h"
 #include "hicontextitem.h"
+#include "hpropertydlg.h"
 #include <QCursor>
+#include <QMenu>
 HIconScene::HIconScene(HIconMgr* iconMgr)
     :pIconMgr(iconMgr)
 {
@@ -40,11 +42,6 @@ void HIconScene::drawBackground(QPainter *painter, const QRectF &rect)
             for(qreal y=finalRect.top();y<finalRect.bottom()+25;y+=25)
                 painter->drawPoint(x,y);
     }
-}
-
-void HIconScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent)
-{
-    QGraphicsScene::mouseDoubleClickEvent(mouseEvent);
 }
 
 
@@ -124,7 +121,7 @@ void HIconScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 
     QGraphicsScene::mousePressEvent(mouseEvent);
 }
-//YCFHQ-9DWCY-DKV88-T2TMH-G7BHP
+
 void HIconScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
     DRAWSHAPE drawShape = pIconMgr->getIconState()->getDrawShape();
@@ -178,36 +175,7 @@ void HIconScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
     //判断当前是否处于选择状态
     if(drawShape == enumSelection)
     {
-        QList<QGraphicsItem*> itemList = selectedItems();
-        if(itemList.size()== 1)
-        {
-            QGraphicsItem* pItem = itemList.first();
-            if(pItem->type() == enumLine)
-            {
-                HIconLineItem *eItem = static_cast<HIconLineItem*>(pItem);
-                QPointF pointF = mouseEvent->scenePos();
-                int location = eItem->pointInRect(pointF);
-                if(location == 1)
-                    eItem->setCursor(QCursor(Qt::SizeFDiagCursor));
-                else if(location == 2)
-                    eItem->setCursor(QCursor(Qt::SizeFDiagCursor));
-                else
-                    eItem->setCursor(QCursor(Qt::ArrowCursor));
-            }
-            else if(pItem->type() == enumEllipse)
-            {
-                HIconEllipseItem *eItem = static_cast<HIconEllipseItem*>(pItem);
-                QPointF pointF = mouseEvent->scenePos();
-                int location = eItem->pointInRect(pointF);
-                if(location == 1 || location == 4)
-                    eItem->setCursor(QCursor(Qt::SizeFDiagCursor));
-                else if(location == 2 || location == 3)
-                    eItem->setCursor(QCursor(Qt::SizeBDiagCursor));
-                else
-                    eItem->setCursor(QCursor(Qt::ArrowCursor));
-            }
-        }
-
+        setItemCursor(mouseEvent);
         QGraphicsScene::mouseMoveEvent(mouseEvent);
      }
 
@@ -266,27 +234,296 @@ void HIconScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
     QGraphicsScene::mouseReleaseEvent(mouseEvent);
 }
 
-void HIconScene::wheelEvent(QGraphicsSceneWheelEvent *wheelEvent)
+void HIconScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
+    QList<QGraphicsItem*> itemList = selectedItems();
+    if(itemList.size()== 1)
+    {
+        QGraphicsItem* pItem = itemList.first();
+        setItemProperty(pItem);
+    }
+    QGraphicsScene::mouseDoubleClickEvent(mouseEvent);
+}
+
+void HIconScene::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
+{
+    QList<QGraphicsItem*> itemList = selectedItems();
+    if(itemList.size() > 0)
+    {
+        QMenu menu;
+        menu.addAction(QStringLiteral("剪切"),this,SLOT(cutItem()));
+        menu.addAction(QStringLiteral("复制"),this,SLOT(copyItem()));
+        menu.addAction(QStringLiteral("删除"),this,SLOT(delItem()));
+        menu.addAction(QStringLiteral("属性"),this,SLOT(showProperty()));
+
+        menu.exec(event->screenPos());
+    }
 
 }
 
-void HIconScene::delItemByPatternId(int nPatternID)
+void HIconScene::setItemProperty(QGraphicsItem* item)
+{
+    if(!item) return;
+    HPropertyDlg dlg;
+    if(item->type() == enumLine)
+    {
+        HIconLineItem *cItem = static_cast<HIconLineItem*>(item);
+        dlg.setIconObj(cItem->pLineObj);
+    }
+    else if(item->type() == enumEllipse)
+    {
+        HIconEllipseItem *cItem = static_cast<HIconEllipseItem*>(item);
+        dlg.setIconObj(cItem->pEllipseObj);
+    }
+    else if(item->type() == enumRectangle)
+    {
+        HIconRectItem *cItem = static_cast<HIconRectItem*>(item);
+        dlg.setIconObj(cItem->pRectObj);
+    }
+    else if(item->type() == enumArc)
+    {
+        HIconArcItem *cItem = static_cast<HIconArcItem*>(item);
+        dlg.setIconObj(cItem->pArcObj);
+    }
+    else if(item->type() == enumPie)
+    {
+        HIconPieItem *cItem = static_cast<HIconPieItem*>(item);
+        dlg.setIconObj(cItem->pPieObj);
+    }
+    else if(item->type() == enumText)
+    {
+        HIconTextItem *cItem = static_cast<HIconTextItem*>(item);
+        dlg.setIconObj(cItem->pTextObj);
+    }
+
+    dlg.exec();
+
+}
+
+void HIconScene::setItemCursor(QGraphicsSceneMouseEvent *mouseEvent)
+{
+    QList<QGraphicsItem*> itemList = selectedItems();
+    if(itemList.size()== 1)
+    {
+        QGraphicsItem* pItem = itemList.first();
+        if(pItem->type() == enumLine)
+        {
+            HIconLineItem *eItem = static_cast<HIconLineItem*>(pItem);
+            QPointF pointF = mouseEvent->scenePos();
+            int location = eItem->pointInRect(pointF);
+            eItem->setItemCursor(location);
+        }
+        else if(pItem->type() == enumEllipse)
+        {
+            HIconEllipseItem *eItem = static_cast<HIconEllipseItem*>(pItem);
+            QPointF pointF = mouseEvent->scenePos();
+            int location = eItem->pointInRect(pointF);
+            eItem->setItemCursor(location);
+        }
+        else if(pItem->type() == enumRectangle)
+        {
+            HIconRectItem *eItem = static_cast<HIconRectItem*>(pItem);
+            QPointF pointF = mouseEvent->scenePos();
+            int location = eItem->pointInRect(pointF);
+            eItem->setItemCursor(location);
+        }
+        else if(pItem->type() == enumArc)
+        {
+            HIconArcItem *eItem = static_cast<HIconArcItem*>(pItem);
+            QPointF pointF = mouseEvent->scenePos();
+            int location = eItem->pointInRect(pointF);
+            eItem->setItemCursor(location);
+        }
+        else if(pItem->type() == enumPie)
+        {
+            HIconPieItem *eItem = static_cast<HIconPieItem*>(pItem);
+            QPointF pointF = mouseEvent->scenePos();
+            int location = eItem->pointInRect(pointF);
+            eItem->setItemCursor(location);
+        }
+        else if(pItem->type() == enumText)
+        {
+            HIconTextItem *eItem = static_cast<HIconTextItem*>(pItem);
+            QPointF pointF = mouseEvent->scenePos();
+            int location = eItem->pointInRect(pointF);
+            eItem->setItemCursor(location);
+        }
+
+    }
+}
+
+void HIconScene::setItemVisible(int nPatternId)
 {
     QList<QGraphicsItem *> pItemList = items();
+    bool bVisible = false;
     for(int i = 0; i < pItemList.count();i++)
     {
         QGraphicsItem* pItem = (QGraphicsItem*)pItemList[i];
+        int drawShape = pItem->type();
         if(pItem)
         {
-            if(pItem->type() == enumLine)
+            bVisible = false;
+            if(drawShape == enumLine)
             {
                 HLineObj* pObj = ((HIconLineItem*)pItem)->pLineObj;
-                if(pObj->contains(nPatternID))
+                if(pObj->contains(nPatternId))
                 {
-                    removeItem(pItem);
+                    bVisible = true;
                 }
+            }
+            else if(drawShape == enumRectangle)
+            {
+                HRectObj* pObj = ((HIconRectItem*)pItem)->pRectObj;
+                if(pObj->contains(nPatternId))
+                {
+                    bVisible = true;
+                }
+            }
+            else if(drawShape == enumEllipse)
+            {
+                HEllipseObj* pObj = ((HIconEllipseItem*)pItem)->pEllipseObj;
+                if(pObj->contains(nPatternId))
+                {
+                    bVisible = true;
+                }
+            }
+            else if(drawShape == enumArc)
+            {
+                HArcObj* pObj = ((HIconArcItem*)pItem)->pArcObj;
+                if(pObj->contains(nPatternId))
+                {
+                    bVisible = true;
+                }
+            }
+            else if(drawShape == enumPie)
+            {
+                HPieObj* pObj = ((HIconPieItem*)pItem)->pPieObj;
+                if(pObj->contains(nPatternId))
+                {
+                    bVisible = true;
+                }
+            }
+            else if(drawShape == enumText)
+            {
+                HTextObj* pObj = ((HIconTextItem*)pItem)->pTextObj;
+                if(pObj->contains(nPatternId))
+                {
+                    bVisible = true;
+                }
+            }
+            pItem->setVisible(bVisible);
+        }
+    }
+}
+
+void HIconScene::delItemByPatternId(int nPatternId)
+{
+    QList<QGraphicsItem *> itemList = items();
+    //bool bDel = false;
+    while(itemList.count())
+    {
+        QGraphicsItem* pItem = (QGraphicsItem*)itemList.takeFirst();
+        int drawShape = pItem->type();
+        if(!pItem) continue;
+
+        if(drawShape == enumLine)
+        {
+            HLineObj* pObj = ((HIconLineItem*)pItem)->pLineObj;
+            if(pObj->contains(nPatternId))
+            {
+                removeItem(pItem);
+            }
+        }
+        else if(drawShape == enumRectangle)
+        {
+            HRectObj* pObj = ((HIconRectItem*)pItem)->pRectObj;
+            if(pObj->contains(nPatternId))
+            {
+                removeItem(pItem);
+            }
+        }
+        else if(drawShape == enumEllipse)
+        {
+            HEllipseObj* pObj = ((HIconEllipseItem*)pItem)->pEllipseObj;
+            if(pObj->contains(nPatternId))
+            {
+                removeItem(pItem);
+            }
+        }
+        else if(drawShape == enumArc)
+        {
+            HArcObj* pObj = ((HIconArcItem*)pItem)->pArcObj;
+            if(pObj->contains(nPatternId))
+            {
+                removeItem(pItem);
+            }
+        }
+        else if(drawShape == enumPie)
+        {
+            HPieObj* pObj = ((HIconPieItem*)pItem)->pPieObj;
+            if(pObj->contains(nPatternId))
+            {
+                removeItem(pItem);
+            }
+        }
+        else if(drawShape == enumText)
+        {
+            HTextObj* pObj = ((HIconTextItem*)pItem)->pTextObj;
+            if(pObj->contains(nPatternId))
+            {
+                removeItem(pItem);
             }
         }
     }
 }
+
+void HIconScene::cutItem()
+{
+
+}
+
+void HIconScene::copyItem()
+{
+
+}
+
+void HIconScene::delItem()
+{
+    QList<QGraphicsItem*> itemList = selectedItems();
+    if(itemList.size() > 0)
+    {
+        while(itemList.count())
+        {
+            QGraphicsItem* pItem = itemList.takeFirst();
+            int drawShape = pItem->type();
+            if(pItem)
+            {
+                if(drawShape == enumLine)
+                    pIconMgr->getIconTemplate()->getSymbol()->delObj(((HIconLineItem*) pItem)->pLineObj);
+                else if(drawShape == enumRectangle)
+                    pIconMgr->getIconTemplate()->getSymbol()->delObj(((HIconRectItem*) pItem)->pRectObj);
+                else if(drawShape == enumEllipse)
+                    pIconMgr->getIconTemplate()->getSymbol()->delObj(((HIconEllipseItem*) pItem)->pEllipseObj);
+                else if(drawShape == enumArc)
+                    pIconMgr->getIconTemplate()->getSymbol()->delObj(((HIconArcItem*) pItem)->pArcObj);
+                else if(drawShape == enumPie)
+                    pIconMgr->getIconTemplate()->getSymbol()->delObj(((HIconPieItem*) pItem)->pPieObj);
+                else if(drawShape == enumText)
+                    pIconMgr->getIconTemplate()->getSymbol()->delObj(((HIconTextItem*) pItem)->pTextObj);
+                removeItem(pItem);
+            }
+        }
+    }
+}
+
+void HIconScene::showProperty()
+{
+    QList<QGraphicsItem*> itemList = selectedItems();
+    if(itemList.size()== 1)
+    {
+        QGraphicsItem* pItem = itemList.first();
+        setItemProperty(pItem);
+    }
+}
+
+

@@ -33,6 +33,7 @@ public:
     HPropertyDlg(HBaseObj* pObj,QWidget *parent = 0);
     ~HPropertyDlg();
 public:
+    void setIconObj(HBaseObj* obj);
     void initTab();
     void initTextTab();
     void initBaseTab();

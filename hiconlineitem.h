@@ -30,21 +30,22 @@ public:
     virtual QPainterPath shape() const;
     virtual int type() const;
 
-    virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
+    //virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
     virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
 
     virtual void keyPressEvent(QKeyEvent *event);
 
+    virtual QVariant itemChange(GraphicsItemChange change, const QVariant &value);
+
 public:
     ushort pointInRect(QPointF& point);
-
+    void setItemCursor(int position);
 public:
     HLineObj* pLineObj;
     ushort lineMode;
     bool bSelected;
-
 
 private:
     ushort pointLocation;

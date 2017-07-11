@@ -58,9 +58,9 @@
       <widget class="QSpinBox" name="widthSpinBox"/>
      </item>
      <item>
-      <widget class="QPushButton" name="radioBtn">
+      <widget class="QPushButton" name="refreshBtn">
        <property name="text">
-        <string>比例</string>
+        <string>刷新</string>
        </property>
        <property name="autoDefault">
         <bool>false</bool>

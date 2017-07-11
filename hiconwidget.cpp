@@ -50,6 +50,8 @@ void HIconWidget::addShowPattern()
         return;
     bool ok;
     QString strName = QInputDialog::getText(this,QStringLiteral("输入显示方案名称"),QStringLiteral("显示方案名称:"),QLineEdit::Normal,"",&ok);
+    if(strName.isEmpty())
+        return;
     HIconShowPattern* pattern = (HIconShowPattern*)(pSymbol->newPattern(strName));
     if(!pattern)
         return;
@@ -92,6 +94,30 @@ void HIconWidget::delShowPattern()
 
 void HIconWidget::renameShowPattern()
 {
+    if(pTabBar)
+    {
+        int curIndex = pTabBar->currentIndex();
+
+        QVariant data = pTabBar->tabData(curIndex);
+        if(!data.isValid())
+            return;
+        if(!pIconMgr->getIconFrame()||!pIconMgr->getIconTemplate()||!pIconMgr->getIconTemplate()->getSymbol())
+            return;
+
+        HIconTemplate* pTemplate = pIconMgr->getIconTemplate();
+        QString strPatternName = pTemplate->getSymbol()->getCurrentPatternPtr()->strName;
+        bool ok;
+        QString strNewName = QInputDialog::getText(this,QStringLiteral("输入显示方案名称"),QStringLiteral("显示方案名称:"),QLineEdit::Normal,strPatternName,&ok);
+        if(ok)
+        {
+            if(strNewName.isEmpty())
+                return;
+            pTemplate->getSymbol()->getCurrentPatternPtr()->strName = strNewName;
+            pTabBar->setTabText(curIndex,strNewName);
+        }
+
+    }
+
 
 }
 
@@ -113,13 +139,13 @@ void HIconWidget::patternChanged(int index)
     if(!ok)
         return;
     HIconTemplate* pTemplate = pIconMgr->getIconTemplate();
-    //int oldPatternId = pTemplate->getSymbol()->getCurrentPattern();
     for(int i = 0; i < pTemplate->getSymbol()->pShowPatternVector.count();i++)
     {
         HIconShowPattern* pattern = (HIconShowPattern*)pTemplate->getSymbol()->pShowPatternVector[i];
         if(pattern)
         {
-            pattern->setObjItemVisible(newPatternId);
+            pIconMgr->getIconFrame()->setItemVisible(newPatternId);
+
         }
     }
     pTemplate->getSymbol()->setCurrentPattern(newPatternId);

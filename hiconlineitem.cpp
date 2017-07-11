@@ -21,7 +21,7 @@ HIconLineItem::HIconLineItem(const QLineF &line, QGraphicsItem *parent):QGraphic
     setFlag(QGraphicsItem::ItemIsSelectable,true);
     setFlag(QGraphicsItem::ItemSendsGeometryChanges,true);
     setFlag(QGraphicsItem::ItemIsFocusable,true);
-    pLineObj = new HLineObj(this);
+    pLineObj = new HLineObj();
     //bSelected = false;
     setSelected(false);
 }
@@ -168,11 +168,15 @@ int HIconLineItem::type() const
     return enumLine;
 }
 
-
-void HIconLineItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
+void HIconLineItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    HPropertyDlg dlg(pLineObj);
-    dlg.exec();
+    if(event->button() != Qt::LeftButton)
+        return;
+    curPointF = event->scenePos();
+    if((pointLocation = pointInRect(curPointF))!=LOCATIONNO)
+        lineMode = LineSize;
+
+    QGraphicsLineItem::mousePressEvent(event);
 }
 
 void HIconLineItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
@@ -182,42 +186,18 @@ void HIconLineItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     //setSelected(false);
     QPointF sizeF = event->scenePos() - curPointF;
     QLineF line1 = line();//
-    QPointF p1 = line1.p1();
-    QPointF p2 = line1.p2();
     curPointF = event->scenePos();
     if(lineMode == LineSize)
     {
         if(pointLocation == LOCATIONLEFT)
         {
-            if(event->modifiers() == Qt::ShiftModifier)
-            {
-                QLineF newLine = QLineF(event->scenePos(),line1.p2());
-                double angle = newLine.dx() / newLine.length();
-                if(abs(angle) >= sqrt(2)/2)
-                {
-                    QPointF p1 = QPointF(event->scenePos().x(),line1.p2().y());
-                    line1 = QLineF(p1,line1.p2());
-                    setLine(line1);
-                }
-                else
-                {
-                    QPointF p1 = QPointF(line1.p2().x(),event->scenePos().y());
-                    line1 = QLineF(p1,line1.p2());
-                    setLine(line1);
-                }
-            }
-            else
-            {
-                line1 = QLineF(line1.p1()+sizeF,line1.p2());
-            }
+           line1 = QLineF(line1.p1()+sizeF,line1.p2());
         }
         else if(pointLocation == LOCATIONRIGHT)
         {
             line1 = QLineF(line1.p1(),line1.p2() + sizeF);
         }
         setLine(line1);
-
-
     }
     else
     {
@@ -225,24 +205,10 @@ void HIconLineItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     }
 }
 
-void HIconLineItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
-{
-    if(event->button() != Qt::LeftButton)
-        return;
-    //setSelected(true);
-    curPointF = event->scenePos();
-    if((pointLocation = pointInRect(curPointF))!=LOCATIONNO)
-        lineMode = LineSize;
-
-    QGraphicsLineItem::mousePressEvent(event);
-}
-
 void HIconLineItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
-    //setSelected(false);
     lineMode = LineNo;
-    pLineObj->pfHeadPoint = mapToScene(line().p1());
-    pLineObj->pfTailPoint = mapToScene(line().p2());
+
     QGraphicsLineItem::mouseReleaseEvent(event);
 }
 
@@ -290,6 +256,15 @@ void HIconLineItem::keyPressEvent(QKeyEvent *event)
     setLine(newLine);
 }
 
+QVariant HIconLineItem::itemChange(GraphicsItemChange change, const QVariant &value)
+{
+    if(change == ItemPositionChange)
+    {
+        pLineObj->pfHeadPoint = mapToScene(line().p1());
+        pLineObj->pfTailPoint = mapToScene(line().p2());
+    }
+    return QGraphicsItem::itemChange(change,value);
+}
 
 ushort HIconLineItem::pointInRect(QPointF &point)
 {
@@ -306,4 +281,14 @@ ushort HIconLineItem::pointInRect(QPointF &point)
     else if(rectF2.contains(point))
         return LOCATIONRIGHT;
     return LOCATIONNO;
+}
+
+void HIconLineItem::setItemCursor(int position)
+{
+    if(position == 1)
+        setCursor(QCursor(Qt::SizeFDiagCursor));
+    else if(position == 2)
+        setCursor(QCursor(Qt::SizeFDiagCursor));
+    else
+        setCursor(QCursor(Qt::ArrowCursor));
 }

@@ -121,11 +121,6 @@ int HIconPieItem::type() const
 }
 
 
-void HIconPieItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
-{
-    HPropertyDlg dlg(pPieObj);
-    dlg.exec();
-}
 
 void HIconPieItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
@@ -227,6 +222,21 @@ void HIconPieItem::keyPressEvent(QKeyEvent *event)
         return;
     QRectF newRect = rect().adjusted(ndx,ndy,ndx,ndy);
     setRect(newRect);
+}
+
+QVariant HIconPieItem::itemChange(GraphicsItemChange change, const QVariant &value)
+{
+    return QGraphicsItem::itemChange(change,value);
+}
+
+void HIconPieItem::setItemCursor(int location)
+{
+    if(location == 1 || location == 4)
+        setCursor(QCursor(Qt::SizeFDiagCursor));
+    else if(location == 2 || location == 3)
+        setCursor(QCursor(Qt::SizeBDiagCursor));
+    else
+        setCursor(QCursor(Qt::ArrowCursor));
 }
 
 ushort HIconPieItem::pointInRect(QPointF& point)

@@ -13,14 +13,11 @@ HIconFrame::HIconFrame(QWidget * parent, Qt::WindowFlags f )
     m_pView->setDragMode(QGraphicsView::NoDrag);
     QRectF rect = QRectF(-500,-500,1000,1000);
     setLogicRect(rect);
-    //m_pView->setSceneRect(-500,-500,1000,1000);
 }
 
 HIconFrame::HIconFrame(HIconMgr* pMgr,QWidget * parent, Qt::WindowFlags f)
 :pIconMgr(pMgr),HFrame(parent,f)
 {
-    //m_pView->setInteractive(false);
-    //m_pView->setDragMode(QGraphicsView::NoDrag);
     m_pView->setScene(new HIconScene(pIconMgr));
     QRectF logicRectF = pIconMgr->getLogicRect();
     setLogicRect(logicRectF);
@@ -108,9 +105,12 @@ void HIconFrame::fitHeight()
 //void HIconFrame::onSelectChanged(HDrawObj* obj,bool bSelect);
 
 //重新计算选中点、选中框
-void HIconFrame::onRecalcRect()
+void HIconFrame::setItemVisible(int nPatternId)
 {
-
+    if(iconScene())
+    {
+        iconScene()->setItemVisible(nPatternId);
+    }
 }
 
 //事件过滤

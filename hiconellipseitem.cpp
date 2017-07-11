@@ -214,12 +214,6 @@ int HIconEllipseItem::type() const
 }
 
 
-void HIconEllipseItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
-{
-    HPropertyDlg dlg(pEllipseObj);
-    dlg.exec();
-}
-
 void HIconEllipseItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     pointStart = event->scenePos();
@@ -321,6 +315,11 @@ void HIconEllipseItem::keyPressEvent(QKeyEvent *event)
     setRect(newRect);
 }
 
+QVariant HIconEllipseItem::itemChange(GraphicsItemChange change, const QVariant &value)
+{
+return QGraphicsItem::itemChange(change,value);
+}
+
 ushort HIconEllipseItem::pointInRect(QPointF& point)
 {
     qreal halfpw = 14.00;
@@ -346,4 +345,14 @@ ushort HIconEllipseItem::pointInRect(QPointF& point)
     else
         location = 0;
     return location;
+}
+
+void HIconEllipseItem::setItemCursor(int location)
+{
+    if(location == 1 || location == 4)
+        setCursor(QCursor(Qt::SizeFDiagCursor));
+    else if(location == 2 || location == 3)
+        setCursor(QCursor(Qt::SizeBDiagCursor));
+    else
+        setCursor(QCursor(Qt::ArrowCursor));
 }

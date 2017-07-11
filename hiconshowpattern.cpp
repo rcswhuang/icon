@@ -62,39 +62,6 @@ void HIconShowPattern::clear()
     }
 }
 
-bool HIconShowPattern::equalPatternId(int nPatternId)
-{
-    if(nPattern == nPatternId)
-        return true;
-    else
-        return false;
-}
-
-void HIconShowPattern::setObjItemVisible(int nPatternId)
-{
-    if(!pSymbol)
-        return;
-    for(int i = 0; i < pObjList.count();i++)
-    {
-        HBaseObj* pObj = (HBaseObj*)pObjList.at(i);
-        if(pObj )
-        {
-            if(pObj->getShapeType() == enumLine)
-            {
-                HLineObj* pLineObj = (HLineObj*)pObj;
-                HIconLineItem* pItem = (HIconLineItem*)(pLineObj->getIconLineItem());
-                if(pItem)
-                {
-                    if(equalPatternId(nPatternId))
-                        pItem->setVisible(true);
-                    else
-                        pItem->setVisible(false);
-                }
-            }
-        }
-    }
-}
-
 
 
 

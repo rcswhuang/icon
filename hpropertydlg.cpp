@@ -10,6 +10,7 @@ HPropertyDlg::HPropertyDlg(QWidget *parent) :
     ui(new Ui::PropertyDlg)
 {
     ui->setupUi(this);
+
 }
 
 HPropertyDlg::HPropertyDlg(HBaseObj* pObj,QWidget *parent):
@@ -29,6 +30,16 @@ HPropertyDlg::~HPropertyDlg()
 {
     delete ui;
 }
+
+void HPropertyDlg::setIconObj(HBaseObj* obj)
+{
+    btnGroup = new QButtonGroup;
+    pCurObj = obj;
+    connect(ui->okBtn,SIGNAL(clicked(bool)),this,SLOT(ok_clicked()));
+    connect(ui->noBtn,SIGNAL(clicked(bool)),this,SLOT(no_clicked()));
+    initTab();
+}
+
 
 void HPropertyDlg::initTab()
 {
@@ -80,8 +91,10 @@ void HPropertyDlg::initBaseTab()
     ui->yCoord->setDecimals(2);
     ui->yCoord->setMinimum(-9999.99);
     ui->yCoord->setMaximum(9999.99);
+    ui->xCoord_width->setMaximum(9999.99);
+    ui->yCoord_height->setMaximum(9999.99);
 
-    //透明度
+    //角度
     ui->x_rotate->setMinimum(0);
     ui->x_rotate->setMaximum(360);
     ui->x_rotate->setSuffix(QStringLiteral("°"));
@@ -89,7 +102,6 @@ void HPropertyDlg::initBaseTab()
 
     QString strObjName = pCurObj->getProperty("Name").toString();
     ui->objName->setText(strObjName);
-    //ui->objType->setText(pCurObj->TagName());
 
     if(pCurObj->getShapeType() == DRAWSHAPE::enumLine)
     {
@@ -104,6 +116,16 @@ void HPropertyDlg::initBaseTab()
         ui->x_rotate->setValue(angleLine);
         ui->xCoord->setValue(dx);
         ui->yCoord->setValue(dy);
+    }
+    else if(pCurObj->getShapeType() == DRAWSHAPE::enumRectangle)
+    {
+        ui->objType->setText(QStringLiteral("矩形"));
+        HRectObj* pRObj = (HRectObj*)pCurObj;
+        ui->x_rotate->setValue(pRObj->getRotateAngle());
+        ui->xCoord->setValue(pRObj->getOX());
+        ui->yCoord->setValue(pRObj->getOY());
+        ui->xCoord_width->setValue(pRObj->rectWidth);
+        ui->yCoord_height->setValue(pRObj->rectHeight);
     }
 }
 

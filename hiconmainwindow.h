@@ -55,6 +55,9 @@ private slots:
     void drawFan();
     void drawText();
 
+
+    //scaleComboBox
+    void scaleChanged(int index);
     //scene
     void itemInserted(int type);
 

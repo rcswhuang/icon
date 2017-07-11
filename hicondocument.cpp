@@ -28,10 +28,11 @@ void HIconDocument::New(const QString &strTemplateName,int nTemplateType)
     pCurIconTemplate = new HIconTemplate;
     pCurIconTemplate->setAttrName(strTemplateName);//普通开关
     pCurIconTemplate->setIconType(nTemplateType);//遥信类
-    QSizeF sizeF = pCurIconTemplate->getDefaultSize();
+    QSizeF sizeF = pCurIconTemplate->getDefaultSize();//获取默认大小
     if(sizeF.width() > 0 && sizeF.height())
     {
-        QSizeF newSizeF = pIconMgr->getIconFrame()->scale() * sizeF;
+        QSizeF newSizeF = pIconMgr->getIconFrame()->scale() * sizeF; //注意有缩放比例
+        //设置坐标原点在中心位置
         QRectF rectF = QRectF(-newSizeF.width()/2*10,-newSizeF.height()/2*10,newSizeF.width()*20,newSizeF.height()*20);
         pCurIconTemplate->getSymbol()->setIconSymbolWidth(newSizeF.width());
         pCurIconTemplate->getSymbol()->setIconSymbolHeight(newSizeF.height());

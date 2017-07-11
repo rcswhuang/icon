@@ -17,10 +17,6 @@ public:
     void delObj(HBaseObj* pObj);
     void copyTo(HIconShowPattern* sp);
     void clear();
-    bool equalPatternId(int nPatternId);
-    void setObjItemVisible(int nPatternId);
-
-
 public:
     int nPattern;
     QString strName;

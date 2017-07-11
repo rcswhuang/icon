@@ -1,6 +1,5 @@
 ﻿#include "hicontreewidget.h"
 #include <QMenu>
-#include "hnewicondlg.h"
 #include "hiconbrower.h"
 #include <QInputDialog>
 #include <QMessageBox>

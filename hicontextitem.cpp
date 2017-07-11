@@ -225,12 +225,6 @@ int HIconTextItem::type() const
 }
 
 
-void HIconTextItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
-{
-    HPropertyDlg dlg(pTextObj);
-    dlg.exec();
-}
-
 void HIconTextItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     pointStart = event->scenePos();
@@ -331,6 +325,21 @@ void HIconTextItem::keyPressEvent(QKeyEvent *event)
         return;
     QRectF newRect = rect().adjusted(ndx,ndy,ndx,ndy);
     setRect(newRect);
+}
+
+QVariant HIconTextItem::itemChange(GraphicsItemChange change, const QVariant &value)
+{
+return QGraphicsItem::itemChange(change,value);
+}
+
+void HIconTextItem::setItemCursor(int location)
+{
+    if(location == 1 || location == 4)
+        setCursor(QCursor(Qt::SizeFDiagCursor));
+    else if(location == 2 || location == 3)
+        setCursor(QCursor(Qt::SizeBDiagCursor));
+    else
+        setCursor(QCursor(Qt::ArrowCursor));
 }
 
 ushort HIconTextItem::pointInRect(QPointF& point)

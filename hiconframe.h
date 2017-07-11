@@ -58,12 +58,9 @@ public:
         return NULL;
     }
 
+    void setItemVisible(int nPatternId);
 public slots:
-    //选中对象发生改变
-    //void onSelectChanged(HDrawObj* obj,bool bSelect);
 
-    //重新计算选中点、选中框
-    void onRecalcRect();
 
 protected:
 

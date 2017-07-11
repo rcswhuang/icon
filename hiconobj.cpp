@@ -1,7 +1,7 @@
 ﻿#include "hiconobj.h"
 #include "hiconlineitem.h"
 #include <QVariant>
-HLineObj::HLineObj(HIconLineItem* item):pLineItem(item)
+HLineObj::HLineObj()
 {
     arrowHeight = 0;
     arrowWidth = 0;
@@ -11,7 +11,7 @@ HLineObj::HLineObj(HIconLineItem* item):pLineItem(item)
 
 HLineObj::~HLineObj()
 {
-   pLineItem = NULL;
+  // pLineItem = NULL;
 }
 
 void HLineObj::readXml(QDomElement* data)
@@ -374,6 +374,11 @@ HPieObj::HPieObj()
     spanAngle = 240;
 }
 
+HPieObj::~HPieObj()
+{
+
+}
+
 void HPieObj::readXml(QDomElement* data)
 {
 
@@ -435,6 +440,11 @@ HTextObj::HTextObj()
     pointSize = 10;//字体大小
     weight = QFont::Normal;//粗体
     italic = false;//斜体
+}
+
+HTextObj::~HTextObj()
+{
+
 }
 
 //xml文件读写

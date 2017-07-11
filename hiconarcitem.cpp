@@ -124,12 +124,6 @@ int HIconArcItem::type() const
 }
 
 
-void HIconArcItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
-{
-    HPropertyDlg dlg(pArcObj);
-    dlg.exec();
-}
-
 void HIconArcItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     pointStart = event->scenePos();
@@ -230,6 +224,21 @@ void HIconArcItem::keyPressEvent(QKeyEvent *event)
         return;
     QRectF newRect = rect().adjusted(ndx,ndy,ndx,ndy);
     setRect(newRect);
+}
+
+QVariant HIconArcItem::itemChange(GraphicsItemChange change, const QVariant &value)
+{
+return QGraphicsItem::itemChange(change,value);
+}
+
+void HIconArcItem::setItemCursor(int location)
+{
+    if(location == 1 || location == 4)
+        setCursor(QCursor(Qt::SizeFDiagCursor));
+    else if(location == 2 || location == 3)
+        setCursor(QCursor(Qt::SizeBDiagCursor));
+    else
+        setCursor(QCursor(Qt::ArrowCursor));
 }
 
 ushort HIconArcItem::pointInRect(QPointF& point)

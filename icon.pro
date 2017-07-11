@@ -3,7 +3,6 @@ QT += widgets
 HEADERS       = \
     iconapi.h \
     hiconmainwindow.h \
-    hiconoper.h \
     hframe.h \
     hiconframe.h \
     hiconwidget.h \
@@ -13,7 +12,6 @@ HEADERS       = \
     hicontype.h \
     hicontemplate.h \
     hicondocument.h \
-    hnewicondlg.h \
     #hdrawtool.h \
     hiconscene.h \
     #hevent.h \
@@ -35,7 +33,6 @@ HEADERS       = \
     #hellipseobj.h
 SOURCES       = main.cpp \
     hiconmainwindow.cpp \
-    hiconoper.cpp \
     hframe.cpp \
     hiconframe.cpp \
     hiconwidget.cpp \
@@ -45,7 +42,6 @@ SOURCES       = main.cpp \
     hicontype.cpp \
     hicontemplate.cpp \
     hicondocument.cpp \
-    hnewicondlg.cpp \
     #hdrawtool.cpp \
     hiconscene.cpp \
     #hevent.cpp \
@@ -71,6 +67,5 @@ RESOURCES     = \
 QT += xml
 
 FORMS += \
-    UI/newicondlg.ui \
     UI/propertydlg.ui \
     UI/iconpreview.ui

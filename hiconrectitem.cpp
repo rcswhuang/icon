@@ -229,16 +229,9 @@ int HIconRectItem::type() const
 }
 
 
-void HIconRectItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
-{
-    HPropertyDlg dlg(pRectObj);
-    dlg.exec();
-}
-
 void HIconRectItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     pointStart = event->scenePos();
-    //QPointF pointF = mouseEvent->scenePos();
     pointLocation = pointInRect(pointStart);
     QGraphicsRectItem::mousePressEvent(event);
 }
@@ -290,7 +283,7 @@ void HIconRectItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     }
     else if(pointLocation == 4)
     {
-        QRectF rectNew = rect();
+       /* QRectF rectNew = rect();
         QPointF p1 = rect().topLeft();
         QPointF p2 = rect().topRight();
         QPointF p3 = rect().bottomLeft();
@@ -324,7 +317,11 @@ void HIconRectItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 
 
         //QPointF centerPoint = boundingRect().center();
-        setTransformOriginPoint(rectNew.center());
+        setTransformOriginPoint(rectNew.center());*/
+        QRectF rectNew;
+        rectNew.setBottomRight(QPointF(rect().right() + pt.x(),rect().bottom() + pt.y()));
+        rectNew.setTopLeft(rect().topLeft());
+        setRect(rectNew.normalized());
     }
     else
     {
@@ -339,6 +336,9 @@ void HIconRectItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     pRectObj->topLeft = mapToScene(rect().topLeft());
     pRectObj->rectWidth = rect().width();
     pRectObj->rectHeight = rect().height();
+    QPointF p = mapToScene(rect().center());
+    pRectObj->setOX(p.x());
+    pRectObj->setOY(p.y());
     QGraphicsRectItem::mouseReleaseEvent(event);
 }
 
@@ -384,12 +384,31 @@ void HIconRectItem::keyPressEvent(QKeyEvent *event)
     setRect(newRect);
 }
 
-/*
+
 QVariant HIconRectItem::itemChange(GraphicsItemChange change, const QVariant &value)
 {
-
+    if(change == QGraphicsItem::ItemPositionChange|| change == QGraphicsItem::ItemSelectedChange)
+    {
+        /*pRectObj->topLeft = mapToScene(rect().topLeft());
+        pRectObj->rectWidth = rect().width();
+        pRectObj->rectHeight = rect().height();
+        QPointF p = mapToScene(rect().center());
+        pRectObj->setOX(p.x());
+        pRectObj->setOY(p.y());*/
+    }
+    return QGraphicsItem::itemChange(change,value);
 }
-*/
+
+void HIconRectItem::setItemCursor(int location)
+{
+    if(location == 1 || location == 4)
+        setCursor(QCursor(Qt::SizeFDiagCursor));
+    else if(location == 2 || location == 3)
+        setCursor(QCursor(Qt::SizeBDiagCursor));
+    else
+        setCursor(QCursor(Qt::ArrowCursor));
+}
+
 ushort HIconRectItem::pointInRect(QPointF& point)
 {
     qreal halfpw = 14.00;

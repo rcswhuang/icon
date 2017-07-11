@@ -21,7 +21,7 @@ public slots:
     void refresh();
 
     void onDefaultSizeChanged();
-    void onRaditChanged();
+    void onRefreshChanged();
     void drawIcon(QPainter* p);
 private:
     Ui::IconPreview *ui;
