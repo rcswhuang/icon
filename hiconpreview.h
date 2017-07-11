@@ -14,7 +14,8 @@ class HIconPreview : public QDialog
 public:
     explicit HIconPreview(HIconMgr* iconMgr,QWidget *parent = 0);
     ~HIconPreview();
-
+public:
+    void init();
 protected:
     bool eventFilter(QObject *, QEvent *);
 public slots:

@@ -80,7 +80,7 @@ double HFrame::scale()
 //缩放到
 void HFrame::scaleChangedTo(double scale)
 {
-
+    m_fScale = scale;
 }
 
 //缩放比例

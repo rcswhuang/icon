@@ -410,6 +410,9 @@ void HIconMainWindow::New(const QString& catalogName,const int& nIconType)//"开
     pIconMgr->New(catalogName,nIconType);
     pIconWidget->newIconWidget();
     pIconTreeWidget->addIconTreeWigetItem();
+    pIconPreview->init();
+    QString strScale = QString("%1%").arg(pIconMgr->getIconFrame()->scale()*100);
+    scaleComboBox->setCurrentText(strScale);
    // pIconWidget->getIconFrame()->setSceneRect(QRectF(-500,500,1000,1000));
 }
 
@@ -612,8 +615,10 @@ void HIconMainWindow::scaleChanged(int index)
     QVariant curData = scaleComboBox->currentData();
     if(!curData.isValid())
         return;
-    //qreal scaleValue = curData.toDouble();
-    //pIconFrame->setLogicRect();
+    double scaleValue = curData.toDouble();
+    pIconMgr->getIconFrame()->scaleChangedTo(scaleValue);
+    //QString strScale = QString("%1%").arg(pIconMgr->getIconFrame()->scale()*100);
+    pIconMgr->getIconFrame()->view()->scale(scaleValue,scaleValue);
 }
 
 void HIconMainWindow::itemInserted(int type)

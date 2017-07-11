@@ -21,18 +21,23 @@ HIconPreview::HIconPreview(HIconMgr* iconMgr,QWidget *parent) :
    // QTimer *timer = new QTimer(this);
   //  connect(timer,SIGNAL(timeout()),this,SLOT(refresh()));
   //  timer->start(5000);
-    if(pIconMgr && pIconMgr->getIconTemplate())
-    {
-        QSizeF sizeF = pIconMgr->getIconTemplate()->getDefaultSize();
-        ui->widthSpinBox->setValue(sizeF.width());
-        ui->heightSpinBox->setValue(sizeF.height());
-    }
+
 
 }
 
 HIconPreview::~HIconPreview()
 {
     delete ui;
+}
+
+void HIconPreview::init()
+{
+    if(pIconMgr && pIconMgr->getIconTemplate())
+    {
+        QSizeF sizeF = pIconMgr->getIconTemplate()->getDefaultSize();
+        ui->widthSpinBox->setValue(sizeF.width());
+        ui->heightSpinBox->setValue(sizeF.height());
+    }
 }
 
 void HIconPreview::refresh()
@@ -50,6 +55,8 @@ void HIconPreview::onDefaultSizeChanged()
     if(pIconMgr && pIconMgr->getIconTemplate())
     {
         pIconMgr->getIconTemplate()->setDefaultSize(QSizeF(width,height));
+        QRectF rectF = QRectF(-width/2*10,-height/2*10,width*20,height*20);
+        pIconMgr->getIconFrame()->setLogicRect(rectF);
     }
 }
 
