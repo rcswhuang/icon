@@ -6,7 +6,7 @@
 #include <QStatusBar>
 #include <QInputDialog>
 #include <QIntValidator>
-
+#include <QActionGroup>
 HIconMainWindow::HIconMainWindow(HIconMgr *parent) : pIconMgr(parent)
 {
     createActions();
@@ -36,10 +36,8 @@ void HIconMainWindow::init()
     pIconFrame = pIconMgr->getIconFrame();
     connect(pIconFrame,SIGNAL(mousePosChanged(const QPoint&,const QPointF&)),this,SLOT(viewMousePosChanged(const QPoint&,const QPointF&)));
     connect(pIconFrame->iconScene(),SIGNAL(itemInserted(int)),this,SLOT(itemInserted(int)));
-
     showGridAct->setChecked(pIconMgr->getShowGrid());
     showCLineAct->setChecked(pIconMgr->getShowCenterLine());
-
 }
 
 void HIconMainWindow::createActions()
@@ -112,6 +110,8 @@ void HIconMainWindow::createActions()
 
     //其他项
     selectAct = new QAction(QIcon(":/images/select.png"), QStringLiteral("选择"), this);
+    selectAct->setCheckable(true);
+    selectAct->setChecked(true);
     rotateAct = new QAction(QIcon(":/images/rotate.png"), QStringLiteral("旋转"), this);
 
     //绘制项
@@ -147,6 +147,16 @@ void HIconMainWindow::createActions()
     textAct = new QAction(QIcon(":/images/text.png"),tr("&Text"),this);
     textAct->setCheckable(true);
     connect(textAct,SIGNAL(triggered()),this,SLOT(drawText()));
+
+    QActionGroup * actionGroup = new QActionGroup(this);
+    actionGroup->addAction(lineAct);
+    actionGroup->addAction(rectAct);
+    actionGroup->addAction(ellipseAct);
+    actionGroup->addAction(arcAct);
+    actionGroup->addAction(fanAct);
+    actionGroup->addAction(textAct);
+    actionGroup->addAction(selectAct);
+
 
     tileAct = new QAction(tr("&Tile"), this);
     tileAct->setStatusTip(tr("Tile the windows"));
@@ -322,43 +332,16 @@ void HIconMainWindow::showCenterLine()
 //draw tool
 void HIconMainWindow::drawLine()
 {
-
-    QList<QAction*> ActList = drawToolBar->actions();
-
-    QList<QAction*>::iterator it;
-    for(it = ActList.begin();it!=ActList.end();++it)
-    {
-        QAction* action = (QAction*)*it;
-        action->setChecked(false);
-    }
-    lineAct->setChecked(true);
     pIconMgr->getIconState()->setDrawShape(enumLine);
 }
 
 void HIconMainWindow::drawEllipse()
 {
-    QList<QAction*> ActList = drawToolBar->actions();
-
-    QList<QAction*>::iterator it;
-    for(it = ActList.begin();it!=ActList.end();++it)
-    {
-        QAction* action = (QAction*)*it;
-        action->setChecked(false);
-    }
-    ellipseAct->setChecked(true);
     pIconMgr->getIconState()->setDrawShape(enumEllipse);
 }
 
 void HIconMainWindow::drawRectangle()
 {
-    QList<QAction*> ActList = drawToolBar->actions();
-
-    QList<QAction*>::iterator it;
-    for(it = ActList.begin();it!=ActList.end();++it)
-    {
-        QAction* action = (QAction*)*it;
-        action->setChecked(false);
-    }
     pIconMgr->getIconState()->setDrawShape(enumRectangle);
 }
 
@@ -412,7 +395,6 @@ void HIconMainWindow::New(const QString& catalogName,const int& nIconType)//"开
     pIconMgr->getIconFrame()->scaleChangedTo(0.6);
     QString strScale = QString("%1%").arg(pIconMgr->getIconFrame()->scale()*100);
     scaleComboBox->setCurrentText(strScale);
-   // pIconWidget->getIconFrame()->setSceneRect(QRectF(-500,500,1000,1000));
 }
 
 //打开 save falg = true
@@ -638,22 +620,8 @@ void HIconMainWindow::scaleChanged()
 
 void HIconMainWindow::itemInserted(int type)
 {
-    if(type == enumLine)
-        lineAct->setChecked(false);
-    else if(type == enumRectangle)
-        rectAct->setChecked(false);
-    else if(type == enumEllipse)
-    {
-        ellipseAct->setChecked(false);
-    }
-    else if(type == enumArc)
-        arcAct->setChecked(false);
-    else if(type == enumPie)
-        fanAct->setChecked(false);
-    else if(type == enumText)
-        textAct->setChecked(false);
 
-    //selectAct->setChecked(true);
+    selectAct->setChecked(true);
 }
 
 

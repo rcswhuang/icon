@@ -12,12 +12,9 @@ class HIconMgr
 {
 public:
     HIconMgr();
-
-    QRectF getLogicRect();
     HIconTemplate* getIconTemplate();
     HIconState* getIconState();
     HIconFrame* getIconFrame();
-    void setLogicRect(QRectF& rectF);
 
     void setBackgroundColor(QString clrName);
     QString getBackgroundColor();
@@ -29,7 +26,6 @@ public:
     void New(const QString& catalogName,const int& nIconType);
     void Del(const QString& catalogName,const int& nIconType,const QString& uuid);
 private:
-    QRectF logicRect;
     bool bShowGrid;
     bool bShowCenterLine;
     QString strBgClr;

@@ -200,18 +200,12 @@ void HIconScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
     }
     else if(drawShape == enumEllipse && ellipse != 0)
     {
-        ellipse->pEllipseObj->topLeft = ellipse->rect().topLeft();
-        ellipse->pEllipseObj->rectWidth = ellipse->rect().width();
-        ellipse->pEllipseObj->rectHeight = ellipse->rect().height();
-
         emit itemInserted(ellipse->type());
         ellipse = 0;
     }
     else if(drawShape == enumPolygon && polygon !=0)
     {
-        //pt = mouseEvent->scenePos();
-        polygon->pyVector<<mouseEvent->scenePos();
-        polygon->pointStart = mouseEvent->scenePos();
+        polygon = 0;
     }
     else if(drawShape == enumArc && arc !=0)
     {

@@ -58,8 +58,6 @@ void HIconEllipseItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *
     else
         painter->setPen(Qt::NoPen);
 
-    //需要判断nFillStyle 如果是linear的模式 就要考虑填充方向了
-    //
     QPainterPath path;
     path.setFillRule(Qt::WindingFill);
     path.addEllipse(rect());
@@ -163,9 +161,11 @@ void HIconEllipseItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *
         }
        // qreal top = rect().top()*(float)(nFillPercentage/100.00);
        // drawRectF.setTop(top);
+        path.setFillRule(Qt::WindingFill);
+        painter->setBrush(brush);
+        painter->drawPath(path);
+
     }
-    path.setFillRule(Qt::WindingFill);
-    painter->drawPath(path);
     painter->restore();
     //
 

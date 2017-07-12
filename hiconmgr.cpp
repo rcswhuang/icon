@@ -1,7 +1,7 @@
 ﻿#include "hiconmgr.h"
 
 HIconMgr::HIconMgr()
-    :logicRect(-500,-500,1000,1000),bShowGrid(true),bShowCenterLine(true)
+    :bShowGrid(true),bShowCenterLine(true)
 {
     pIconFrame = new HIconFrame(this);
     //pIconFrame->setIconMgr(this);
@@ -31,16 +31,6 @@ HIconFrame* HIconMgr::getIconFrame()
     if(pIconFrame)
         return pIconFrame;
     return NULL;
-}
-
-QRectF HIconMgr::getLogicRect()
-{
-    return logicRect;
-}
-
-void HIconMgr::setLogicRect(QRectF& rectF)
-{
-    logicRect = rectF;
 }
 
 void HIconMgr::setBackgroundColor(QString clrName)

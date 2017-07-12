@@ -3,6 +3,7 @@
 #include "hicontemplate.h"
 #include "hbaseobj.h"
 #include "hiconobj.h"
+#include "hiconshowpattern.h"
 #include <QIntValidator>
 HIconPreview::HIconPreview(HIconMgr* iconMgr,QWidget *parent) :
     QDialog(parent),
@@ -66,10 +67,8 @@ void HIconPreview::onRefreshChanged()
     HIconTemplate* pTemplate = pIconMgr->getIconTemplate();
     if(!pTemplate) return;
     QSizeF tempSize = pTemplate->getDefaultSize();
-    pixRect = QRectF(QPointF(0,0),tempSize);
-    QSize sz = ui->widget->size();
+    pixRect = QRectF(QPointF(0,0),tempSize*2);
     pixRect.moveCenter(QPointF(ui->widget->size().width()/2,ui->widget->size().height()/2));
-
     pixMap = QPixmap(ui->widget->size());
     if(pixMap.isNull()) return;
     QPainter p(&pixMap);
@@ -87,15 +86,15 @@ void HIconPreview::drawIcon(QPainter *p)
 {
     HIconTemplate* pTemplate = pIconMgr->getIconTemplate();
     if(!pTemplate) return;
-    HIconSymbol* pSymbol = pTemplate->getSymbol();
-    if(!pSymbol) return;
-    qreal deltaX = pixRect.width()/pIconMgr->getLogicRect().width();
-    qreal deltaY = pixRect.height()/pIconMgr->getLogicRect().height();
+    HIconShowPattern* pShowPattern = pTemplate->getSymbol()->getCurrentPatternPtr();
+    if(!pShowPattern) return;
+    qreal deltaX = pixRect.width()/pIconMgr->getIconFrame()->getLogicRect().width();
+    qreal deltaY = pixRect.height()/pIconMgr->getIconFrame()->getLogicRect().height();
     p->save();
     p->translate(ui->widget->size().width()/2,ui->widget->size().height()/2);
     QPen pen(Qt::NoPen);
     QList<HBaseObj*>::iterator it;
-    for(it = pSymbol->pObjList.begin();it!=pSymbol->pObjList.end();++it)
+    for(it = pShowPattern->pObjList.begin();it != pShowPattern->pObjList.end();++it)
     {
         HBaseObj* pObj = (HBaseObj*)*it;
         pen.setColor(QColor(pObj->getLineColorName()));

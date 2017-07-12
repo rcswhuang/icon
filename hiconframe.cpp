@@ -11,16 +11,16 @@ HIconFrame::HIconFrame(QWidget * parent, Qt::WindowFlags f )
     pIconMgr = NULL;
     m_pView->setInteractive(false);
     m_pView->setDragMode(QGraphicsView::NoDrag);
-    QRectF rect = QRectF(-500,-500,1000,1000);
-    setLogicRect(rect);
+    //QRectF rect = QRectF(-500,-500,1000,1000);
+    //setLogicRect(rect);
 }
 
 HIconFrame::HIconFrame(HIconMgr* pMgr,QWidget * parent, Qt::WindowFlags f)
 :pIconMgr(pMgr),HFrame(parent,f)
 {
     m_pView->setScene(new HIconScene(pIconMgr));
-    QRectF logicRectF = pIconMgr->getLogicRect();
-    setLogicRect(logicRectF);
+    //QRectF logicRectF = pIconMgr->getLogicRect();
+    //setLogicRect(logicRectF);
 }
 
 HIconFrame::~HIconFrame()
@@ -32,8 +32,8 @@ void HIconFrame::setIconMgr(HIconMgr *iconmgr)
 {
     pIconMgr = iconmgr;
 
-    QRectF logicRectF = pIconMgr->getLogicRect();
-    setLogicRect(logicRectF);
+    //QRectF logicRectF = pIconMgr->getLogicRect();
+    //setLogicRect(logicRectF);
 }
 
 void HIconFrame::setLogicRect(QRectF &rectF)
