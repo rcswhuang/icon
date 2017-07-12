@@ -179,6 +179,12 @@ void HIconPieItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 void HIconPieItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     //bSelected = false;
+    pPieObj->topLeft = mapToScene(rect().topLeft());
+    pPieObj->rectWidth = rect().width();
+    pPieObj->rectHeight = rect().height();
+    QPointF p = mapToScene(rect().center());
+    pPieObj->setOX(p.x());
+    pPieObj->setOY(p.y());
     QGraphicsEllipseItem::mouseReleaseEvent(event);
 }
 

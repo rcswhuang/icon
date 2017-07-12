@@ -57,7 +57,8 @@ private slots:
 
 
     //scaleComboBox
-    void scaleChanged(int index);
+    void scaleChanged(QString strScale);
+    void scaleChanged();
     //scene
     void itemInserted(int type);
 

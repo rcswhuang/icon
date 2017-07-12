@@ -38,6 +38,7 @@ void HIconFrame::setIconMgr(HIconMgr *iconmgr)
 
 void HIconFrame::setLogicRect(QRectF &rectF)
 {
+    int x = 0;
     sceneRect = rectF;
     if(m_pView)
         m_pView->setSceneRect(rectF);

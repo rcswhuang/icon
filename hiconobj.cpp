@@ -440,6 +440,7 @@ HTextObj::HTextObj()
     pointSize = 10;//字体大小
     weight = QFont::Normal;//粗体
     italic = false;//斜体
+    bFrameSee = false;
 }
 
 HTextObj::~HTextObj()

@@ -162,8 +162,8 @@ public:
     void setCloseStatus(bool bcheck);
     bool getCloseStatus();
 public:
-    QPointF rectLeft;
-    QPointF rectTop;
+    QPointF topLeft;
+    //QPointF rectTop;
     double rectWidth;
     double rectHeight;
     int startAngle;//其实角度
@@ -195,11 +195,11 @@ public:
     void setCloseStatus(bool bcheck);
     bool getCloseStatus();
 public:
-    QPointF rectLeft;
-    QPointF rectTop;
+    QPointF topLeft;
+    //QPointF rectTop;
     double rectWidth;
     double rectHeight;
-    int startAngle;//其实角度
+    int startAngle;//起始角度
     int spanAngle;//旋转角度
 };
 

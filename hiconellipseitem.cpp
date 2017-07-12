@@ -269,7 +269,12 @@ void HIconEllipseItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 
 void HIconEllipseItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
-
+    pEllipseObj->topLeft = mapToScene(rect().topLeft());
+    pEllipseObj->rectWidth = rect().width();
+    pEllipseObj->rectHeight = rect().height();
+    QPointF p = mapToScene(rect().center());
+    pEllipseObj->setOX(p.x());
+    pEllipseObj->setOY(p.y());
     QGraphicsEllipseItem::mouseReleaseEvent(event);
 }
 

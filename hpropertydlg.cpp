@@ -103,12 +103,13 @@ void HPropertyDlg::initBaseTab()
     QString strObjName = pCurObj->getProperty("Name").toString();
     ui->objName->setText(strObjName);
 
+
     if(pCurObj->getShapeType() == DRAWSHAPE::enumLine)
     {
         ui->objType->setText(QStringLiteral("直线"));
-        HLineObj* pLObj = (HLineObj*)pCurObj;
-        QPointF p1 = pLObj->pfHeadPoint;
-        QPointF p2 = pLObj->pfTailPoint;
+        HLineObj* pObj = (HLineObj*)pCurObj;
+        QPointF p1 = pObj->pfHeadPoint;
+        QPointF p2 = pObj->pfTailPoint;
         double dx = (p1.x() + p2.x())/2;
         double dy = (p1.y() + p2.y())/2;
         QLineF lineF(p1,p2);
@@ -120,13 +121,54 @@ void HPropertyDlg::initBaseTab()
     else if(pCurObj->getShapeType() == DRAWSHAPE::enumRectangle)
     {
         ui->objType->setText(QStringLiteral("矩形"));
-        HRectObj* pRObj = (HRectObj*)pCurObj;
-        ui->x_rotate->setValue(pRObj->getRotateAngle());
-        ui->xCoord->setValue(pRObj->getOX());
-        ui->yCoord->setValue(pRObj->getOY());
-        ui->xCoord_width->setValue(pRObj->rectWidth);
-        ui->yCoord_height->setValue(pRObj->rectHeight);
+        HRectObj* pObj = (HRectObj*)pCurObj;
+        ui->x_rotate->setValue(pObj->getRotateAngle());
+        ui->xCoord->setValue(pObj->getOX());
+        ui->yCoord->setValue(pObj->getOY());
+        ui->xCoord_width->setValue(pObj->rectWidth);
+        ui->yCoord_height->setValue(pObj->rectHeight);
     }
+    else if(pCurObj->getShapeType() == DRAWSHAPE::enumEllipse)
+    {
+        ui->objType->setText(QStringLiteral("椭圆"));
+        HEllipseObj* pObj = (HEllipseObj*)pCurObj;
+        ui->x_rotate->setValue(pObj->getRotateAngle());
+        ui->xCoord->setValue(pObj->getOX());
+        ui->yCoord->setValue(pObj->getOY());
+        ui->xCoord_width->setValue(pObj->rectWidth);
+        ui->yCoord_height->setValue(pObj->rectHeight);
+    }
+    else if(pCurObj->getShapeType() == DRAWSHAPE::enumArc)
+    {
+        ui->objType->setText(QStringLiteral("弧线"));
+        HArcObj* pObj = (HArcObj*)pCurObj;
+        ui->x_rotate->setValue(pObj->getRotateAngle());
+        ui->xCoord->setValue(pObj->getOX());
+        ui->yCoord->setValue(pObj->getOY());
+        ui->xCoord_width->setValue(pObj->rectWidth);
+        ui->yCoord_height->setValue(pObj->rectHeight);
+    }
+    else if(pCurObj->getShapeType() == DRAWSHAPE::enumPie)
+    {
+        ui->objType->setText(QStringLiteral("饼型"));
+        HPieObj* pObj = (HPieObj*)pCurObj;
+        ui->x_rotate->setValue(pObj->getRotateAngle());
+        ui->xCoord->setValue(pObj->getOX());
+        ui->yCoord->setValue(pObj->getOY());
+        ui->xCoord_width->setValue(pObj->rectWidth);
+        ui->yCoord_height->setValue(pObj->rectHeight);
+    }
+    else if(pCurObj->getShapeType() == DRAWSHAPE::enumText)
+    {
+        ui->objType->setText(QStringLiteral("文字"));
+        HTextObj* pObj = (HTextObj*)pCurObj;
+        ui->x_rotate->setValue(pObj->getRotateAngle());
+        ui->xCoord->setValue(pObj->getOX());
+        ui->yCoord->setValue(pObj->getOY());
+        ui->xCoord_width->setValue(pObj->getRectWidth());
+        ui->yCoord_height->setValue(pObj->getRectHeight());
+    }
+
 }
 
 void HPropertyDlg::initTextTab()
@@ -273,6 +315,7 @@ void HPropertyDlg::initLineTab()
     ui->spanAngle->setSuffix(QStringLiteral("°"));
     ui->spanAngle->setValue(240);
 
+    ui->bCloseCheck->setVisible(false);
     ui->bCloseCheck->setChecked(false);
     if(pCurObj)
     {
@@ -291,6 +334,7 @@ void HPropertyDlg::initLineTab()
         }
         else if(pCurObj->getShapeType() == enumArc)
         {
+            ui->bCloseCheck->setVisible(true);
             HArcObj* pArcObj = (HArcObj*)pCurObj;
             ui->startAngle->setValue(pArcObj->getStartAngle());
             ui->spanAngle->setValue(pArcObj->getSpanAngle());

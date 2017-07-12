@@ -104,13 +104,11 @@ void HIconMainWindow::createActions()
     scaleComboBox->setValidator(validator);
     scaleComboBox->setEditable(true);
     scaleComboBox->addItem(tr("50%"),0.5);
-    scaleComboBox->addItem(tr("70%"),0.75);
+    scaleComboBox->addItem(tr("70%"),0.7);
     scaleComboBox->addItem(tr("100%"),1);
     scaleComboBox->addItem(tr("150%"),1.5);
-    scaleComboBox->addItem(tr("200%"),2);
-    scaleComboBox->addItem(tr("300%"),3);
-    scaleComboBox->addItem(tr("400%"),4);
-    connect(scaleComboBox,SIGNAL(currentIndexChanged(int)),this,SLOT(scaleChanged(int)));
+    connect(scaleComboBox,SIGNAL(currentIndexChanged(QString)),this,SLOT(scaleChanged(QString)));
+    connect(scaleComboBox->lineEdit(),SIGNAL(editingFinished()),this,SLOT(scaleChanged()));
 
     //其他项
     selectAct = new QAction(QIcon(":/images/select.png"), QStringLiteral("选择"), this);
@@ -411,6 +409,7 @@ void HIconMainWindow::New(const QString& catalogName,const int& nIconType)//"开
     pIconWidget->newIconWidget();
     pIconTreeWidget->addIconTreeWigetItem();
     pIconPreview->init();
+    pIconMgr->getIconFrame()->scaleChangedTo(0.6);
     QString strScale = QString("%1%").arg(pIconMgr->getIconFrame()->scale()*100);
     scaleComboBox->setCurrentText(strScale);
    // pIconWidget->getIconFrame()->setSceneRect(QRectF(-500,500,1000,1000));
@@ -610,15 +609,31 @@ void HIconMainWindow::viewMousePosChanged(const QPoint& pos,const QPointF &logPo
     statusBar()->showMessage(strLogicPos + " " + strViewPos);
 }
 
-void HIconMainWindow::scaleChanged(int index)
+void HIconMainWindow::scaleChanged(QString strScale)
 {
-    QVariant curData = scaleComboBox->currentData();
-    if(!curData.isValid())
+    if(strScale.isEmpty())
         return;
-    double scaleValue = curData.toDouble();
-    pIconMgr->getIconFrame()->scaleChangedTo(scaleValue);
-    //QString strScale = QString("%1%").arg(pIconMgr->getIconFrame()->scale()*100);
-    pIconMgr->getIconFrame()->view()->scale(scaleValue,scaleValue);
+    if(strScale.endsWith("%"))
+        strScale = strScale.mid(0,strScale.lastIndexOf("%"));
+    bool bOk;
+    double newscale = strScale.toDouble(&bOk)/100;
+    if(!bOk)
+        return;
+    double oldscale = pIconMgr->getIconFrame()->scale();
+    pIconMgr->getIconFrame()->scaleChangedTo(newscale);
+    double deltascale = newscale/oldscale;
+    pIconMgr->getIconFrame()->view()->scale(deltascale,deltascale);
+    strScale = QString("%1%").arg(pIconMgr->getIconFrame()->scale()*100);
+    scaleComboBox->setCurrentText(strScale);
+}
+
+void HIconMainWindow::scaleChanged()
+{
+    QString strScale = scaleComboBox->lineEdit()->text();
+    if(strScale.isEmpty())
+        return;
+    scaleChanged(strScale);
+
 }
 
 void HIconMainWindow::itemInserted(int type)

@@ -8,7 +8,7 @@ HIconTemplate::HIconTemplate(QObject* parent)
         uUid = QUuid::createUuid();
     }
     pIconSymbol = new HIconSymbol;
-    sDefaultSize = QSizeF(50,50);
+    sDefaultSize = QSizeF(30,30);
     nIconType = 0;
     nVersion = 1;
 }

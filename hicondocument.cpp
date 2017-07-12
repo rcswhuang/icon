@@ -31,12 +31,13 @@ void HIconDocument::New(const QString &strTemplateName,int nTemplateType)
     QSizeF sizeF = pCurIconTemplate->getDefaultSize();//获取默认大小
     if(sizeF.width() > 0 && sizeF.height())
     {
-        QSizeF newSizeF = pIconMgr->getIconFrame()->scale() * sizeF; //注意有缩放比例
+        //QSizeF newSizeF = pIconMgr->getIconFrame()->scale() * sizeF; //注意有缩放比例
         //设置坐标原点在中心位置
-        QRectF rectF = QRectF(-newSizeF.width()/2*10,-newSizeF.height()/2*10,newSizeF.width()*20,newSizeF.height()*20);
-        pCurIconTemplate->getSymbol()->setIconSymbolWidth(newSizeF.width());
-        pCurIconTemplate->getSymbol()->setIconSymbolHeight(newSizeF.height());
-        pIconMgr->setLogicRect(rectF);
+        QRectF rectF = QRectF(-sizeF.width()*10,-sizeF.height()*10,sizeF.width()*20,sizeF.height()*20);
+        pCurIconTemplate->getSymbol()->setIconSymbolWidth(sizeF.width());
+        pCurIconTemplate->getSymbol()->setIconSymbolHeight(sizeF.height());
+        //pIconMgr->setLogicRect(rectF);
+        pIconMgr->getIconFrame()->setLogicRect(rectF);
     }
     pIconTemplateList.append(pCurIconTemplate);
     //for(int i=0;i<pCurIconTemplate->getSymbol()->

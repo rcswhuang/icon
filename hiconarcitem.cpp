@@ -181,6 +181,13 @@ void HIconArcItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 void HIconArcItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     //bSelected = false;
+    pArcObj->topLeft = mapToScene(rect().topLeft());
+    pArcObj->rectWidth = rect().width();
+    pArcObj->rectHeight = rect().height();
+    QPointF p = mapToScene(rect().center());
+    pArcObj->setOX(p.x());
+    pArcObj->setOY(p.y());
+
     QGraphicsEllipseItem::mouseReleaseEvent(event);
 }
 

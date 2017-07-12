@@ -282,6 +282,9 @@ void HIconTextItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     pTextObj->setTopLeftPoint(mapToScene(rect().topLeft()));
     pTextObj->setRectWidth(rect().width());
     pTextObj->setRectHeight(rect().height());
+    QPointF p = mapToScene(rect().center());
+    pTextObj->setOX(p.x());
+    pTextObj->setOY(p.y());
     QGraphicsRectItem::mouseReleaseEvent(event);
 }
 

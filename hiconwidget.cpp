@@ -33,7 +33,7 @@ void HIconWidget::newIconWidget()
     int index = pTabBar->addTab(strName);
     pTabBar->setTabData(index,pSymbol->getCurrentPattern());
     pTabBar->setCurrentIndex(index);
-
+    pIconMgr->getIconFrame();
     QVBoxLayout *layout = new QVBoxLayout;
     layout->setContentsMargins(0,0,0,0);
     layout->setSpacing(0);
