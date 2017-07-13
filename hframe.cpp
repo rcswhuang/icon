@@ -19,7 +19,6 @@ HFrame::HFrame(QWidget* parent, Qt::WindowFlags f):QFrame(parent,f)
     m_pView->scale(m_fScale,m_fScale);
     m_pView->viewport()->setMouseTracking(true);
     m_pView->viewport()->installEventFilter(this);
-    //m_pView->centerOn();
     drawBox();
 
 }
@@ -32,7 +31,20 @@ HFrame::~HFrame()
 //设置显示标尺线
 void HFrame::setShowRuler(bool bShow)
 {
-
+    if(bShow == m_bIsShowRuler)
+        return;
+    m_bIsShowRuler = bShow;
+    if(bShow)
+    {
+        m_pView->move(m_nVRulerWidth,m_nHRulerHeight);
+        m_pView->resize(width()-m_nVRulerWidth,height()-m_nHRulerHeight);
+    }
+    else
+    {
+        m_pView->move(0,0);
+        m_pView->resize(width(),height());
+    }
+    update();
 }
 
 //获取显示标尺线
@@ -132,12 +144,15 @@ bool HFrame::eventFilter(QObject* obj,QEvent* event)
 //绘制事件过滤
 void HFrame::paintEvent(QPaintEvent* painterEvent)
 {
-    QPainter painter(this);
-    painter.setBackground(QBrush(Qt::white));
-    if(!m_vHRuler.isNull())
-        painter.drawPixmap(m_nVRulerWidth,0,width()-m_nVRulerWidth,m_nHRulerHeight,m_vHRuler);
-    if(!m_vBox.isNull())
-        painter.drawPixmap(0,0,m_nVRulerWidth,m_nHRulerHeight,m_vBox);
+    if(m_bIsShowRuler)
+    {
+        QPainter painter(this);
+        painter.setBackground(QBrush(Qt::white));
+        if(!m_vHRuler.isNull())
+            painter.drawPixmap(m_nVRulerWidth,0,width()-m_nVRulerWidth,m_nHRulerHeight,m_vHRuler);
+        if(!m_vBox.isNull())
+            painter.drawPixmap(0,0,m_nVRulerWidth,m_nHRulerHeight,m_vBox);
+    }
 
 }
 

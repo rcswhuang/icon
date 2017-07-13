@@ -51,12 +51,8 @@ public:
 
     QRectF getLogicRect(){return sceneRect;}
 
-    HIconScene* iconScene()
-    {
-        if(m_pView)
-            return (HIconScene*)m_pView->scene();
-        return NULL;
-    }
+    HIconScene* iconScene();
+
 
     void setItemVisible(int nPatternId);
 public slots:

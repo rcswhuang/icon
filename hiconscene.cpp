@@ -410,6 +410,8 @@ void HIconScene::setItemVisible(int nPatternId)
     }
 }
 
+
+//删除某一个显示方案里面的所有图元元素(参数为方案id)
 void HIconScene::delItemByPatternId(int nPatternId)
 {
     QList<QGraphicsItem *> itemList = items();
@@ -481,6 +483,7 @@ void HIconScene::copyItem()
 
 }
 
+//右键删除已经选择的图元元素
 void HIconScene::delItem()
 {
     QList<QGraphicsItem*> itemList = selectedItems();

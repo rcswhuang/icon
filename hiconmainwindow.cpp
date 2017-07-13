@@ -407,9 +407,12 @@ void HIconMainWindow::open(const QString& catalogName,const QString& uuid)
 
 void HIconMainWindow::Del(const QString& catalogName,const int& nIconType,const QString& uuid)
 {
-    pIconMgr->Del(catalogName,nIconType,uuid);
+    if(!pIconTreeWidget || !pIconWidget || !pIconMgr)
+        return;
     pIconTreeWidget->delIconTreeWidgetItem();
-    pIconWidget->delShowPattern();
+    pIconWidget->delIconWidget();
+    pIconMgr->Del(catalogName,nIconType,uuid);
+    pIconPreview->init();
 }
 
 //撤销

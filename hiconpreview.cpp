@@ -18,12 +18,6 @@ HIconPreview::HIconPreview(HIconMgr* iconMgr,QWidget *parent) :
     connect(ui->widthSpinBox,SIGNAL(editingFinished()),this,SLOT(onDefaultSizeChanged()));
     connect(ui->heightSpinBox,SIGNAL(editingFinished()),this,SLOT(onDefaultSizeChanged()));
     connect(ui->refreshBtn,SIGNAL(clicked(bool)),this,SLOT(onRefreshChanged()));
-
-   // QTimer *timer = new QTimer(this);
-  //  connect(timer,SIGNAL(timeout()),this,SLOT(refresh()));
-  //  timer->start(5000);
-
-
 }
 
 HIconPreview::~HIconPreview()
@@ -38,6 +32,11 @@ void HIconPreview::init()
         QSizeF sizeF = pIconMgr->getIconTemplate()->getDefaultSize();
         ui->widthSpinBox->setValue(sizeF.width());
         ui->heightSpinBox->setValue(sizeF.height());
+    }
+    else
+    {
+        ui->widthSpinBox->setValue(0);
+        ui->heightSpinBox->setValue(0);
     }
 }
 
@@ -56,8 +55,9 @@ void HIconPreview::onDefaultSizeChanged()
     if(pIconMgr && pIconMgr->getIconTemplate())
     {
         pIconMgr->getIconTemplate()->setDefaultSize(QSizeF(width,height));
-        QRectF rectF = QRectF(-width/2*10,-height/2*10,width*20,height*20);
+        QRectF rectF = QRectF(-width*10,-height*10,width*20,height*20);
         pIconMgr->getIconFrame()->setLogicRect(rectF);
+        onRefreshChanged();
     }
 }
 
@@ -110,7 +110,6 @@ void HIconPreview::drawIcon(QPainter *p)
         quint8 nTransparency = pObj->getTransparency(); //透明度
         quint8 nFillDir = pObj->getFillDirection();//填充方向
         QColor fillClr = QColor(pObj->getFillColorName());//填充颜色
-        //quint8 nFillPercentage = pRectObj->getFillPercentage(); //填充比例
         QBrush brush;
 
         if(nFillWay >= 1)
@@ -119,7 +118,7 @@ void HIconPreview::drawIcon(QPainter *p)
             if(nFillStyle == Qt::LinearGradientPattern)
             {
                 QPointF ps1,ps2;
-               /* switch(nFillDir)
+                switch(nFillDir)
                 {
                     case DIRECT_BOTTOM_TO_TOP:
                     {
@@ -177,62 +176,87 @@ void HIconPreview::drawIcon(QPainter *p)
                 lgrd.setSpread(QGradient::ReflectSpread);
                 QBrush brush2(lgrd);
                 brush = brush2;
-                //painter->setBrush(brush2);
-                //painter->drawRect(rect());*/
             }
             else if(nFillStyle == Qt::RadialGradientPattern)
             {
-                /*QRadialGradient lgrd(rect().center(),qMin(rect().width(),rect().height())/2);
+                QRadialGradient lgrd(rect().center(),qMin(rect().width(),rect().height())/2);
                 lgrd.setColorAt(0.0,fillClr);
                 lgrd.setColorAt(0.5,fillClr.dark(150));
                 lgrd.setColorAt(1.0,fillClr.dark(250));
                 lgrd.setSpread(QGradient::ReflectSpread);
                 QBrush brush2(lgrd);
-                brush = brush2;*/
+                brush = brush2;
             }
             else if(nFillStyle == Qt::ConicalGradientPattern)
             {
-                /*QConicalGradient lgrd(rect().center(),270);
+                QConicalGradient lgrd(rect().center(),270);
                 lgrd.setColorAt(0.0,fillClr);
                 lgrd.setColorAt(0.5,fillClr.lighter(150));
                 lgrd.setColorAt(1.0,fillClr.lighter(250));
                 lgrd.setSpread(QGradient::ReflectSpread);
                 QBrush brush2(lgrd);
-                brush = brush2;*/
+                brush = brush2;
             }
             else
             {
                 Qt::BrushStyle bs = (Qt::BrushStyle)nFillStyle;
                 QBrush brush1(fillClr,bs);
                 brush = brush1;
-                //painter->setBrush(brush);
             }
-           // qreal top = rect().top()*(float)(nFillPercentage/100.00);
-           // drawRectF.setTop(top);
         }
         p->setBrush(brush);
         DRAWSHAPE shapeType = pObj->getShapeType();
         if(shapeType == enumLine)
         {
             HLineObj* pLineObj = (HLineObj*)pObj;
-            p->drawLine(pLineObj->pfHeadPoint,pLineObj->pfTailPoint);
+            QPointF pt1 = QPointF(pLineObj->pfHeadPoint.x()*deltaX,pLineObj->pfHeadPoint.y()*deltaY);
+            QPointF pt2 = QPointF(pLineObj->pfTailPoint.x()*deltaX,pLineObj->pfTailPoint.y()*deltaY);
+            p->drawLine(pt1,pt2);
         }
         else if(shapeType == enumEllipse)
         {
             HEllipseObj* pEllipseObj = (HEllipseObj*)pObj;
-            //deltaX = pixRect.width()/pEllipseObj->rectWidth;
-            //deltaY = pixRect.height()/pEllipseObj->rectHeight;
             QPointF pt = QPointF(pEllipseObj->topLeft.x()*deltaX,pEllipseObj->topLeft.y()*deltaY);
             p->drawEllipse(QRectF(pt,QSizeF(pEllipseObj->rectWidth*deltaX,pEllipseObj->rectHeight*deltaY)));
-            //p->drawEllipse(QRectF(QPointF(0,0),QSizeF(5,5)));
         }
         else if(shapeType == enumRectangle)
         {
             HRectObj* pRectObj = (HRectObj*)pObj;
-            //p->drawRect(QRectF(QPoint(pRectObj->rectLeft,pRectObj->rectTop),QSizeF(pRectObj->rectWidth,pRectObj->rectHeight)));
+            QPointF pt = QPointF(pRectObj->topLeft.x()*deltaX,pRectObj->topLeft.y()*deltaY);
+            p->drawRect(QRectF(pt,QSizeF(pRectObj->rectWidth*deltaX,pRectObj->rectHeight*deltaY)));
         }
+        else if(shapeType == enumArc)
+        {
+            HArcObj* pArcObj = (HArcObj*)pObj;
+            QPointF pt = QPointF(pArcObj->topLeft.x()*deltaX,pArcObj->topLeft.y()*deltaY);
+            if(pArcObj->bCloseCheck)
+                p->drawChord(QRectF(pt,QSizeF(pArcObj->rectWidth*deltaX,pArcObj->rectHeight*deltaY)),pArcObj->startAngle*16,pArcObj->spanAngle*16);
+            else
+                p->drawArc(QRectF(pt,QSizeF(pArcObj->rectWidth*deltaX,pArcObj->rectHeight*deltaY)),pArcObj->startAngle*16,pArcObj->spanAngle*16);
+        }
+        else if(shapeType == enumPie)
+        {
+            HPieObj* pPieObj = (HPieObj*)pObj;
+            QPointF pt = QPointF(pPieObj->topLeft.x()*deltaX,pPieObj->topLeft.y()*deltaY);
+            p->drawPie(QRectF(pt,QSizeF(pPieObj->rectWidth*deltaX,pPieObj->rectHeight*deltaY)),pPieObj->startAngle*16,pPieObj->spanAngle*16);
+        }
+        else if(shapeType == enumText)
+        {
+            HTextObj* pTextObj = (HTextObj*)pObj;
+            QString strFontName = pTextObj->getTextFontName();
+            int pointSize = pTextObj->getPointSize();
 
+            int weight = pTextObj->getWeigth();
+            bool italic = pTextObj->getItalic();
+            QFont font(strFontName,pointSize,weight,italic);
 
+            QPen textPen = QPen(QColor(pTextObj->getTextColorName()));
+            p->setPen(textPen);
+            p->setFont(font);
+            QPointF pt = QPointF(pTextObj->getTopLeftPoint().x()*deltaX,pTextObj->getTopLeftPoint().y()*deltaY);
+            int nAlign = pTextObj->getHorizontalAlign()|pTextObj->getVerticalAlign();
+            p->drawText(QRectF(pt,QSizeF(pTextObj->getRectWidth()*deltaX,pTextObj->getRectHeight()*deltaY)),nAlign,pTextObj->getTextContent());
+        }
     }
     p->restore();
 }

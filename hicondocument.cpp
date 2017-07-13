@@ -52,6 +52,7 @@ void HIconDocument::Del(const QString &strTemplateName, int nTemplateType, const
         {
             pIconTemplateList.removeOne(pIconTemplate);
             delete pIconTemplate;
+            pIconTemplate = NULL;
         }
     }
 }

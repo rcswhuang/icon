@@ -117,14 +117,18 @@ void HIconTreeWidget::initTemplateMenu(QContextMenuEvent *event)
 void HIconTreeWidget::initTemplateChildMenu(QContextMenuEvent *event)
 {
     QMenu* menu = new QMenu;
+    renameAct = new QAction(QStringLiteral("重命名图元"),this);
+    renameAct->setStatusTip(QStringLiteral("重命名一个图元"));
+    menu->addAction(renameAct);
+    connect(renameAct,SIGNAL(triggered(bool)),this,SLOT(renameIcon()));
+
+    menu->addSeparator();
     delAct = new QAction(QStringLiteral("删除图元"),this);
     delAct->setStatusTip(QStringLiteral("删除一个图元"));
     menu->addAction(delAct);
     connect(delAct,SIGNAL(triggered(bool)),SLOT(deleteIcon()));
-    menu->addSeparator();
-    renameAct = new QAction(QStringLiteral("重命名图元"),this);
-    renameAct->setStatusTip(QStringLiteral("重命名一个图元"));
-    menu->addAction(renameAct);
+
+
 
     menu->popup(event->globalPos());
 }

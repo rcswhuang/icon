@@ -17,12 +17,18 @@ HIconWidget::HIconWidget(HIconMgr* iconMgr):pIconMgr(iconMgr)
     pTabBar = new QTabBar;
     pTabBar->installEventFilter(this);
     connect(pTabBar,SIGNAL(currentChanged(int)),this,SLOT(patternChanged(int)));
-
+    QVBoxLayout *layout = new QVBoxLayout;
+    layout->setContentsMargins(0,0,0,0);
+    layout->setSpacing(0);
+    layout->addWidget(pTabBar);
+    layout->addWidget(pIconMgr->getIconFrame());
+    setLayout(layout);
 }
 
 void HIconWidget::newIconWidget()
 {
-
+    if(!pIconMgr || !pIconMgr->getIconTemplate())
+        return;
     HIconSymbol* pSymbol = (HIconSymbol*)(pIconMgr->getIconTemplate()->getSymbol());
     if(!pSymbol)
         return;
@@ -33,15 +39,27 @@ void HIconWidget::newIconWidget()
     int index = pTabBar->addTab(strName);
     pTabBar->setTabData(index,pSymbol->getCurrentPattern());
     pTabBar->setCurrentIndex(index);
-    pIconMgr->getIconFrame();
-    QVBoxLayout *layout = new QVBoxLayout;
-    layout->setContentsMargins(0,0,0,0);
-    layout->setSpacing(0);
-    layout->addWidget(pTabBar);
-    layout->addWidget(pIconMgr->getIconFrame());
-    setLayout(layout);
+    pIconMgr->getIconFrame()->setShowRuler(true);
+
 
 }
+
+void HIconWidget::delIconWidget()
+{
+    int index = pTabBar->count();
+    while(index)
+    {
+        QVariant data = pTabBar->tabData(index-1);
+        pIconMgr->getIconFrame()->delItemByPatternId(data.toInt());
+        pTabBar->removeTab(index-1);
+        index--;
+    }
+    pIconMgr->getIconFrame()->setShowRuler(false);
+    pIconMgr->getIconFrame()->setLogicRect(QRectF(0,0,0,0));
+
+
+}
+
 
 void HIconWidget::addShowPattern()
 {
@@ -139,6 +157,8 @@ void HIconWidget::patternChanged(int index)
     if(!ok)
         return;
     HIconTemplate* pTemplate = pIconMgr->getIconTemplate();
+    if(!pTemplate || !pTemplate->getSymbol())
+        return;
     for(int i = 0; i < pTemplate->getSymbol()->pShowPatternVector.count();i++)
     {
         HIconShowPattern* pattern = (HIconShowPattern*)pTemplate->getSymbol()->pShowPatternVector[i];

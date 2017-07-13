@@ -50,7 +50,7 @@ public:
     HIconTemplate* getIconTemplate()const {return pIconTemplate;}
     //HIconShowPattern* getIconShowPattern() const {return pShowPatternVector;}
 public:
-    QList<HBaseObj*> pObjList;
+    //QList<HBaseObj*> pObjList;
     HIconTemplate* pIconTemplate;
     QVector<HIconShowPattern*> pShowPatternVector;
 private:

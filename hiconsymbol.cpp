@@ -12,7 +12,16 @@ HIconSymbol::HIconSymbol(QObject* parent):QObject(parent)
 
 HIconSymbol::~HIconSymbol()
 {
-
+    while(!pShowPatternVector.isEmpty())
+    {
+        HIconShowPattern* pattern = (HIconShowPattern*)pShowPatternVector.takeFirst();
+        if(pattern)
+        {
+            delete pattern;
+            pattern = NULL;
+        }
+    }
+    pShowPatternVector.clear();
 }
 
 void HIconSymbol::readXml(QDomElement* dom)

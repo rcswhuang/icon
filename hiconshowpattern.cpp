@@ -8,7 +8,7 @@ HIconShowPattern::HIconShowPattern(HIconSymbol* symbol):pSymbol(symbol)
 
 HIconShowPattern::~HIconShowPattern()
 {
-
+    clear();
 }
 
 void HIconShowPattern::readXml(QDomElement* dom)
@@ -60,6 +60,7 @@ void HIconShowPattern::clear()
             pObj = NULL;
         }
     }
+    pObjList.clear();
 }
 
 

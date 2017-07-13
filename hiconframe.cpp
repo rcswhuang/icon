@@ -38,13 +38,26 @@ void HIconFrame::setIconMgr(HIconMgr *iconmgr)
 
 void HIconFrame::setLogicRect(QRectF &rectF)
 {
-    int x = 0;
+    if(rectF == sceneRect)
+        return;
     sceneRect = rectF;
     if(m_pView)
+    {
         m_pView->setSceneRect(rectF);
+        int f_width = width();
+        int f_height = height();
+        resize(f_width-1,f_height);
+        resize(f_width,f_height);
+    }
 
 }
 
+HIconScene* HIconFrame::iconScene()
+{
+    if(m_pView)
+        return (HIconScene*)m_pView->scene();
+    return NULL;
+}
 //绘制路径
 void HIconFrame::drawPath(const QList<Path>& pathList)
 {

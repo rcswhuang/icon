@@ -12,10 +12,15 @@ class HIconWidget : public QWidget
     Q_OBJECT
 public:
     HIconWidget(HIconMgr* iconMgr);
+
+    //新建一个icon图元
     void newIconWidget();
 
-    void refreshIconWidget();
+    //删除整个Icon的显示
+    void delIconWidget();
 
+    //刷新图元
+    void refreshIconWidget();
 
     QTabBar* getTabBar(){return pTabBar;}
 
