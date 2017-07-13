@@ -12,11 +12,17 @@
 #include "hiconshowpattern.h"
 #include "hiconobj.h"
 #include "hiconlineitem.h"
-HIconWidget::HIconWidget(HIconMgr* iconMgr):pIconMgr(iconMgr)
+HIconWidget::HIconWidget()
 {
     pTabBar = new QTabBar;
     pTabBar->installEventFilter(this);
     connect(pTabBar,SIGNAL(currentChanged(int)),this,SLOT(patternChanged(int)));
+
+}
+
+void HIconWidget::setIconMgr(HIconMgr *iconMgr)
+{
+    pIconMgr = iconMgr;
     QVBoxLayout *layout = new QVBoxLayout;
     layout->setContentsMargins(0,0,0,0);
     layout->setSpacing(0);

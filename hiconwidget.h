@@ -11,8 +11,9 @@ class HIconWidget : public QWidget
 {
     Q_OBJECT
 public:
-    HIconWidget(HIconMgr* iconMgr);
+    HIconWidget();
 
+    void setIconMgr(HIconMgr* iconMgr);
     //新建一个icon图元
     void newIconWidget();
 

@@ -388,6 +388,10 @@ void HIconMainWindow::quit()
 //新建对象
 void HIconMainWindow::New(const QString& catalogName,const int& nIconType)//"开关",遥信
 {
+
+    //弹出对话框
+
+
     pIconMgr->New(catalogName,nIconType);
     pIconWidget->newIconWidget();
     pIconTreeWidget->addIconTreeWigetItem();
