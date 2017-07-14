@@ -14,7 +14,8 @@ HIconMainWindow::HIconMainWindow(HIconMgr *parent) : pIconMgr(parent)
     createToolBars();
     createDockWindows();
 
-    pIconWidget = new HIconWidget(pIconMgr);
+    pIconWidget = new HIconWidget();
+
     setCentralWidget(pIconWidget);
     setWindowTitle("test");
 
@@ -289,6 +290,7 @@ void HIconMainWindow::createDockWindows()
     pIconTreeWidget->init();
     connect(pIconTreeWidget,SIGNAL(IconNew(const QString&,const int&)),this,SLOT(New(const QString&,const int&)));
     connect(pIconTreeWidget,SIGNAL(IconDel(const QString&,const int&,const QString&)),this,SLOT(Del(const QString&,const int&,const QString&)));
+    connect(pIconTreeWidget,SIGNAL(IconOpen(const QString&,const int&,const QString&)),this,SLOT(Open(const QString&,const int&,const QString&)));
 
     QDockWidget* iconPreviewDock = new QDockWidget(QStringLiteral("图元预览框"),this);
     iconPreviewDock->setAllowedAreas(Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea);
@@ -391,19 +393,33 @@ void HIconMainWindow::New(const QString& catalogName,const int& nIconType)//"开
 
     //弹出对话框
 
-
     pIconMgr->New(catalogName,nIconType);
+    pIconWidget->setIconMgr(pIconMgr);
     pIconWidget->newIconWidget();
     pIconTreeWidget->addIconTreeWigetItem();
     pIconPreview->init();
+    //改用函数来实现
     pIconMgr->getIconFrame()->scaleChangedTo(0.6);
     QString strScale = QString("%1%").arg(pIconMgr->getIconFrame()->scale()*100);
     scaleComboBox->setCurrentText(strScale);
 }
 
 //打开 save falg = true
-void HIconMainWindow::open(const QString& catalogName,const QString& uuid)
+void HIconMainWindow::Open(const QString& catalogName,const int& nIconType,const QString& uuid)
 {
+    //获取当前Template 提示是否保存
+    //保存成功后 关闭显示 close Template
+    if(!pIconMgr->Save())
+    {
+        //保存失败
+    }
+
+    pIconMgr->Open(catalogName,nIconType,uuid);
+    pIconWidget->delIconWidget();//先删除目前
+    pIconWidget->setIconMgr(pIconMgr); //设置iconWidget
+    pIconWidget->openIconWidget();//打开新的
+    pIconPreview->init();
+    //然后获取新的Template
 
 }
 

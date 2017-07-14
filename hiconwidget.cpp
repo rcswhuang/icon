@@ -23,6 +23,8 @@ HIconWidget::HIconWidget()
 void HIconWidget::setIconMgr(HIconMgr *iconMgr)
 {
     pIconMgr = iconMgr;
+    if(!pIconMgr || !pIconMgr->getIconFrame())
+        return;
     QVBoxLayout *layout = new QVBoxLayout;
     layout->setContentsMargins(0,0,0,0);
     layout->setSpacing(0);
@@ -42,12 +44,48 @@ void HIconWidget::newIconWidget()
     HIconShowPattern* pattern = (HIconShowPattern*)(pSymbol->newPattern(strName));
     if(!pattern)
         return;
+    pTabBar->show();
     int index = pTabBar->addTab(strName);
     pTabBar->setTabData(index,pSymbol->getCurrentPattern());
     pTabBar->setCurrentIndex(index);
     pIconMgr->getIconFrame()->setShowRuler(true);
+    QSizeF sizeF = pIconMgr->getIconTemplate()->getDefaultSize();//获取默认大小
+    if(sizeF.width() > 0 && sizeF.height())
+    {
+        QRectF rectF = QRectF(-sizeF.width()*10,-sizeF.height()*10,sizeF.width()*20,sizeF.height()*20);
+        pIconMgr->getIconFrame()->setLogicRect(rectF);
+    }
+    pIconMgr->getIconFrame()->show();
+}
 
 
+void HIconWidget::openIconWidget()
+{
+    if(!pIconMgr || !pIconMgr->getIconTemplate())
+        return;
+    HIconSymbol* pSymbol = (HIconSymbol*)(pIconMgr->getIconTemplate()->getSymbol());
+    if(!pSymbol)
+        return;
+    for(int i = 0; i < pSymbol->pShowPatternVector.count();i++)
+    {
+        HIconShowPattern* pattern = (HIconShowPattern*)(pSymbol->pShowPatternVector[i]);
+        if(!pattern)
+            return;
+        int index = pTabBar->addTab(strName);
+        pTabBar->setTabData(index,pSymbol->getCurrentPattern());
+        pIconMgr->getIconFrame()->addItemByPatternId(pSymbol->getCurrentPattern());
+    }
+
+    pIconMgr->getIconFrame()->setShowRuler(true);
+    QSizeF sizeF = pIconMgr->getIconTemplate()->getDefaultSize();//获取默认大小
+    if(sizeF.width() > 0 && sizeF.height())
+    {
+        QRectF rectF = QRectF(-sizeF.width()*10,-sizeF.height()*10,sizeF.width()*20,sizeF.height()*20);
+        pIconMgr->getIconFrame()->setLogicRect(rectF);
+    }
+    pTabBar->setCurrentIndex(0);
+    pTabBar->show();
+    pIconMgr->getIconFrame()->show();
 }
 
 void HIconWidget::delIconWidget()
@@ -62,8 +100,15 @@ void HIconWidget::delIconWidget()
     }
     pIconMgr->getIconFrame()->setShowRuler(false);
     pIconMgr->getIconFrame()->setLogicRect(QRectF(0,0,0,0));
-
-
+    pTabBar->hide();
+    pIconMgr->getIconFrame()->hide();
+    QVBoxLayout* vBoxLayout = (QVBoxLayout*)layout();
+    if(vBoxLayout)
+    {
+        vBoxLayout->removeWidget(pTabBar);
+        vBoxLayout->removeWidget(pIconMgr->getIconFrame());
+        delete vBoxLayout;
+    }
 }
 
 

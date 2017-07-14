@@ -57,9 +57,9 @@ private:
     QString strSymbolName;
     int usSymbolType;
     //属性
- /*   double fWidth;
+    double fWidth;
     double fHeight;
-    double fTransparent;//透明度
+/*    double fTransparent;//透明度
     int nFillStyle;//填充风格
     int nFillCent;//填充比例
     bool bFill;

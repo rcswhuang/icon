@@ -78,6 +78,7 @@ void HIconTreeWidget::init()
     paiItem->setText(0,QStringLiteral("接地牌"));
     rootItem->addChild(paiItem);
 
+    connect(this,SIGNAL(itemSelectionChanged()),SLOT(openIcon()));
     expandAll();
 
 }
@@ -145,6 +146,25 @@ void HIconTreeWidget::newIcon()
         nIconType = item->type();
     }
     emit IconNew(strName,nIconType);
+}
+
+void HIconTreeWidget::openIcon()
+{
+    HIconTreeWidgetItem* pCurItem = dynamic_cast<HIconTreeWidgetItem*> (currentItem());
+    if(!pCurItem) return;
+    int nCurType = pCurItem->type();
+    if(nCurType > TEMPLATE_TYPE_NULL && nCurType < TEMPLATE_TYPE_MAX)
+    {
+        collapseAll();
+        expandItem(pCurItem);
+    }
+    else if(nCurType == TEMPLATE_TYPE_CHILD)
+    {
+        QString strName = pCurItem->text(0);
+        QString strUuid = pCurItem->getUuid();
+        emit IconOpen(strName,nCurType,strUuid);
+    }
+
 }
 
 void HIconTreeWidget::deleteIcon()

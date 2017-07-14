@@ -25,6 +25,8 @@ public:
 public:
     void New(const QString& catalogName,const int& nIconType);
     void Del(const QString& catalogName,const int& nIconType,const QString& uuid);
+    bool Save();
+    void Open(const QString& catalogName,const int& nIconType,const QString& uuid);
 private:
     bool bShowGrid;
     bool bShowCenterLine;

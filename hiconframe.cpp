@@ -11,16 +11,12 @@ HIconFrame::HIconFrame(QWidget * parent, Qt::WindowFlags f )
     pIconMgr = NULL;
     m_pView->setInteractive(false);
     m_pView->setDragMode(QGraphicsView::NoDrag);
-    //QRectF rect = QRectF(-500,-500,1000,1000);
-    //setLogicRect(rect);
 }
 
 HIconFrame::HIconFrame(HIconMgr* pMgr,QWidget * parent, Qt::WindowFlags f)
 :pIconMgr(pMgr),HFrame(parent,f)
 {
     m_pView->setScene(new HIconScene(pIconMgr));
-    //QRectF logicRectF = pIconMgr->getLogicRect();
-    //setLogicRect(logicRectF);
 }
 
 HIconFrame::~HIconFrame()
@@ -31,9 +27,6 @@ HIconFrame::~HIconFrame()
 void HIconFrame::setIconMgr(HIconMgr *iconmgr)
 {
     pIconMgr = iconmgr;
-
-    //QRectF logicRectF = pIconMgr->getLogicRect();
-    //setLogicRect(logicRectF);
 }
 
 void HIconFrame::setLogicRect(QRectF &rectF)
@@ -52,45 +45,18 @@ void HIconFrame::setLogicRect(QRectF &rectF)
 
 }
 
+QRectF HIconFrame::getLogicRect()
+{
+    return sceneRect;
+}
+
 HIconScene* HIconFrame::iconScene()
 {
     if(m_pView)
         return (HIconScene*)m_pView->scene();
     return NULL;
 }
-//绘制路径
-void HIconFrame::drawPath(const QList<Path>& pathList)
-{
-    QPainter painter(this);
-    QPen pen = pathList[0].pen;
-    pen.setWidth(1);
-    painter.setPen(pen);
-    QPainterPath path = pathList[0].painterPath;
-    painter.drawPath(path);
-}
 
-//结束绘制
-void HIconFrame::endDraw()
-{
-
-}
-
-
-//对象的创建
-void HIconFrame::objCreated(HBaseObj* obj)
-{
-    if(!m_pView || !m_pView->scene())
-        return;
-
-  //  pIconScene->addLine(0,0,100,100,QPen(QColor(Qt::red)));
-}
-/*
-//对象的删除
-void HIconFrame::objRemoved(HDrawObj* obj)
-{
-
-}
-*/
 //刷新选中点、选中框
 void HIconFrame::refreshSelected(const QRectF& rect)
 {
@@ -115,10 +81,8 @@ void HIconFrame::fitHeight()
 
 }
 
-//选中对象发生改变
-//void HIconFrame::onSelectChanged(HDrawObj* obj,bool bSelect);
 
-//重新计算选中点、选中框
+//按照显示方案来显示里面的Item
 void HIconFrame::setItemVisible(int nPatternId)
 {
     if(iconScene())
@@ -137,6 +101,13 @@ bool HIconFrame::eventFilter( QObject *obj, QEvent *event)
     return false;
 }
 
+//增加某个图元的显示方案
+void HIconFrame::addItemByPatternId(int nPatternId)
+{
+
+}
+
+//删除某个图元的显示方案
 void HIconFrame::delItemByPatternId(int nPatternId)
 {
     if(iconScene())

@@ -18,6 +18,8 @@ public:
 public:
     void New(const QString& strTemplateName,int nTemplateType);
     void Del(const QString& strTemplateName,int nTemplateType,const QString& strUuid);
+    void Open(const QString& strTemplateName,int nTemplateType,const QString& strUuid);
+    bool Save();
     HIconTemplate* getCurrentTemplate();
     HIconTemplate* findIconTemplateByTypeAndUuid(int nTemplateType,const QString& strUuid);
 public:

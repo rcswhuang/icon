@@ -21,7 +21,7 @@ HIconLineItem::HIconLineItem(const QLineF &line, QGraphicsItem *parent):QGraphic
     setFlag(QGraphicsItem::ItemIsSelectable,true);
     setFlag(QGraphicsItem::ItemSendsGeometryChanges,true);
     setFlag(QGraphicsItem::ItemIsFocusable,true);
-    pLineObj = new HLineObj();
+    pLineObj = new HLineObj();//改掉
     //bSelected = false;
     setSelected(false);
 }

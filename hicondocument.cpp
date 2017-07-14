@@ -28,15 +28,6 @@ void HIconDocument::New(const QString &strTemplateName,int nTemplateType)
     pCurIconTemplate = new HIconTemplate;
     pCurIconTemplate->setAttrName(strTemplateName);//普通开关
     pCurIconTemplate->setIconType(nTemplateType);//遥信类
-    QSizeF sizeF = pCurIconTemplate->getDefaultSize();//获取默认大小
-    if(sizeF.width() > 0 && sizeF.height())
-    {
-        //设置坐标原点在中心位置
-        QRectF rectF = QRectF(-sizeF.width()*10,-sizeF.height()*10,sizeF.width()*20,sizeF.height()*20);
-        pCurIconTemplate->getSymbol()->setIconSymbolWidth(sizeF.width());
-        pCurIconTemplate->getSymbol()->setIconSymbolHeight(sizeF.height());
-        pIconMgr->getIconFrame()->setLogicRect(rectF);
-    }
     pIconTemplateList.append(pCurIconTemplate);
     //for(int i=0;i<pCurIconTemplate->getSymbol()->
 }
@@ -56,6 +47,25 @@ void HIconDocument::Del(const QString &strTemplateName, int nTemplateType, const
         }
     }
 }
+
+void HIconDocument::Open(const QString &strTemplateName, int nTemplateType, const QString &strUuid)
+{
+    HIconTemplate* pTemplate = findIconTemplateByTypeAndUuid(nTemplateType,strUuid);
+    if(!pTempalte && pTemplate->getAttrName() == strTemplateName)
+        pCurIconTemplate = pTemplate;
+    else
+        pCurIconTemplate = NULL;
+
+}
+
+bool HIconDocument::Save()
+{
+    if(!pCurIconTemplate)
+        return false;
+    //pCurIconTemplate->writeXml();
+    return true;
+}
+
 
 HIconTemplate* HIconDocument::findIconTemplateByTypeAndUuid(int nTemplateType, const QString &strUuid)
 {

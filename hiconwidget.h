@@ -14,11 +14,15 @@ public:
     HIconWidget();
 
     void setIconMgr(HIconMgr* iconMgr);
+
     //新建一个icon图元
     void newIconWidget();
 
-    //删除整个Icon的显示
+    //删除一个Icon图元
     void delIconWidget();
+
+    //打开一个图元
+    void openIconWidget();
 
     //刷新图元
     void refreshIconWidget();

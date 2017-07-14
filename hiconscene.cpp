@@ -10,6 +10,7 @@
 #include "hiconstate.h"
 #include "hicontextitem.h"
 #include "hpropertydlg.h"
+#include "hiconshowpattern.h"
 #include <QCursor>
 #include <QMenu>
 HIconScene::HIconScene(HIconMgr* iconMgr)
@@ -224,7 +225,6 @@ void HIconScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
 
     }
     pIconMgr->getIconState()->setDrawShape(enumSelection);
-
     QGraphicsScene::mouseReleaseEvent(mouseEvent);
 }
 
@@ -252,7 +252,6 @@ void HIconScene::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
 
         menu.exec(event->screenPos());
     }
-
 }
 
 void HIconScene::setItemProperty(QGraphicsItem* item)
@@ -291,7 +290,6 @@ void HIconScene::setItemProperty(QGraphicsItem* item)
     }
 
     dlg.exec();
-
 }
 
 void HIconScene::setItemCursor(QGraphicsSceneMouseEvent *mouseEvent)
@@ -342,7 +340,6 @@ void HIconScene::setItemCursor(QGraphicsSceneMouseEvent *mouseEvent)
             int location = eItem->pointInRect(pointF);
             eItem->setItemCursor(location);
         }
-
     }
 }
 
@@ -410,8 +407,26 @@ void HIconScene::setItemVisible(int nPatternId)
     }
 }
 
+//增加图元的显示方案
+void HIconScene::addItemByPatternId(int nPatternId)
+{
+    if(!pIconMgr && !pIconMgr->getIconTemplate() &&!pIconMgr->getIconTemplate()->getSymbol())
+        return;
+    HIconSymbol *pSymbol = pIconMgr->getIconTemplate()->getSymbol();
+    HIconShowPattern* pattern = pSymbol->getCurrentPatternPtr();
+    if(!pattern) return;
+    for(int i = 0; i < pattern->pObjList;i++)
+    {
+        HBaseObj* pObj = (HBaseObj*)pattern->pObjList.at(i);
+        if(!pObj) continue;
+        if(pObj->getShapeType() == enumLine)
+        {
+            //line = new HIconLineItem()
+        }
+    }
+}
 
-//删除某一个显示方案里面的所有图元元素(参数为方案id)
+//删除图元的显示方案
 void HIconScene::delItemByPatternId(int nPatternId)
 {
     QList<QGraphicsItem *> itemList = items();

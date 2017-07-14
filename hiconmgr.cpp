@@ -74,8 +74,15 @@ void HIconMgr::Del(const QString& catalogName,const int& nIconType,const QString
     pIconDocument->Del(catalogName,nIconType,uuid);
 }
 
+bool HIconMgr::Save()
+{
+    return pIconDocument->Save();
+}
 
-
+void HIconMgr::Open(const QString &catalogName, const int &nIconType, const QString &uuid)
+{
+    pIconDocument->Open(catalogName,nIconType,uuid);
+}
 
 
 

@@ -21,17 +21,6 @@ public:
 public:
 
     void setIconMgr(HIconMgr* iconmgr);
-    //绘制路径
-    void drawPath(const QList<Path>& pathList);
-
-    //结束绘制
-    void endDraw();
-
-    //对象的创建
-    void objCreated(HBaseObj* obj);
-
-    //对象的删除
-    //void objRemoved(HDrawObj* obj);
 
     //刷新选中点、选中框
     void refreshSelected(const QRectF& rect);
@@ -47,9 +36,11 @@ public:
 
     void setLogicRect(QRectF& rectF);
 
+    void addItemByPatternId(int nPatternId);
+
     void delItemByPatternId(int nPatternId);
 
-    QRectF getLogicRect(){return sceneRect;}
+    QRectF getLogicRect();
 
     HIconScene* iconScene();
 

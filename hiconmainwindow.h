@@ -84,7 +84,7 @@ public slots:
     void New(const QString& catalogName,const int& nIconType);
 
     //打开 save falg = true
-    void open(const QString& catalogName,const QString& uuid);
+    void Open(const QString& catalogName,const int& nIconType,const QString& uuid);
 
     //
     void Del(const QString& catalogName,const int& nIconType,const QString& uuid);

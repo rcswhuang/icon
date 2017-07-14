@@ -21,6 +21,7 @@ public:
 public:
     void setItemProperty(QGraphicsItem *item);
     void setItemCursor(QGraphicsSceneMouseEvent *mouseEvent);
+    void addItemByPatternId(int nPatternId);
     void delItemByPatternId(int nPatternId);
     void setItemVisible(int nPatternId);
 protected:

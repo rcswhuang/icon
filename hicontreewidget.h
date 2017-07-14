@@ -59,11 +59,13 @@ protected:
 signals:
     void IconNew(const QString& strName,const int& nIconType);
     void IconDel(const QString& strName,const int& nIconType,const QString& strUuid);
+    void IconOpen(const QString& strName,const int& nIconType,const QString& strUuid);
 public slots:
     void newIcon();
     void deleteIcon();
     void renameIcon();
     void importIcon();
+    void openIcon();
 
 public:
     HIconTreeWidgetItem* digitalItem;
