@@ -3,7 +3,7 @@
 
 #include <QObject>
 #include "hicontype.h"
-#include "iconapi.h"
+#include "hiconapi.h"
 #include "hicontemplate.h"
 #include "hiconmgr.h"
 class HIconMgr;

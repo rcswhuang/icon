@@ -1,23 +1,30 @@
 ﻿#include "hiconpieitem.h"
 #include "hpropertydlg.h"
+#include "hiconapi.h"
+#include <QObject>
+#include <QRectF>
+#include <QPainterPath>
+#include <QPointF>
 #include <QGraphicsSceneMouseEvent>
 #include <QKeyEvent>
+#include <QStyleOptionGraphicsItem>
+#include <QPainter>
 #include <QDebug>
-HIconPieItem::HIconPieItem(QGraphicsRectItem *parent)
-    :QGraphicsEllipseItem(parent)
+HIconPieItem::HIconPieItem(HIconGraphicsItem *parent)
+    :HIconGraphicsItem(parent)
 {
 
 }
 
-HIconPieItem::HIconPieItem(const QRectF &rectF, QGraphicsRectItem *parent)
-    :QGraphicsEllipseItem(rectF,parent)
+HIconPieItem::HIconPieItem(const QRectF &rectF, HIconGraphicsItem *parent)
+    :HIconGraphicsItem(parent),rectF(rectF)
 {
     //pointLocation = LOCATIONNO;
     setFlag(QGraphicsItem::ItemIsMovable,true);
     setFlag(QGraphicsItem::ItemIsSelectable,true);
     setFlag(QGraphicsItem::ItemSendsGeometryChanges,true);
     setFlag(QGraphicsItem::ItemIsFocusable,true);
-    pPieObj = new HPieObj();
+    pPieObj = NULL;
     bSelected = false;
 }
 
@@ -127,7 +134,7 @@ void HIconPieItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
     pointStart = event->scenePos();
     pointLocation = pointInRect(pointStart);
     bSelected = true;
-    QGraphicsEllipseItem::mousePressEvent(event);
+    HIconGraphicsItem::mousePressEvent(event);
 }
 
 void HIconPieItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
@@ -171,7 +178,7 @@ void HIconPieItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     else
     {
 
-        QGraphicsEllipseItem::mouseMoveEvent(event);
+        HIconGraphicsItem::mouseMoveEvent(event);
     }
 }
 
@@ -185,7 +192,7 @@ void HIconPieItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     QPointF p = mapToScene(rect().center());
     pPieObj->setOX(p.x());
     pPieObj->setOY(p.y());
-    QGraphicsEllipseItem::mouseReleaseEvent(event);
+    HIconGraphicsItem::mouseReleaseEvent(event);
 }
 
 void HIconPieItem::keyPressEvent(QKeyEvent *event)
@@ -230,9 +237,26 @@ void HIconPieItem::keyPressEvent(QKeyEvent *event)
     setRect(newRect);
 }
 
-QVariant HIconPieItem::itemChange(GraphicsItemChange change, const QVariant &value)
+void HIconPieItem::setRect(const QRectF& rect)
 {
-    return QGraphicsItem::itemChange(change,value);
+    rectF = rect;
+}
+
+QRectF HIconPieItem::rect()const
+{
+    return rectF;
+}
+
+void HIconPieItem::setItemObj(HBaseObj *pObj)
+{
+    pPieObj = (HPieObj*)pObj;
+}
+
+HBaseObj* HIconPieItem::getItemObj()
+{
+    if(pPieObj)
+        return pPieObj;
+    return NULL;
 }
 
 void HIconPieItem::setItemCursor(int location)

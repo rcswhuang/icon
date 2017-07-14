@@ -33,7 +33,7 @@ void HIconState::OnEvent(HEvent& e)
 
 void HIconState::OnDrawPath(const QList<Path>& pathList)
 {
-    pIconMgr->getIconFrame()->drawPath(pathList);
+    //pIconMgr->getIconFrame()->drawPath(pathList);
 }
 
 void HIconState::appendObj(HBaseObj *obj)

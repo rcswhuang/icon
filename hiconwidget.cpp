@@ -71,7 +71,7 @@ void HIconWidget::openIconWidget()
         HIconShowPattern* pattern = (HIconShowPattern*)(pSymbol->pShowPatternVector[i]);
         if(!pattern)
             return;
-        int index = pTabBar->addTab(strName);
+        int index = pTabBar->addTab(pattern->strName);
         pTabBar->setTabData(index,pSymbol->getCurrentPattern());
         pIconMgr->getIconFrame()->addItemByPatternId(pSymbol->getCurrentPattern());
     }
@@ -99,7 +99,8 @@ void HIconWidget::delIconWidget()
         index--;
     }
     pIconMgr->getIconFrame()->setShowRuler(false);
-    pIconMgr->getIconFrame()->setLogicRect(QRectF(0,0,0,0));
+    QRectF rectF = QRectF(0,0,0,0);
+    pIconMgr->getIconFrame()->setLogicRect(rectF);
     pTabBar->hide();
     pIconMgr->getIconFrame()->hide();
     QVBoxLayout* vBoxLayout = (QVBoxLayout*)layout();

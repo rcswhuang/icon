@@ -1,6 +1,6 @@
 ﻿#include "hpropertydlg.h"
 #include "ui_propertydlg.h"
-#include "iconapi.h"
+#include "hiconapi.h"
 #include <QColorDialog>
 #include <QFontDialog>
 #include <QVariant>

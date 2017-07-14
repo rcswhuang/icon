@@ -1,19 +1,22 @@
 ﻿#include "hiconlineitem.h"
-#include <QGraphicsSceneMouseEvent>
-#include <QStyleOptionGraphicsItem>
-#include <QPainterPathStroker>
-#include <QKeyEvent>
 #include <math.h>
 #include "hpropertydlg.h"
-#include "hiconobj.h"
+#include <QObject>
+#include <QRectF>
+#include <QPainterPath>
+#include <QPointF>
+#include <QGraphicsSceneMouseEvent>
+#include <QKeyEvent>
+#include <QStyleOptionGraphicsItem>
+#include <QPainter>
 
 
-HIconLineItem::HIconLineItem(QGraphicsItem *parent):QGraphicsLineItem(parent)
+HIconLineItem::HIconLineItem(HIconGraphicsItem *parent):HIconGraphicsItem(parent)
 {
     setFlags(QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsSelectable);
 }
 
-HIconLineItem::HIconLineItem(const QLineF &line, QGraphicsItem *parent):QGraphicsLineItem(line,parent)
+HIconLineItem::HIconLineItem(const QLineF &line, HIconGraphicsItem *parent):HIconGraphicsItem(parent),lineF(line)
 {
     //setAcceptDrops(true);
     pointLocation = LOCATIONNO;
@@ -21,7 +24,7 @@ HIconLineItem::HIconLineItem(const QLineF &line, QGraphicsItem *parent):QGraphic
     setFlag(QGraphicsItem::ItemIsSelectable,true);
     setFlag(QGraphicsItem::ItemSendsGeometryChanges,true);
     setFlag(QGraphicsItem::ItemIsFocusable,true);
-    pLineObj = new HLineObj();//改掉
+    pLineObj = NULL;
     //bSelected = false;
     setSelected(false);
 }
@@ -176,7 +179,7 @@ void HIconLineItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
     if((pointLocation = pointInRect(curPointF))!=LOCATIONNO)
         lineMode = LineSize;
 
-    QGraphicsLineItem::mousePressEvent(event);
+    HIconGraphicsItem::mousePressEvent(event);
 }
 
 void HIconLineItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
@@ -201,7 +204,7 @@ void HIconLineItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     }
     else
     {
-        QGraphicsLineItem::mouseMoveEvent(event);
+        HIconGraphicsItem::mouseMoveEvent(event);
     }
 }
 
@@ -209,7 +212,7 @@ void HIconLineItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     lineMode = LineNo;
 
-    QGraphicsLineItem::mouseReleaseEvent(event);
+    HIconGraphicsItem::mouseReleaseEvent(event);
 }
 
 void HIconLineItem::keyPressEvent(QKeyEvent *event)
@@ -256,14 +259,26 @@ void HIconLineItem::keyPressEvent(QKeyEvent *event)
     setLine(newLine);
 }
 
-QVariant HIconLineItem::itemChange(GraphicsItemChange change, const QVariant &value)
+QLineF HIconLineItem::line() const
 {
-    if(change == ItemPositionChange)
-    {
-        pLineObj->pfHeadPoint = mapToScene(line().p1());
-        pLineObj->pfTailPoint = mapToScene(line().p2());
-    }
-    return QGraphicsItem::itemChange(change,value);
+    return lineF;
+}
+void HIconLineItem::setLine(const QLineF &line)
+{
+    lineF = line;
+}
+
+void HIconLineItem::setItemObj(HBaseObj *pObj)
+{
+    pLineObj = (HLineObj*)pObj;
+}
+
+
+HBaseObj* HIconLineItem::getItemObj()
+{
+    if(pLineObj)
+        return pLineObj;
+    return NULL;
 }
 
 ushort HIconLineItem::pointInRect(QPointF &point)

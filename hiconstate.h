@@ -1,7 +1,7 @@
 ﻿#ifndef HICONSTATE_H
 #define HICONSTATE_H
 #include "hdrawtool.h"
-#include "iconapi.h"
+#include "hiconapi.h"
 #include "hevent.h"
 #include <QPainterPath>
 #include "hbaseobj.h"

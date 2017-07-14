@@ -2,7 +2,7 @@
 #define HICONPOLYGONITEM_H
 
 #include <QGraphicsPolygonItem>
-#include "iconapi.h"
+#include "hiconapi.h"
 #include "hiconobj.h"
 #include <QVector>
 

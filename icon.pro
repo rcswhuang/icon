@@ -1,7 +1,6 @@
 QT += widgets
 
 HEADERS       = \
-    iconapi.h \
     hiconmainwindow.h \
     hframe.h \
     hiconframe.h \
@@ -28,7 +27,9 @@ HEADERS       = \
     hiconpreview.h \
     hicontextitem.h \
     hiconshowpattern.h \
-    hiconlineitem.h
+    hiconlineitem.h \
+    hicongraphicsitem.h \
+    hiconapi.h
     #hlineobj.h \
     #hellipseobj.h
 SOURCES       = main.cpp \
@@ -58,7 +59,8 @@ SOURCES       = main.cpp \
     hiconpreview.cpp \
     hicontextitem.cpp \
     hiconshowpattern.cpp \
-    hiconlineitem.cpp
+    hiconlineitem.cpp \
+    hicongraphicsitem.cpp
     #hlineobj.cpp \
     #hellipseobj.cpp
 RESOURCES     = \

@@ -8,7 +8,7 @@
 #include <QDomElement>
 #include <QPainterPath>
 #include <QPainter>
-#include "iconapi.h"
+#include "hiconapi.h"
 class HBaseObj: public QObject
 {
 public:

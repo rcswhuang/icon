@@ -1,5 +1,5 @@
 ﻿#include "hiconsymbol.h"
-#include "iconapi.h"
+#include "hiconapi.h"
 #include "hiconshowpattern.h"
 #include <QVariant>
 HIconSymbol::HIconSymbol(QObject* parent):QObject(parent)

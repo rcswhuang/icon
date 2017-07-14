@@ -6,7 +6,7 @@
 #include <QContextMenuEvent>
 #include <QAction>
 #include <QUuid>
-#include "iconapi.h"
+#include "hiconapi.h"
 #include "hicontemplate.h"
 #include "hiconbrower.h"
 class HIconMgr;

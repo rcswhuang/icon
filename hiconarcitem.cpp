@@ -1,23 +1,30 @@
 ﻿#include "hiconarcitem.h"
 #include "hpropertydlg.h"
+#include <QObject>
+#include <QRectF>
+#include <QPainterPath>
+#include <QPointF>
 #include <QGraphicsSceneMouseEvent>
 #include <QKeyEvent>
+#include <QStyleOptionGraphicsItem>
+#include <QPainter>
+
 #include <QDebug>
-HIconArcItem::HIconArcItem(QGraphicsRectItem *parent)
-    :QGraphicsEllipseItem(parent)
+HIconArcItem::HIconArcItem(HIconGraphicsItem *parent)
+    :HIconGraphicsItem(parent)
 {
 
 }
 
-HIconArcItem::HIconArcItem(const QRectF &rectF, QGraphicsRectItem *parent)
-    :QGraphicsEllipseItem(rectF,parent)
+HIconArcItem::HIconArcItem(const QRectF &rectF, HIconGraphicsItem *parent)
+    :HIconGraphicsItem(parent),rectF(rectF)
 {
     //pointLocation = LOCATIONNO;
     setFlag(QGraphicsItem::ItemIsMovable,true);
     setFlag(QGraphicsItem::ItemIsSelectable,true);
     setFlag(QGraphicsItem::ItemSendsGeometryChanges,true);
     setFlag(QGraphicsItem::ItemIsFocusable,true);
-    pArcObj = new HArcObj();
+    pArcObj = NULL;
     bSelected = false;
 }
 
@@ -129,7 +136,7 @@ void HIconArcItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
     pointStart = event->scenePos();
     pointLocation = pointInRect(pointStart);
     bSelected = true;
-    QGraphicsEllipseItem::mousePressEvent(event);
+    HIconGraphicsItem::mousePressEvent(event);
 }
 
 void HIconArcItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
@@ -173,10 +180,9 @@ void HIconArcItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     else
     {
 
-        QGraphicsEllipseItem::mouseMoveEvent(event);
+        HIconGraphicsItem::mouseMoveEvent(event);
     }
 }
-
 
 void HIconArcItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
@@ -188,7 +194,7 @@ void HIconArcItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     pArcObj->setOX(p.x());
     pArcObj->setOY(p.y());
 
-    QGraphicsEllipseItem::mouseReleaseEvent(event);
+    HIconGraphicsItem::mouseReleaseEvent(event);
 }
 
 void HIconArcItem::keyPressEvent(QKeyEvent *event)
@@ -233,9 +239,26 @@ void HIconArcItem::keyPressEvent(QKeyEvent *event)
     setRect(newRect);
 }
 
-QVariant HIconArcItem::itemChange(GraphicsItemChange change, const QVariant &value)
+void HIconArcItem::setRect(const QRectF& rect)
 {
-return QGraphicsItem::itemChange(change,value);
+    rectF = rect;
+}
+
+QRectF HIconArcItem::rect()const
+{
+    return rectF;
+}
+
+void HIconArcItem::setItemObj(HBaseObj *pObj)
+{
+    pArcObj = (HArcObj*)pObj;
+}
+
+HBaseObj* HIconArcItem::getItemObj()
+{
+    if(pArcObj)
+        return pArcObj;
+    return NULL;
 }
 
 void HIconArcItem::setItemCursor(int location)

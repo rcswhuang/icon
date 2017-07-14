@@ -3,7 +3,7 @@
 
 #include <QWidget>
 
-#include "iconapi.h"
+#include "hiconapi.h"
 class QTabBar;
 class HIconFrame;
 class HIconMgr;

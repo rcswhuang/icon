@@ -78,7 +78,7 @@ void HIconTreeWidget::init()
     paiItem->setText(0,QStringLiteral("接地牌"));
     rootItem->addChild(paiItem);
 
-    connect(this,SIGNAL(itemSelectionChanged()),SLOT(openIcon()));
+    //connect(this,SIGNAL(itemSelectionChanged()),SLOT(openIcon()));
     expandAll();
 
 }

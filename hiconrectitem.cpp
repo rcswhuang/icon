@@ -1,26 +1,32 @@
 ﻿#include "hiconrectitem.h"
 #include "hpropertydlg.h"
+#include <qmath.h>
+#include <QObject>
+#include <QRectF>
+#include <QPainterPath>
+#include <QPointF>
 #include <QGraphicsSceneMouseEvent>
 #include <QKeyEvent>
-#include <qmath.h>
+#include <QStyleOptionGraphicsItem>
+#include <QPainter>
 #include <QDebug>
-HIconRectItem::HIconRectItem(QGraphicsRectItem *parent)
-    :QGraphicsRectItem(parent)
+HIconRectItem::HIconRectItem(HIconGraphicsItem *parent)
+    :HIconGraphicsItem(parent)
 {
 
 }
 
-HIconRectItem::HIconRectItem(const QRectF &rectF, QGraphicsRectItem *parent)
-    :QGraphicsRectItem(rectF,parent)
+HIconRectItem::HIconRectItem(const QRectF &rectF, HIconGraphicsItem *parent)
+    :HIconGraphicsItem(parent),rectF(rectF)
 {
     //pointLocation = LOCATIONNO;
     setFlag(QGraphicsItem::ItemIsMovable,true);
     setFlag(QGraphicsItem::ItemIsSelectable,true);
     setFlag(QGraphicsItem::ItemSendsGeometryChanges,true);
     setFlag(QGraphicsItem::ItemIsFocusable,true);
-    pRectObj = new HRectObj();
-    QPointF centerPoint = rect().center();
-    setTransformOriginPoint(centerPoint);
+    pRectObj = NULL;
+   // QPointF centerPoint = rect().center();
+    //setTransformOriginPoint(centerPoint);
 }
 
 QRectF HIconRectItem::boundingRect() const
@@ -233,7 +239,7 @@ void HIconRectItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     pointStart = event->scenePos();
     pointLocation = pointInRect(pointStart);
-    QGraphicsRectItem::mousePressEvent(event);
+    HIconGraphicsItem::mousePressEvent(event);
 }
 
 void HIconRectItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
@@ -326,7 +332,7 @@ void HIconRectItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     else
     {
 
-        QGraphicsRectItem::mouseMoveEvent(event);
+        HIconGraphicsItem::mouseMoveEvent(event);
     }
 }
 
@@ -339,7 +345,7 @@ void HIconRectItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     QPointF p = mapToScene(rect().center());
     pRectObj->setOX(p.x());
     pRectObj->setOY(p.y());
-    QGraphicsRectItem::mouseReleaseEvent(event);
+    HIconGraphicsItem::mouseReleaseEvent(event);
 }
 
 void HIconRectItem::keyPressEvent(QKeyEvent *event)
@@ -384,19 +390,26 @@ void HIconRectItem::keyPressEvent(QKeyEvent *event)
     setRect(newRect);
 }
 
-
-QVariant HIconRectItem::itemChange(GraphicsItemChange change, const QVariant &value)
+void HIconRectItem::setRect(const QRectF& rect)
 {
-    if(change == QGraphicsItem::ItemPositionChange|| change == QGraphicsItem::ItemSelectedChange)
-    {
-        /*pRectObj->topLeft = mapToScene(rect().topLeft());
-        pRectObj->rectWidth = rect().width();
-        pRectObj->rectHeight = rect().height();
-        QPointF p = mapToScene(rect().center());
-        pRectObj->setOX(p.x());
-        pRectObj->setOY(p.y());*/
-    }
-    return QGraphicsItem::itemChange(change,value);
+    rectF = rect;
+}
+
+QRectF HIconRectItem::rect()const
+{
+    return rectF;
+}
+
+void HIconRectItem::setItemObj(HBaseObj *pObj)
+{
+    pRectObj = (HRectObj*)pObj;
+}
+
+HBaseObj* HIconRectItem::getItemObj()
+{
+    if(pRectObj)
+        return pRectObj;
+    return NULL;
 }
 
 void HIconRectItem::setItemCursor(int location)
