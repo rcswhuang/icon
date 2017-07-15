@@ -37,6 +37,4 @@ public:
   //  bool bSelected;
 };
 
-#endif // HICONRECTITEM_H
-
 #endif // HICONSELECTIONITEM_H

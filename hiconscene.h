@@ -26,6 +26,7 @@ public:
     void addItemByPatternId(int nPatternId);
     void delItemByPatternId(int nPatternId);
     void setItemVisible(int nPatternId);
+    void calcSelectedItem(const QRectF& rectF);
 protected:
     virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
     virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent);

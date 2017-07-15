@@ -51,10 +51,15 @@ void HIconScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
     if(mouseEvent->button() != Qt::LeftButton)
         return;
-    if(getItemAt(mouseEvent->scenePos()))
-        pIconMgr->getIconState()->setDrawShape(enumMulSelection);
+
 
     DRAWSHAPE drawShape = pIconMgr->getIconState()->getDrawShape();
+    //处于选择状态同时没有选到任何item,就是多选状态
+    if(!getItemAt(mouseEvent->scenePos()) && drawShape == enumSelection)
+    {
+        drawShape = enumMulSelection;
+        pIconMgr->getIconState()->setDrawShape(enumMulSelection);
+    }
     switch (drawShape) {
     case enumLine:
     {
@@ -152,30 +157,43 @@ void HIconScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
     DRAWSHAPE drawShape = pIconMgr->getIconState()->getDrawShape();
     if(drawShape == enumLine && line != 0)
     {
-        QLineF newline = QLineF(line->line().p1(),mouseEvent->scenePos());
+        QLineF newline;
+        if(mouseEvent->scenePos().y() - line->line().p1().y())
+            newline = QLineF(line->line().p1(),mouseEvent->scenePos());
+        else
+            newline = QLineF(mouseEvent->scenePos(),line->line().p2());
         line->setLine(newline);
 
     }
     else if(drawShape == enumRectangle && rectangle != 0)
     {
-        QRectF newRect = QRectF(rectangle->rect().topLeft(),mouseEvent->scenePos());
-        if(mouseEvent->modifiers() == Qt::ShiftModifier)
+
+        QRectF newRect;
+        if(mouseEvent->scenePos().y() - rectangle->rect().y() > 0)
+            newRect = QRectF(rectangle->rect().topLeft(),mouseEvent->scenePos());
+        else
+            newRect = QRectF(mouseEvent->scenePos(),rectangle->rect().bottomRight());
+        /*if(mouseEvent->modifiers() == Qt::ShiftModifier)
         {
             qreal dx = qAbs(mouseEvent->scenePos().x() - rectangle->rect().x());
             qreal dy = qAbs(mouseEvent->scenePos().y() - rectangle->rect().y());
             newRect = QRectF(rectangle->rect().topLeft(),QSize(qMin(dx,dy),qMin(dx,dy)));
-        }
+        }*/
         rectangle->setRect(newRect);
     }
     else if(drawShape == enumEllipse && ellipse != 0)
     {
-        QRectF newRect = QRectF(ellipse->rect().topLeft(),mouseEvent->scenePos());
-        if(mouseEvent->modifiers() == Qt::ShiftModifier)
+        QRectF newRect;
+        if(mouseEvent->scenePos().y() - ellipse->rect().y() > 0)
+            newRect = QRectF(ellipse->rect().topLeft(),mouseEvent->scenePos());
+        else
+            newRect = QRectF(mouseEvent->scenePos(),ellipse->rect().bottomRight());
+        /*if(mouseEvent->modifiers() == Qt::ShiftModifier)
         {
             qreal dx = qAbs(mouseEvent->scenePos().x() - ellipse->rect().x());
             qreal dy = qAbs(mouseEvent->scenePos().y() - ellipse->rect().y());
             newRect = QRectF(ellipse->rect().topLeft(),QSize(qMin(dx,dy),qMin(dx,dy)));
-        }
+        }*/
         ellipse->setRect(newRect);
     }
     else if(drawShape == enumPolygon && polygon != 0)
@@ -184,22 +202,38 @@ void HIconScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
     }
     else if(drawShape == enumArc && arc != 0)
     {
-        QRectF newRect = QRectF(arc->rect().topLeft(),mouseEvent->scenePos());
+        QRectF newRect;
+        if(mouseEvent->scenePos().y() - arc->rect().y() > 0)
+            newRect = QRectF(arc->rect().topLeft(),mouseEvent->scenePos());
+        else
+            newRect = QRectF(mouseEvent->scenePos(),arc->rect().bottomRight());
         arc->setRect(newRect);
     }
     else if(drawShape == enumPie && pie != 0)
     {
-        QRectF newRect = QRectF(pie->rect().topLeft(),mouseEvent->scenePos());
+        QRectF newRect;
+        if(mouseEvent->scenePos().y() - pie->rect().y() > 0)
+            newRect = QRectF(pie->rect().topLeft(),mouseEvent->scenePos());
+        else
+            newRect = QRectF(mouseEvent->scenePos(),pie->rect().bottomRight());
         pie->setRect(newRect);
     }
     else if(drawShape == enumText && text != 0)
     {
-        QRectF newRect = QRectF(text->rect().topLeft(),mouseEvent->scenePos());
+        QRectF newRect;
+        if(mouseEvent->scenePos().y() - text->rect().y() > 0)
+            newRect = QRectF(text->rect().topLeft(),mouseEvent->scenePos());
+        else
+            newRect = QRectF(mouseEvent->scenePos(),text->rect().bottomRight());
         text->setRect(newRect);
     }
     else if(drawShape == enumMulSelection)
     {
-        QRectF newRect = QRectF(select->rect().topLeft(),mouseEvent->scenePos());
+        QRectF newRect;
+        if(mouseEvent->scenePos().y() - select->rect().y() > 0)
+            newRect = QRectF(select->rect().topLeft(),mouseEvent->scenePos());
+        else
+            newRect = QRectF(mouseEvent->scenePos(),select->rect().bottomRight());
         select->setRect(newRect);
     }
     //判断当前是否处于选择状态
@@ -252,9 +286,11 @@ void HIconScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
     else if(drawShape == enumMulSelection && select != 0)
     {
         //计算选择点
+        QRectF rectF = select->rect();
+        calcSelectedItem(rectF);
         removeItem(select);
         delete select;
-        select = 0
+        select = 0;
     }
 
     pIconMgr->getIconState()->setDrawShape(enumSelection);
@@ -291,7 +327,8 @@ bool HIconScene::getItemAt(const QPointF &pos)
 {
     QTransform transform;
     QGraphicsItem* item = itemAt(pos,transform);
-    if(item)
+    QList<QGraphicsItem*> itemList = selectedItems();
+    if(item || itemList.count() > 0)
         return true;
     return false;
 }
@@ -468,6 +505,14 @@ void HIconScene::showProperty()
         QGraphicsItem* pItem = itemList.first();
         setItemProperty(pItem);
     }
+}
+
+void HIconScene::calcSelectedItem(const QRectF &rectF)
+{
+    QPainterPath path;
+    path.addRect(rectF);
+    QTransform transform;
+    setSelectionArea(path,transform);
 }
 
 

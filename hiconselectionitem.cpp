@@ -7,6 +7,7 @@
 #include <QKeyEvent>
 #include <QStyleOptionGraphicsItem>
 #include <QPainter>
+#include <QPen>
 #include <QDebug>
 HIconSelectionItem::HIconSelectionItem(HIconGraphicsItem *parent)
     :HIconGraphicsItem(parent)
@@ -29,9 +30,11 @@ QRectF HIconSelectionItem::boundingRect() const
 void HIconSelectionItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     painter->save();
-
-
-
+    QPen pen = QPen(QColor(Qt::black));
+    pen.setWidth(1);
+    painter->setPen(pen);
+    //QBrush brush();
+    painter->drawRect(rect());
     painter->restore();
 
 }

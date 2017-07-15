@@ -64,7 +64,7 @@ enum DRAWSHAPE
 {
     enumSelection, //选择模式
     enumMulSelection,
-    enumConnect, //连接模式
+   // enumConnect, //连接模式
 
     //绘制对象
     enumNo,
