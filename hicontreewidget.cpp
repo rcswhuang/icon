@@ -79,6 +79,7 @@ void HIconTreeWidget::init()
     rootItem->addChild(paiItem);
 
     //connect(this,SIGNAL(itemSelectionChanged()),SLOT(openIcon()));
+    connect(this,SIGNAL(itemClicked(QTreeWidgetItem*,int)),SLOT(openIcon(QTreeWidgetItem*,int)));
     expandAll();
 
 }
@@ -139,18 +140,17 @@ void HIconTreeWidget::newIcon()
 {
     bool ok;
     QString strName = QInputDialog::getText(this,QStringLiteral("输入图元的名称"),QStringLiteral("图元名称:"),QLineEdit::Normal,"",&ok);
+    if(!ok) return;
     int nIconType;
     HIconTreeWidgetItem* item = (HIconTreeWidgetItem*)currentItem();
-    if(item)
-    {
-        nIconType = item->type();
-    }
+    if(!item) return;
+    nIconType = item->type();
     emit IconNew(strName,nIconType);
 }
 
-void HIconTreeWidget::openIcon()
+void HIconTreeWidget::openIcon(QTreeWidgetItem* item,int col)
 {
-    HIconTreeWidgetItem* pCurItem = dynamic_cast<HIconTreeWidgetItem*> (currentItem());
+    HIconTreeWidgetItem* pCurItem = dynamic_cast<HIconTreeWidgetItem*> (item);
     if(!pCurItem) return;
     int nCurType = pCurItem->type();
     if(nCurType > TEMPLATE_TYPE_NULL && nCurType < TEMPLATE_TYPE_MAX)
@@ -160,8 +160,11 @@ void HIconTreeWidget::openIcon()
     }
     else if(nCurType == TEMPLATE_TYPE_CHILD)
     {
-        QString strName = pCurItem->text(0);
+        QString strName = pCurItem->text(col);
         QString strUuid = pCurItem->getUuid();
+        nCurType = pCurItem->parent()->type();
+        if(strName.isEmpty() || strUuid.isEmpty())
+            return;
         emit IconOpen(strName,nCurType,strUuid);
     }
 

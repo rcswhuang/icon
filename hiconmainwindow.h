@@ -54,7 +54,7 @@ private slots:
     void drawHexagon();
     void drawFan();
     void drawText();
-
+    void drawSelection();
 
     //scaleComboBox
     void scaleChanged(QString strScale);

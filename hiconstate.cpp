@@ -3,7 +3,7 @@
 HIconState::HIconState(HIconMgr* pMgr):pIconMgr(pMgr)
 {
     pCurTool = NULL;
-    curDrawShape = enumNo;
+    curDrawShape = enumSelection;
 }
 
 HIconState::~HIconState()

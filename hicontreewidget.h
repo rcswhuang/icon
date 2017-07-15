@@ -65,7 +65,7 @@ public slots:
     void deleteIcon();
     void renameIcon();
     void importIcon();
-    void openIcon();
+    void openIcon(QTreeWidgetItem*,int);
 
 public:
     HIconTreeWidgetItem* digitalItem;

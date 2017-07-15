@@ -51,7 +51,7 @@ void HIconDocument::Del(const QString &strTemplateName, int nTemplateType, const
 void HIconDocument::Open(const QString &strTemplateName, int nTemplateType, const QString &strUuid)
 {
     HIconTemplate* pTemplate = findIconTemplateByTypeAndUuid(nTemplateType,strUuid);
-    if(!pTemplate && pTemplate->getAttrName() == strTemplateName)
+    if(pTemplate && pTemplate->getAttrName() == strTemplateName)
         pCurIconTemplate = pTemplate;
     else
         pCurIconTemplate = NULL;

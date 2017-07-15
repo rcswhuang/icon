@@ -1,4 +1,4 @@
-#include "hicongraphicsitem.h"
+﻿#include "hicongraphicsitem.h"
 #include <QRectF>
 HIconGraphicsItem::HIconGraphicsItem(QGraphicsItem* parent):QGraphicsItem(parent)
 {
@@ -37,7 +37,7 @@ void HIconGraphicsItem::setItemObj(HBaseObj * pObj)
 
 HBaseObj* HIconGraphicsItem::getItemObj()
 {
-
+    return NULL;
 }
 
 bool HIconGraphicsItem::contains(const QPointF &point) const

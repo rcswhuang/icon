@@ -72,8 +72,8 @@ void HIconWidget::openIconWidget()
         if(!pattern)
             return;
         int index = pTabBar->addTab(pattern->strName);
-        pTabBar->setTabData(index,pSymbol->getCurrentPattern());
-        pIconMgr->getIconFrame()->addItemByPatternId(pSymbol->getCurrentPattern());
+        pTabBar->setTabData(index,pattern->nPattern);
+        pIconMgr->getIconFrame()->addItemByPatternId(pattern->nPattern);
     }
 
     pIconMgr->getIconFrame()->setShowRuler(true);
@@ -83,7 +83,7 @@ void HIconWidget::openIconWidget()
         QRectF rectF = QRectF(-sizeF.width()*10,-sizeF.height()*10,sizeF.width()*20,sizeF.height()*20);
         pIconMgr->getIconFrame()->setLogicRect(rectF);
     }
-    pTabBar->setCurrentIndex(0);
+    emit pTabBar->currentChanged(0);
     pTabBar->show();
     pIconMgr->getIconFrame()->show();
 }
@@ -91,6 +91,7 @@ void HIconWidget::openIconWidget()
 void HIconWidget::delIconWidget()
 {
     int index = pTabBar->count();
+    if(index == 0) return;
     while(index)
     {
         QVariant data = pTabBar->tabData(index-1);

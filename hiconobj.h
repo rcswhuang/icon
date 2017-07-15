@@ -22,9 +22,8 @@ public:
     //设置属性值 By ID
     virtual bool setPropertyValue(int nId,const QVariant &value);
     virtual QVariant getPropertyValue(int nId);
-
     virtual DRAWSHAPE getShapeType();
-    HIconLineItem* getIconLineItem(){return pLineItem;}
+
 public:
 
     void setArrowStart(quint8 start);
@@ -40,7 +39,6 @@ public:
     quint16 getArrowHeight();
 
 private:
-    HIconLineItem* pLineItem;
     quint8 arrowStart;
     quint8 arrowEnd;
     quint16 arrowWidth;

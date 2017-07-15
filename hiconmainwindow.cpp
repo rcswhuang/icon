@@ -111,6 +111,7 @@ void HIconMainWindow::createActions()
 
     //其他项
     selectAct = new QAction(QIcon(":/images/select.png"), QStringLiteral("选择"), this);
+    connect(selectAct,SIGNAL(triggered(bool)),this,SLOT(drawSelection()));
     selectAct->setCheckable(true);
     selectAct->setChecked(true);
     rotateAct = new QAction(QIcon(":/images/rotate.png"), QStringLiteral("旋转"), this);
@@ -372,6 +373,11 @@ void HIconMainWindow::drawText()
     pIconMgr->getIconState()->setDrawShape(enumText);
 }
 
+void HIconMainWindow::drawSelection()
+{
+    pIconMgr->getIconState()->setDrawShape(enumSelection);
+}
+
 //关闭
 void HIconMainWindow::close()
 {
@@ -393,6 +399,7 @@ void HIconMainWindow::New(const QString& catalogName,const int& nIconType)//"开
 
     //弹出对话框
 
+    pIconWidget->delIconWidget();//先删除目前
     pIconMgr->New(catalogName,nIconType);
     pIconWidget->setIconMgr(pIconMgr);
     pIconWidget->newIconWidget();
@@ -409,13 +416,13 @@ void HIconMainWindow::Open(const QString& catalogName,const int& nIconType,const
 {
     //获取当前Template 提示是否保存
     //保存成功后 关闭显示 close Template
-    if(!pIconMgr->Save())
+   // if(!pIconMgr->Save())
     {
         //保存失败
     }
 
-    pIconMgr->Open(catalogName,nIconType,uuid);
     pIconWidget->delIconWidget();//先删除目前
+    pIconMgr->Open(catalogName,nIconType,uuid);
     pIconWidget->setIconMgr(pIconMgr); //设置iconWidget
     pIconWidget->openIconWidget();//打开新的
     pIconPreview->init();

@@ -241,7 +241,10 @@ void HIconArcItem::keyPressEvent(QKeyEvent *event)
 
 void HIconArcItem::setRect(const QRectF& rect)
 {
+    if(rect == rectF) return;
+    prepareGeometryChange();
     rectF = rect;
+    update();
 }
 
 QRectF HIconArcItem::rect()const

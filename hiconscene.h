@@ -13,12 +13,14 @@ class HIconPolygonItem;
 class HIconArcItem;
 class HIconPieItem;
 class HIconTextItem;
+class HIconSelectionItem;
 class HIconScene : public QGraphicsScene
 {
     Q_OBJECT
 public:
     HIconScene(HIconMgr* iconMgr);
 public:
+    bool getItemAt(const QPointF& pos);
     void setItemProperty(QGraphicsItem *item);
     void setItemCursor(QGraphicsSceneMouseEvent *mouseEvent);
     void addItemByPatternId(int nPatternId);
@@ -53,6 +55,8 @@ private:
     HIconArcItem* arc;
     HIconPieItem* pie;
     HIconTextItem* text;
+    HIconSelectionItem* select;
+    //HIconRectItem
 
 };
 

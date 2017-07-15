@@ -211,7 +211,8 @@ void HIconLineItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 void HIconLineItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     lineMode = LineNo;
-
+    pLineObj->pfHeadPoint = mapToScene(line().p1());
+    pLineObj->pfTailPoint =  mapToScene(line().p2());
     HIconGraphicsItem::mouseReleaseEvent(event);
 }
 
@@ -265,7 +266,10 @@ QLineF HIconLineItem::line() const
 }
 void HIconLineItem::setLine(const QLineF &line)
 {
+    if(lineF == line) return;
+    prepareGeometryChange();
     lineF = line;
+    update();
 }
 
 void HIconLineItem::setItemObj(HBaseObj *pObj)

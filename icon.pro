@@ -29,7 +29,8 @@ HEADERS       = \
     hiconshowpattern.h \
     hiconlineitem.h \
     hicongraphicsitem.h \
-    hiconapi.h
+    hiconapi.h \
+    hiconselectionitem.h
     #hlineobj.h \
     #hellipseobj.h
 SOURCES       = main.cpp \
@@ -60,7 +61,8 @@ SOURCES       = main.cpp \
     hicontextitem.cpp \
     hiconshowpattern.cpp \
     hiconlineitem.cpp \
-    hicongraphicsitem.cpp
+    hicongraphicsitem.cpp \
+    hiconselectionitem.cpp
     #hlineobj.cpp \
     #hellipseobj.cpp
 RESOURCES     = \

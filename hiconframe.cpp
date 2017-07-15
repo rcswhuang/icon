@@ -104,7 +104,10 @@ bool HIconFrame::eventFilter( QObject *obj, QEvent *event)
 //增加某个图元的显示方案
 void HIconFrame::addItemByPatternId(int nPatternId)
 {
-
+    if(iconScene())
+    {
+        iconScene()->addItemByPatternId(nPatternId);
+    }
 }
 
 //删除某个图元的显示方案
