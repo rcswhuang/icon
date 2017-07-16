@@ -242,8 +242,6 @@ void HIconScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
         setItemCursor(mouseEvent);
         QGraphicsScene::mouseMoveEvent(mouseEvent);
      }
-
-
 }
 
 void HIconScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
@@ -515,4 +513,54 @@ void HIconScene::calcSelectedItem(const QRectF &rectF)
     setSelectionArea(path,transform);
 }
 
+//移动到顶层
+void HIconScene::bringToTop()
+{
+    int maxZValue = 0;
+    QList<QGraphicsItem*> itemList = selectedItems();
+    if(itemList.count() > 1) return;
+    QGraphicsItem* pItem = itemList.at(0);
+    QList<QGraphicsItem*> collItemList = pItem->collidingItems();
+    if(collItemList.count()<=0) return;
+    maxZValue = collItemList.at(0)->zValue();
+    for(int i = 1; i < collItemList.count();i++)
+    {
+        QGraphicsItem* item = collItemList[i];
+        if(item->zValue() > maxZValue)
+            maxZValue = item->zValue();
+    }
+    if(pItem->zValue() > maxZValue)
+        return;
+    else
+    {
+        maxZValue++;
+        pItem->setZValue(maxZValue);
+        ((HIconGraphicsItem*)pItem)->getItemObj()->setStackOrder(maxZValue);
+    }
+}
 
+//移动到底层
+void HIconScene::bringToBottom()
+{
+    int minZValue = 0;
+    QList<QGraphicsItem*> itemList = selectedItems();
+    if(itemList.count() > 1) return;
+    QGraphicsItem* pItem = itemList.at(0);
+    QList<QGraphicsItem*> collItemList = pItem->collidingItems();
+    if(collItemList.count()<=0) return;
+    minZValue = collItemList.at(0)->zValue();
+    for(int i = 1; i < collItemList.count();i++)
+    {
+        QGraphicsItem* item = collItemList[i];
+        if(item->zValue() < minZValue)
+            minZValue = item->zValue();
+    }
+    if(pItem->zValue() < minZValue)
+        return;
+    else
+    {
+        minZValue--;
+        pItem->setZValue(minZValue);
+        ((HIconGraphicsItem*)pItem)->getItemObj()->setStackOrder(minZValue);
+    }
+}

@@ -17,22 +17,23 @@ public:
 
 public:
     void init();
+
+    //二进制读写
+    virtual void readData(QDataStream* data);
+    virtual void writeData(QDataStream* data);
+
     //xml文件读写
     virtual void readXml(QDomElement* data);
     virtual void writeXml(QDomElement* data);
 
     virtual QString TagName();
+
     //拷贝克隆
     virtual void copyTo(HBaseObj* obj);
+    virtual HBaseObj* clone();
 
-    //设置属性值 By Name
-    virtual bool setProperty(const QString &name, const QVariant &value);
-    virtual QVariant getProperty(const QString &name);
-
-    //设置属性值 By ID
-    virtual bool setPropertyValue(int nId,const QVariant &value);
-    virtual QVariant getPropertyValue(int nId);
-
+    virtual void setObjName(const QString strName);
+    virtual QString getObjName();
     //形状类型
     virtual DRAWSHAPE getShapeType();
     virtual void setShapeType(DRAWSHAPE t);
@@ -143,7 +144,7 @@ public:
     //基本信息
     QString strObjName; //对象名称
 
-    DRAWSHAPE drawShape;//图符类型(直线\圆)
+    quint8 drawShape;//图符类型(直线\圆)
 
     //对象标识ID
     quint32 nObjectId;
@@ -176,7 +177,7 @@ public:
     //边框透明度
     bool bFrameSee;//边框可见
 
-    int nTransparency; //透明度
+    quint8 nTransparency; //透明度
 
     //旋转
     float fRotateAngle;//旋转角度
@@ -191,7 +192,7 @@ public:
 
     qint64 nStackOrder;
 
-    QVector<qint8> nPattern;
+    QVector<quint8> nPattern;
 
 protected:
 

@@ -12,7 +12,7 @@ HBaseObj::~HBaseObj()
 
 QString HBaseObj::TagName()
 {
-    return QString("基础");
+    return QString("base");
 }
 
 void HBaseObj::init()
@@ -53,11 +53,108 @@ void HBaseObj::init()
 
 }
 
+void HBaseObj::readData(QDataStream *data)
+{
+    if(!data) return;
+    QString s;
+    *data>>s;
+    strObjName = s;
+    quint32 n32;
+    *data>>n32;
+    nObjectId = n32;
+    quint8 n8;
+    *data>>n8;
+    drawShape = n8;
+    double ff;
+    *data>>ff;
+    originX = ff;
+    *data>>ff;
+    originY = ff;
+    *data>>s;
+    strLineColor = s;
+    *data>>n8;
+    nLineWidth = n8;
+    *data>>n8;
+    nLineStyle = n8;
+    *data>>n8;
+    nLineJoinStyle = n8;
+    *data>>n8;
+    nLineCapStyle = n8;
+    *data>>n8;
+    nFillWay = n8;
+    *data>>n8;
+    nFillStyle = n8;
+    *data>>s;
+    strFillColor = s;
+    *data>>n8;
+    nFillDirection = n8;
+    *data>>n8;
+    nFillPercentage = n8;
+    bool b;
+    *data>>b;
+    bFrameSee = b;
+    *data>>n8;
+    nTransparency = n8;
+    float f;
+    *data>>f;
+    fRotateAngle = f;
+    *data>>b;
+    bHorizonTurn = b;
+    *data>>b;
+    bVerticalTurn = b;
+    *data>>n8;
+    bVisible = n8;
+    quint64 n64;
+    *data>>n64;
+    nStackOrder = n64;
+    *data>>n8;//showpattern num
+    for(int i = 0; i < n8;i++)
+    {
+        quint8 nsp;
+        *data>>nsp;
+        nPattern.append(nsp);
+    }
+
+}
+
+void HBaseObj::writeData(QDataStream *data)
+{
+    if(!data) return;
+    *data<<strObjName;
+    *data<<(quint32)nObjectId;
+
+    *data<<(quint8)drawShape;
+    *data<<(double)originX;
+    *data<<(double)originY;
+    *data<<(QString)strLineColor;
+    *data<<(quint8)nLineWidth;
+    *data<<(quint8)nLineStyle;
+    *data<<(quint8)nLineJoinStyle;
+    *data<<(quint8)nLineCapStyle;
+    *data<<(quint8)nFillWay;
+    *data<<(quint8)nFillStyle;
+    *data<<(QString)strFillColor;
+    *data<<(quint8)nFillDirection;
+    *data<<(quint8)nFillPercentage;
+    *data<<(bool)bFrameSee;
+    *data<<(quint8)nTransparency;
+    *data<<(float)fRotateAngle;
+    *data<<(bool)bHorizonTurn;
+    *data<<(bool)bVerticalTurn;
+    *data<<(quint8)bVisible;
+    *data<<(quint64)nStackOrder;
+    *data<<(quint8)nPattern.count();
+    for(int i = 0; i < nPattern.count();i++)
+    {
+        *data<<(quint8)nPattern[i];
+    }
+}
+
 void HBaseObj::readXml(QDomElement* dom)
 {
-    if(!dom)
+   /* if(!dom)
         return;
-  /*  drawShape = (DRAWSHAPE)dom->attribute("ObjType").toUInt();
+    drawShape = (DRAWSHAPE)dom->attribute("ObjType").toUInt();
     strObjName = dom->attribute("ObjName");
     originX = dom->attribute("X").toDouble();
     originY = dom->attribute("Y").toDouble();
@@ -110,151 +207,45 @@ void HBaseObj::writeXml(QDomElement* dom)
 //拷贝克隆
 void HBaseObj::copyTo(HBaseObj* obj)
 {
-   /* obj->drawShape = drawShape;
+    //id暂时不能复制 只能等到粘贴的时候才能赋值
+    obj->drawShape = drawShape;
     obj->strObjName = strObjName;
     obj->originX = originX;
     obj->originY = originY;
     obj->fRotateAngle = fRotateAngle;
-    obj->fLightRange = fLightRange;
+
+    obj->strLineColor = strLineColor;
     obj->nLineWidth = nLineWidth;
     obj->nLineStyle = nLineStyle;
     obj->nLineJoinStyle = nLineJoinStyle;
     obj->nLineCapStyle = nLineCapStyle;
+
+    obj->nFillWay = nFillWay;
+    obj->nFillStyle = nFillStyle;
+    obj->strFillColor = strFillColor;
+    obj->nFillDirection = nFillDirection;
+    obj->nFillPercentage = nFillPercentage;
+    obj->bFrameSee = bFrameSee;
+    obj->nTransparency = nTransparency;
+
+    obj->fRotateAngle = fRotateAngle;
     obj->bHorizonTurn = bHorizonTurn;
     obj->bVerticalTurn = bVerticalTurn;
     obj->bVisible = bVisible;
-    obj->bDeleted = bDeleted;
     obj->nStackOrder = nStackOrder;
-    obj->setLineColor(&mLineColor);*/
+    for(i = 0;i<nPattern.count();i++)
+        obj->nPattern.append(nPatter[i]);
 }
 
 //设置属性值 By Name
-bool HBaseObj::setProperty(const QString &name, const QVariant &value)
+void HBaseObj::setObjName(const QString strName)
 {
-    if("X" == name)
-    {
-        originX = value.toDouble();
-    }
-    else if("Y" == name)
-    {
-        originX = value.toDouble();
-    }
-    else if("Name" == name)
-    {
-        strObjName = value.toString();
-    }
-    else if("OBJID" == name)
-    {
-        nObjectId = value.toInt();
-    }
-    else if("RotateAngle" == name)
-    {
-        fRotateAngle = value.toDouble();
-    }
-    else if("LineWidth" == name)
-    {
-        nLineWidth = value.toInt();
-    }
-    else if("LineStyle" == name)
-    {
-        nLineStyle = value.toInt();
-    }
-    else if("LineJoinStyle" == name)
-    {
-        nLineJoinStyle = value.toInt();
-    }
-    else if("LineCapStyle" == name)
-    {
-        nLineCapStyle = value.toInt();
-    }
-    else if("LineColor" == name)
-    {
-        //QColor color = QColor(value.toString());
-        //setLineColor(&color);
-    }
-
-    return true;
+   strObjName = strName;
 }
 
-QVariant HBaseObj::getProperty(const QString &name)
+QString HBaseObj::getObjName()
 {
-    QVariant val;
-    if("X" == name)
-    {
-        val = QVariant(originX);
-    }
-    else if("Y" == name)
-    {
-        val = QVariant(originY);
-    }
-    else if("Name" == name)
-    {
-        val = QVariant(strObjName);
-    }
-    else if("RotateAngle" == name)
-    {
-        val = QVariant(fRotateAngle);
-    }
-    else if("LineWidth" == name)
-    {
-        val = QVariant(nLineWidth);
-    }
-    else if("LineStyle" == name)
-    {
-        val = QVariant(nLineStyle);
-    }
-    else if("LineJoinStyle" == name)
-    {
-        val = QVariant(nLineJoinStyle);
-    }
-    else if("LineCapStyle" == name)
-    {
-        val = QVariant(nLineCapStyle);
-    }
-    else if("LineColor" == name)
-    {
-        val = QVariant(strLineColor);
-    }
-    else if("FrameSee" == name)
-    {
-        val = QVariant(bFrameSee);
-    }
-    else if("FillWay" == name)
-    {
-        val = QVariant(nFillWay);
-    }
-    else if("FillStyle" == name)
-    {
-        val = QVariant(nFillStyle);
-    }
-    else if("FillColor" == name)
-    {
-        val = QVariant(strFillColor);
-    }
-    else if("FillDirection" == name)
-    {
-        val = QVariant(nFillDirection);
-    }
-    else if("FillPercentage" == name)
-    {
-        val = QVariant(nFillPercentage);
-    }
-    else if("Transparency" == name)
-    {
-        val = QVariant(nTransparency); //透明度
-    }
-    return val;
-}
-
-//设置属性值 By ID
-bool HBaseObj::setPropertyValue(int nId,const QVariant &value)
-{
-    return false;
-}
-
-QVariant HBaseObj::getPropertyValue(int nId)
-{
-    return false;
+   return strObjName;
 }
 
 int HBaseObj::getObjID()

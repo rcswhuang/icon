@@ -81,10 +81,10 @@ void HIconSymbol::addObj(HBaseObj* pObj)
 {
     if(!pObj)
         return;
-    int objID = getObjID(pObj->getShapeType());
-    pObj->setProperty("OBJID",QVariant(objID));
+    int objID = getObjID();
+    pObj->setObjID(objID);
     QString strObjName = QString("%1_%2_%3").arg(pObj->TagName()).arg(pObj->getShapeType()).arg(objID);
-    pObj->setProperty("Name",QVariant(strObjName));
+    pObj->setObjName(strObjName);
     HIconShowPattern* pSP = getCurrentPatternPtr();
     if(!pSP)
         return;
@@ -102,7 +102,7 @@ void HIconSymbol::delObj(HBaseObj* pObj)
 }
 
 //获取ObjID
-int HIconSymbol::getObjID(int nObjType)
+int HIconSymbol::getObjID()
 {
     int nObjID = 1;
     while(findObjID(nObjID))

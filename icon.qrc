@@ -30,5 +30,7 @@
         <file>images/rectangle.png</file>
         <file>images/fan.png</file>
         <file>images/text.png</file>
+        <file>images/move_backward.png</file>
+        <file>images/move_forward.png</file>
     </qresource>
 </RCC>

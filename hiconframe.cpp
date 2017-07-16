@@ -1,10 +1,14 @@
 ﻿#include "hiconframe.h"
 #include <QVBoxLayout>
-#include "hevent.h"
+#include <QByteArray>
+#include <QDataStream>
+#include <QProcessEnvironment>
+#include <QDir>
 #include "hiconscene.h"
 #include "hiconobjitem.h"
 #include "hiconmgr.h"
 #include "hiconstate.h"
+#include "hicongraphicsitem.h"
 HIconFrame::HIconFrame(QWidget * parent, Qt::WindowFlags f )
     :HFrame(parent,f)
 {
@@ -57,32 +61,89 @@ HIconScene* HIconFrame::iconScene()
     return NULL;
 }
 
-//刷新选中点、选中框
 void HIconFrame::refreshSelected(const QRectF& rect)
 {
 
 }
 
-//鼠标的改变
 void HIconFrame::cursorChanged(const QCursor& cursor)
 {
 
 }
 
-//合适宽度
 void HIconFrame::fitWidth()
 {
 
 }
 
-//合适高度
 void HIconFrame::fitHeight()
 {
 
 }
 
+void HIconFrame::cut()
+{
+    //寻找当前页面的所有选择的图元
+    QByteArray bytes;
+    QDataStream stream(bytes,QIODevice::WriteOnly);
+    QList<QGraphicsItem*> itemSelectList = iconScene()->selectedItems();
+    stream<<itemSelectList.count();
+    stream<<pIconMgr->getIconTemplate()->getSymbol()->getCurrentPattern();
+    for(int i =0; i < itemSelectList.count();i++)
+    {
+        HBaseObj* pObj = qgraphicsitem_cast<HIconGraphicsItem*>(itemSelectList[i])->getItemObj();
+        HBaseObj* pNewObj = pObj->clone();
+        pNewObj->writeData(&stream);
+    }
+    QString clipboardPath = getClipboardFile();
+    QFile file(clipboardPath);
+    if(file.open(QIODevice::WriteOnly))
+    {
+        QDataStream cbStream(file);
+        cbStream<<0x0000;
+        cbStream.writeBytes(bytes.data(),bytes.length());
+        file.close();
+    }
+}
 
-//按照显示方案来显示里面的Item
+void HIconFrame::copy()
+{
+
+}
+
+void HIconFrame::paste()
+{
+    QString clipboardPath = getClipboardFile();
+    QFile file(clipboardPath);
+    if(!file.exists() || file.open(QIODevice::ReadOnly))
+        return;
+    QDataStream stream(&file);
+    quint32 magicNumber;
+    stream>>magicNumber;
+    int num;
+    stream>>num;
+    int nPattern;
+    stream>>nPattern;
+    for(int i = 0; i < num;i++)
+    {
+
+    }
+
+}
+
+
+void HIconFrame::bringToTop()
+{
+    if(iconScene())
+        iconScene()->bringToTop();
+}
+
+void HIconFrame::bringToBottom()
+{
+    if(iconScene())
+        iconScene()->bringToBottom();
+}
+
 void HIconFrame::setItemVisible(int nPatternId)
 {
     if(iconScene())
@@ -91,7 +152,6 @@ void HIconFrame::setItemVisible(int nPatternId)
     }
 }
 
-//事件过滤
 bool HIconFrame::eventFilter( QObject *obj, QEvent *event)
 {
     HFrame::eventFilter(obj,event);
@@ -101,7 +161,6 @@ bool HIconFrame::eventFilter( QObject *obj, QEvent *event)
     return false;
 }
 
-//增加某个图元的显示方案
 void HIconFrame::addItemByPatternId(int nPatternId)
 {
     if(iconScene())
@@ -110,11 +169,21 @@ void HIconFrame::addItemByPatternId(int nPatternId)
     }
 }
 
-//删除某个图元的显示方案
 void HIconFrame::delItemByPatternId(int nPatternId)
 {
     if(iconScene())
     {
         iconScene()->delItemByPatternId(nPatternId);
     }
+}
+
+QString HIconFrame::getClipboardFile()
+{
+    QString clipboardPath = QProcessEnvironment::systemEnvironment().value("WFSYSTEM_DIR");
+    clipboardPath.append("/data/icon");
+    QDir dirClipboard(clipboardPath);
+    if(!dirClipboard.exists())
+        dirClipboard.mkdir(clipboardPath);
+    clipboardPath.append("/iconclipboard.data");
+    return clipboardPath;
 }

@@ -7,21 +7,21 @@ class HLineObj : public HBaseObj
 public:
     HLineObj();
     ~HLineObj();
+
+    //二进制读写
+    virtual void readData(QDataStream* data);
+    virtual void writeData(QDataStream* data);
+
     //xml文件读写
     virtual void readXml(QDomElement* data);
     virtual void writeXml(QDomElement* data);
 
     virtual QString TagName();
+
     //拷贝克隆
     virtual void copyTo(HBaseObj* obj);
+    virtual HLineObj* clone();
 
-    //设置属性值 By Name
-    virtual bool setProperty(const QString &name, const QVariant &value);
-    virtual QVariant getProperty(const QString &name);
-
-    //设置属性值 By ID
-    virtual bool setPropertyValue(int nId,const QVariant &value);
-    virtual QVariant getPropertyValue(int nId);
     virtual DRAWSHAPE getShapeType();
 
 public:
@@ -58,16 +58,9 @@ public:
     virtual void writeXml(QDomElement* data);
 
     virtual QString TagName();
+
     //拷贝克隆
     virtual void copyTo(HBaseObj* obj);
-
-    //设置属性值 By Name
-    virtual bool setProperty(const QString &name, const QVariant &value);
-    virtual QVariant getProperty(const QString &name);
-
-    //设置属性值 By ID
-    virtual bool setPropertyValue(int nId,const QVariant &value);
-    virtual QVariant getPropertyValue(int nId);
 
     virtual DRAWSHAPE getShapeType();
 
@@ -92,14 +85,6 @@ public:
     //拷贝克隆
     virtual void copyTo(HBaseObj* obj);
 
-    //设置属性值 By Name
-    virtual bool setProperty(const QString &name, const QVariant &value);
-    virtual QVariant getProperty(const QString &name);
-
-    //设置属性值 By ID
-    virtual bool setPropertyValue(int nId,const QVariant &value);
-    virtual QVariant getPropertyValue(int nId);
-
     virtual DRAWSHAPE getShapeType();
 
 public:
@@ -123,14 +108,6 @@ public:
     //拷贝克隆
     virtual void copyTo(HBaseObj* obj);
 
-    //设置属性值 By Name
-    virtual bool setProperty(const QString &name, const QVariant &value);
-    virtual QVariant getProperty(const QString &name);
-
-    //设置属性值 By ID
-    virtual bool setPropertyValue(int nId,const QVariant &value);
-    virtual QVariant getPropertyValue(int nId);
-
     virtual DRAWSHAPE getShapeType();
 
 public:
@@ -147,6 +124,7 @@ public:
     virtual void writeXml(QDomElement* data);
 
     virtual QString TagName();
+
     //拷贝克隆
     virtual void copyTo(HBaseObj* obj);
 

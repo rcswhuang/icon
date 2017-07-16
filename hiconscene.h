@@ -20,6 +20,10 @@ class HIconScene : public QGraphicsScene
 public:
     HIconScene(HIconMgr* iconMgr);
 public:
+    //移动到顶层
+    void bringToTop();
+    //移动到底层
+    void bringToBottom();
     bool getItemAt(const QPointF& pos);
     void setItemProperty(QGraphicsItem *item);
     void setItemCursor(QGraphicsSceneMouseEvent *mouseEvent);

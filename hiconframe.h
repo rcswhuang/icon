@@ -34,18 +34,40 @@ public:
     //合适高度
     void fitHeight();
 
+    //剪切
+    void cut();
+
+    //复制
+    void copy();
+
+    //粘贴
+    void paste();
+
+    //移动到顶层
+    void bringToTop();
+
+    //移动到底层
+    void bringToBottom();
+
+    //设置scene的逻辑区域
     void setLogicRect(QRectF& rectF);
 
+    //增加scene的显示方案
     void addItemByPatternId(int nPatternId);
 
+    //删除scene的显示方案
     void delItemByPatternId(int nPatternId);
 
+    //获取scene的区域
     QRectF getLogicRect();
 
+    //获取frame里面的scene对象
     HIconScene* iconScene();
 
-
+    //设置显示方案对象的显示和隐藏功能
     void setItemVisible(int nPatternId);
+
+    QString getClipboardFile();
 public slots:
 
 

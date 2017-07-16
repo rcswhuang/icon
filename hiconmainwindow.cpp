@@ -72,7 +72,6 @@ void HIconMainWindow::createActions()
     copyAct = new QAction(QIcon(":/images/copy.png"), QStringLiteral("复制(&C)"), this);
     copyAct->setShortcuts(QKeySequence::Copy);
 
-
     pasteAct = new QAction(QIcon(":/images/paste.png"), QStringLiteral("粘贴(&P)"), this);
     pasteAct->setShortcuts(QKeySequence::Paste);
 
@@ -109,6 +108,11 @@ void HIconMainWindow::createActions()
     connect(scaleComboBox,SIGNAL(currentIndexChanged(QString)),this,SLOT(scaleChanged(QString)));
     connect(scaleComboBox->lineEdit(),SIGNAL(editingFinished()),this,SLOT(scaleChanged()));
 
+    toTopAct = new QAction(QIcon(":/images/move_forward.png"),QStringLiteral("置顶"),this);
+    connect(toTopAct,SIGNAL(triggered(bool)),this,SLOT(bringToTop()));
+
+    toBottomAct = new QAction(QIcon(":/images/move_backward.png"),QStringLiteral("置底"),this);
+    connect(toBottomAct,SIGNAL(triggered(bool)),this,SLOT(bringToBottom()));
     //其他项
     selectAct = new QAction(QIcon(":/images/select.png"), QStringLiteral("选择"), this);
     connect(selectAct,SIGNAL(triggered(bool)),this,SLOT(drawSelection()));
@@ -220,6 +224,8 @@ void HIconMainWindow::createToolBars()
 
     zoomToolBar = addToolBar(tr("zoomBar"));
     zoomToolBar->setIconSize(QSize(32,32));
+    zoomToolBar->addAction(toTopAct);
+    zoomToolBar->addAction(toBottomAct);
     zoomToolBar->addAction(fitWidthAct);
     zoomToolBar->addAction(fitHeightAct);
     zoomToolBar->addAction(zoomInAct);
@@ -583,13 +589,17 @@ void HIconMainWindow::rotateRight()
 //移动到顶层
 void HIconMainWindow::bringToTop()
 {
-
+    if(!pIconMgr || !pIconMgr->getIconFrame())
+        return;
+    pIconMgr->getIconFrame()->bringToTop();
 }
 
 //移动到底层
 void HIconMainWindow::bringToBottom()
 {
-
+    if(!pIconMgr || !pIconMgr->getIconFrame())
+        return;
+    pIconMgr->getIconFrame()->bringToBottom();
 }
 
 //上移一层

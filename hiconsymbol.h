@@ -23,7 +23,7 @@ public:
     void setIconSymbolWidth(double width);
     void setIconSymbolHeight(double height);
 
-    int getObjID(int nObjType);
+    int getObjID();
     bool findObjID(int nObjID);
     //图元中多种状态的显示方案
     bool PatterIsValid(int nId);

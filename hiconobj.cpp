@@ -14,6 +14,45 @@ HLineObj::~HLineObj()
   // pLineItem = NULL;
 }
 
+void HLineObj::readData(QDataStream *data)
+{
+    if(!data)return;
+    HBaseObj::readData(data);
+    qreal qr;
+    *data>>qr;
+    pfHeadPoint.setX(qr);
+    *data>>qr;
+    pfHeadPoint.setY(qr);
+    *data>>qr;
+    pfTailPoint.setX(qr);
+    *data>>qr;
+    pfTailPoint.setY(qr);
+    quint8 n8;
+    *data>>n8;
+    arrowStart = n8;
+    *data>>n8;
+    arrowEnd = n8;
+    quint16 n16;
+    *data>>n16;
+    arrowWidth = n16;
+    *data>>n16;
+    arrowHeight = n16;
+}
+
+void HLineObj::writeData(QDataStream *data)
+{
+    if(!data) return;
+    HBaseObj::writeData(data);
+    *data<<(qreal)pfHeadPoint.x();
+    *data<<(qreal)pfHeadPoint.y();
+    *data<<(qreal)pfTailPoint.x();
+    *data<<(qreal)pfTailPoint.y();
+    *data<<(quint8)arrowStart;
+    *data<<(quint8)arrowEnd;
+    *data<<(quint16)arrowWidth;
+    *data<<(quint16)arrowHeight;
+}
+
 void HLineObj::readXml(QDomElement* data)
 {
 
@@ -32,39 +71,30 @@ QString HLineObj::TagName()
 //拷贝克隆
 void HLineObj::copyTo(HBaseObj* obj)
 {
-    HBaseObj::copyTo(obj);
+    HLineObj* ob = (HLineObj*)obj;
+    HBaseObj::copyTo(oj);
+    ob->setArrowStart(arrowStart);
+    ob->setArrowEnd(arrowEnd);
+    ob->setArrowWidth(arrowWidth);
+    ob->setArrowHeight(arrowHeight);
+    ob->pfHeadPoint = pfHeadPoint;
+    ob->pfTailPoint = pfTailPoint;
 }
 
-//设置属性值 By Name
-bool HLineObj::setProperty(const QString &name, const QVariant &value)
+HLineObj* HLineObj::clone()
 {
-    bool bResult = HBaseObj::setProperty(name,value);
-    return bResult;
+    HLineObj* newObj = new HLineObj;
+    if(newObj)
+    {
+        copyTo(newObj);
+    }
+    return newObj;
 }
-
-QVariant HLineObj::getProperty(const QString &name)
-{
-    QVariant val = HBaseObj::getProperty(name);
-    return val;
-}
-
-//设置属性值 By ID
-bool HLineObj::setPropertyValue(int nId,const QVariant &value)
-{
-    return false;
-}
-
-QVariant HLineObj::getPropertyValue(int nId)
-{
-    return QVariant();
-}
-
 
 DRAWSHAPE HLineObj::getShapeType()
 {
     return enumLine;
 }
-
 
 void HLineObj::setArrowStart(quint8 start)
 {
@@ -138,31 +168,6 @@ void HRectObj::copyTo(HBaseObj* obj)
     HBaseObj::copyTo(obj);
 }
 
-//设置属性值 By Name
-bool HRectObj::setProperty(const QString &name, const QVariant &value)
-{
-    bool bResult = HBaseObj::setProperty(name,value);
-    return bResult;
-}
-
-QVariant HRectObj::getProperty(const QString &name)
-{
-    QVariant val = HBaseObj::getProperty(name);
-    return val;
-}
-
-//设置属性值 By ID
-bool HRectObj::setPropertyValue(int nId,const QVariant &value)
-{
-    return false;
-}
-
-QVariant HRectObj::getPropertyValue(int nId)
-{
-    return QVariant();
-}
-
-
 DRAWSHAPE HRectObj::getShapeType()
 {
     return enumRectangle;
@@ -202,31 +207,6 @@ void HEllipseObj::copyTo(HBaseObj* obj)
     HBaseObj::copyTo(obj);
 }
 
-//设置属性值 By Name
-bool HEllipseObj::setProperty(const QString &name, const QVariant &value)
-{
-    bool bResult = HBaseObj::setProperty(name,value);
-    return bResult;
-}
-
-QVariant HEllipseObj::getProperty(const QString &name)
-{
-    QVariant val = HBaseObj::getProperty(name);
-    return val;
-}
-
-//设置属性值 By ID
-bool HEllipseObj::setPropertyValue(int nId,const QVariant &value)
-{
-    return false;
-}
-
-QVariant HEllipseObj::getPropertyValue(int nId)
-{
-    return QVariant();
-}
-
-
 DRAWSHAPE HEllipseObj::getShapeType()
 {
     return enumEllipse;
@@ -263,31 +243,6 @@ void HPolygonObj::copyTo(HBaseObj* obj)
 {
     HBaseObj::copyTo(obj);
 }
-
-//设置属性值 By Name
-bool HPolygonObj::setProperty(const QString &name, const QVariant &value)
-{
-    bool bResult = HBaseObj::setProperty(name,value);
-    return bResult;
-}
-
-QVariant HPolygonObj::getProperty(const QString &name)
-{
-    QVariant val = HBaseObj::getProperty(name);
-    return val;
-}
-
-//设置属性值 By ID
-bool HPolygonObj::setPropertyValue(int nId,const QVariant &value)
-{
-    return false;
-}
-
-QVariant HPolygonObj::getPropertyValue(int nId)
-{
-    return QVariant();
-}
-
 
 DRAWSHAPE HPolygonObj::getShapeType()
 {
