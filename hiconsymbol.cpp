@@ -31,45 +31,26 @@ void HIconSymbol::readXml(QDomElement* dom)
         return;
     strSymbolName = dom->attribute("SymbolName");
     usSymbolType = dom->attribute("ObjType").toUInt();
-    //fWidth = dom->attribute("Width").toDouble();
-    //fHeight = dom->attribute("Height").toDouble();
-    //fTransparent = dom->attribute("Transparent").toDouble();
-    //nFillStyle = dom->attribute("FillStyle").toInt();
-    //nFillCent = dom->attribute("FillCent").toInt();
-    //bFill = dom->attribute("bFill").toInt();
-    //pFillColor = new QColor(dom->attribute("FillColor"));
-    //strBackgroundPath = dom->attribute("BackImagePath");
 
-    QDomElement objEle = dom->namedItem("DrawObj").toElement();
-    bool bChild = objEle.attribute("bChildren").toInt();
-    if(!bChild)
-        return;
+    //先找到showPattern
+
+    QDomElement objEle = dom->namedItem("ShowPatterns").toElement();
     //构建下面的元素对象
     QDomNode n = objEle.firstChild();
     int i = 0;
     for(;!n.isNull();n=n.nextSibling(),i++)
     {
         QDomElement e = n.toElement();
-        int nType = e.attribute("ObjType").toInt();
-        HBaseObj* obj = NULL;
-        if(nType == OBJ_TYPE_LINE)
+        int patternID = e.attribute("PatternID").toInt();
+        HIconShowPattern* pattern = newPattern(patternID);
+        if(!pattern)
         {
-            //obj = new
+            delete pattern;
+            pattern = NULL;
+            continue;
         }
-        else if(nType == OBJ_TYPE_RECTANGLE)
-        {
-
-        }
-        else if(nType == OBJ_TYPE_ELLIPSE)
-        {
-
-        }
-        else if(nType == OBJ_TYPE_ARC)
-        {
-
-        }
-        obj->readXml(&e);
-
+        pattern->readXml(e);
+        pShowPatternVector.append(pattern);
     }
 }
 
@@ -79,15 +60,6 @@ void HIconSymbol::writeXml(QDomElement *dom)
         return;
     dom->setAttribute("IconSymbolName",strSymbolName);
     dom->setAttribute("IconSymbolType",usSymbolType);
-
-    QDomElement childDom = dom->ownerDocument().createElement("Children");
-    dom->appendChild(childDom);
-    for(int i = 0; i < pShowPatternVector[i];i++)
-    {
-        HIconShowPattern* pattern = (HIconShowPattern*)pShowPatternVector[i];
-        if(!pattern)continue;
-        pattern->writeXml(childDom);
-    }
 
     QDomElement patternDom = dom->ownerDocument().createElement("ShowPatterns");
     dom->appendChild(patternDom);
@@ -100,6 +72,7 @@ void HIconSymbol::writeXml(QDomElement *dom)
         patternChildDom.setAttribute("Alias",pattern->strAlias);
         patternChildDom.setAttribute("PatternID",pattern->nPattern);
         patternDom.appendChild(patternChild);
+        pattern->writeXml(patternChildDom);
     }
 }
 

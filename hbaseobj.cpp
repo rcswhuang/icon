@@ -155,79 +155,57 @@ void HBaseObj::readXml(QDomElement* dom)
         return;
 
 
-  /*  *data<<(bool)bFrameSee;
-    *data<<(quint8)nTransparency;
-    *data<<(float)fRotateAngle;
-    *data<<(bool)bHorizonTurn;
-    *data<<(bool)bVerticalTurn;
-    *data<<(quint8)bVisible;
-    *data<<(quint64)nStackOrder;
-    *data<<(quint8)nPattern.count();
-    for(int i = 0; i < nPattern.count();i++)
-    {
-        *data<<(quint8)nPattern[i];
-    }*/
-
-    nObjectId = dom->attribute("ObjId").toUInt();
     strObjName = dom->attribute("ObjName");
+    nObjectId = dom->attribute("ObjId").toUInt();
     drawShape = (quint8)dom->attribute("ObjType").toUInt();
     originX = dom->attribute("X").toDouble();
     originY = dom->attribute("Y").toDouble();
-
-    /**data<<(QString)strLineColor;
-    *data<<(quint8)nLineWidth;
-    *data<<(quint8)nLineStyle;
-    *data<<(quint8)nLineJoinStyle;
-    *data<<(quint8)nLineCapStyle;
-    *data<<(quint8)nFillWay;
-    *data<<(quint8)nFillStyle;
-    *data<<(QString)strFillColor;
-    *data<<(quint8)nFillDirection;
-    *data<<(quint8)nFillPercentage;*/
-/*
-    fRotateAngle = dom->attribute("RotateAngle").toDouble();
-    fLightRange = dom->attribute("LightRange").toDouble();
+    strLineColor = dom->attribute("strLineColor");
     nLineWidth = dom->attribute("LineWidth").toUInt();
     nLineStyle = dom->attribute("LineStyle").toUInt();
     nLineJoinStyle = dom->attribute("LineJoinStyle").toUInt();
     nLineCapStyle = dom->attribute("LineCapStyle").toUInt();
+    nFillWay = dom->attribute("FillWay").toUInt();
+    nFillStyle = dom->attribute("FillStyle").toUInt();
+    strFillColor = dom->attribute("FillColor").toUInt();
+    nFillDirection = dom->attribute("FillDirection").toUInt();
+
+    nFillStyle = dom->attribute("nFillPercentage").toUInt();
+    bFrameSee = (bool)dom->attribute("FrameSee").toUInt();
+    nTransparency = dom->attribute("Transparency").toUInt();
+    fRotateAngle = dom->attribute("RotateAngle").toDouble();
     bHorizonTurn = dom->attribute("HorizonTurn").toInt();
     bVerticalTurn = dom->attribute("VerticalTurn").toInt();
     bVisible = dom->attribute("Visible").toInt();
-    bDeleted = dom->attribute("Delete").toInt();
     nStackOrder = dom->attribute("StackOrder").toInt();
-    QString lc = dom->attribute("LineColor");
-    if(!lc.isEmpty())
-    {
-        mLineColor = QColor(lc);
-    }
-*/
-
 }
 
 void HBaseObj::writeXml(QDomElement* dom)
 {
     if(!dom)
         return;
-   /* dom->setTagName(TagName());
-    dom->setAttribute("ObjType",drawShape);
     dom->setAttribute("ObjName",strObjName);
+    dom->setAttribute("ObjID",nObjectId);
+    dom->setAttribute("ObjType",drawShape); 
     dom->setAttribute("X",originX);
     dom->setAttribute("Y",originY);
-
-    dom->setAttribute("RotateAngle",fRotateAngle);
-    dom->setAttribute("LightRangle",fLightRange);
+    dom->setAttribute("LineColor",strLineColor);
     dom->setAttribute("LineWidth",nLineWidth);
     dom->setAttribute("LineStyle",nLineStyle);
-    dom->setAttribute("LineJoinStyle",nLineJoinStyle);
-    dom->setAttribute("LineCapStyle",nLineCapStyle);
+    dom->setAttribute("LineJoinSytle",nLineJoinStyle);
+    dom->setAttribute("LineCapSytle",nLineCapStyle);
+    dom->setAttribute("FillWay",nFillWay);
+    dom->setAttribute("FillStyle",nFillStyle);
+    dom->setAttribute("FillColor",strFillColor);
+    dom->setAttribute("FillDirection",nFillDirection);
+    dom->setAttribute("FillPercentage",nFillPercentage);
+    dom->setAttribute("FrameSee",bFrameSee);
+    dom->setAttribute("Transparency",nTransparency);
+    dom->setAttribute("RotateAngle",fRotateAngle);
     dom->setAttribute("HorizonTurn",bHorizonTurn);
     dom->setAttribute("VerticalTurn",bVerticalTurn);
-
     dom->setAttribute("Visible",bVisible);
-    dom->setAttribute("Delete",bDeleted);
     dom->setAttribute("StackOrder",nStackOrder);
-    dom->setAttribute("LineColor",mLineColor.name());*/
 
 }
 

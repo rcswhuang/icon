@@ -13,12 +13,38 @@ HIconShowPattern::~HIconShowPattern()
 
 void HIconShowPattern::readXml(QDomElement* dom)
 {
+    if(!dom) return;
 
+    QDomElement objEle = dom->namedItem("ShowPatterns").toElement();
+    //构建下面的元素对象
+    QDomNode n = objEle.firstChild();
+    int i = 0;
+    for(;!n.isNull();n=n.nextSibling(),i++)
+    {
+        QDomElement e = n.toElement();
+        int patternID = e.attribute("PatternID").toInt();
+        HIconShowPattern* pattern = newPattern(patternID);
+        if(!pattern)
+        {
+            delete pattern;
+            pattern = NULL;
+            continue;
+        }
+        pattern->readXml(e);
+        pShowPatternVector.append(pattern);
+    }
 }
 
 void HIconShowPattern::writeXml(QDomElement *dom)
 {
-
+    if(!dom) return;
+    QDomElement childEle;
+    for(int i = 0; i < pObjList.count();i++)
+    {
+        HBaseObj* pObj = (HBaseObj*)pObjList[i];
+        childEle = dom->ownerDocument.createElement(pObj->TagName());
+        pObj->writeXml(childEle);
+    }
 }
 
 void HIconShowPattern::addObj(HBaseObj* pObj)

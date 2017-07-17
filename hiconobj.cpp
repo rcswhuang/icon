@@ -53,14 +53,33 @@ void HLineObj::writeData(QDataStream *data)
     *data<<(quint16)arrowHeight;
 }
 
-void HLineObj::readXml(QDomElement* data)
+void HLineObj::readXml(QDomElement* dom)
 {
+    if(!dom) return;
+    HBaseObj::readData(dom);
+    pfHeadPoint.setX(dom->attribute("pfHeadPointx").toDouble());
+    pfHeadPoint.setY(dom->attribute("pfHeadPointy").toDouble());
+    pfTailPoint.setX(dom->attribute("pfTailPointx").toDouble());
+    pfTailPoint.setY(dom->attribute("pfTailPointx").toDouble());
+    arrowStart = dom->attribute("arrowStart").toInt();
+    arrowEnd = dom->attribute("arrowEnd").toInt();
+    arrowWidth = dom->attribute("arrowWidth").toInt();
+    arrowHeight = dom->attribute("arrowHeight").toInt();
 
 }
 
-void HLineObj::writeXml(QDomElement* data)
+void HLineObj::writeXml(QDomElement* dom)
 {
-
+    if(!dom)return;
+    HBaseObj::writeData(data);
+    dom->setAttribute("pfHeadPointx",pfHeadPoint.x());
+    dom->setAttribute("pfHeadPointy",pfHeadPoint.y());
+    dom->setAttribute("pfTailPointx",pfTailPoint.x());
+    dom->setAttribute("pfTailPointy",pfHeadPoint.y());
+    dom->setAttribute("arrowStart",arrowStart);
+    dom->setAttribute("arrowEnd",arrowEnd);
+    dom->setAttribute("arrowWidth",arrowWidth);
+    dom->setAttribute("arrowHeight",arrowHeight);
 }
 
 QString HLineObj::TagName()
@@ -177,14 +196,24 @@ void HRectObj::writeData(QDataStream* data)
     *data<<(double)rectHeight;
 }
 
-void HRectObj::readXml(QDomElement* data)
+void HRectObj::readXml(QDomElement* dom)
 {
-
+    if(!dom) return;
+    HBaseObj::readData(dom);
+    topLeft.setX(dom->attribute("topLeftx").toDouble());
+    topLeft.setY(dom->attribute("topLeftx").toDouble());
+    rectWidth = dom->attribute("rectWidth").toInt();
+    rectHeight = dom->attribute("arrowEnd").toInt();
 }
 
-void HRectObj::writeXml(QDomElement* data)
+void HRectObj::writeXml(QDomElement* dom)
 {
-
+    if(!dom)return;
+    HBaseObj::writeData(dom);
+    dom->setAttribute("topLeftx",topLeft.x());
+    dom->setAttribute("topLefty",topLeft.y());
+    dom->setAttribute("rectWidth",rectWidth);
+    dom->setAttribute("rectHeight",rectHeight);
 }
 
 QString HRectObj::TagName()
@@ -247,10 +276,10 @@ void HEllipseObj::readData(QDataStream* data)
     rectHeight = qr;
 }
 
-void HEllipseObj::writeData(QDataStream* data)
+void HEllipseObj::writeData(QDataStream* dom)
 {
-    if(!data) return;
-    HBaseObj::writeData(data);
+    if(!dom) return;
+    HBaseObj::writeData(dom);
     *data<<(qreal)topLeft.x();
     *data<<(qreal)topLeft.y();
     *data<<(double)rectWidth;
@@ -259,12 +288,22 @@ void HEllipseObj::writeData(QDataStream* data)
 
 void HEllipseObj::readXml(QDomElement* data)
 {
-
+    if(!dom) return;
+    HBaseObj::readData(dom);
+    topLeft.setX(dom->attribute("topLeftx").toDouble());
+    topLeft.setY(dom->attribute("topLeftx").toDouble());
+    rectWidth = dom->attribute("rectWidth").toInt();
+    rectHeight = dom->attribute("arrowEnd").toInt();
 }
 
-void HEllipseObj::writeXml(QDomElement* data)
+void HEllipseObj::writeXml(QDomElement* dom)
 {
-
+    if(!dom)return;
+    HBaseObj::writeData(data);
+    dom->setAttribute("topLeftx",topLeft.x());
+    dom->setAttribute("topLefty",topLeft.y());
+    dom->setAttribute("rectWidth",rectWidth);
+    dom->setAttribute("rectHeight",rectHeight);
 }
 
 QString HEllipseObj::TagName()
@@ -396,14 +435,30 @@ void HArcObj::writeData(QDataStream* data)
     *data<<(bool)bCloseCheck;
 }
 
-void HArcObj::readXml(QDomElement* data)
+void HArcObj::readXml(QDomElement* dom)
 {
-
+    if(!dom) return;
+    HBaseObj::readData(dom);
+    topLeft.setX(dom->attribute("topLeftx").toDouble());
+    topLeft.setY(dom->attribute("topLeftx").toDouble());
+    rectWidth = dom->attribute("rectWidth").toInt();
+    rectHeight = dom->attribute("arrowEnd").toInt();
+    startAngle = dom->attribute("startAngle").toInt();
+    spanAngle = dom->attribute("spanAngle").toInt();
+    bCloseCheck = dom->attribute("bCloseCheck").toInt();
 }
 
-void HArcObj::writeXml(QDomElement* data)
+void HArcObj::writeXml(QDomElement* dom)
 {
-
+    if(!dom)return;
+    HBaseObj::writeData(dom);
+    dom->setAttribute("topLeftx",topLeft.x());
+    dom->setAttribute("topLefty",topLeft.y());
+    dom->setAttribute("rectWidth",rectWidth);
+    dom->setAttribute("rectHeight",rectHeight);
+    dom->setAttribute("startAngle",startAngle);
+    dom->setAttribute("spanAngle",spanAngle);
+    dom->setAttribute("bCloseCheck",bCloseCheck);
 }
 
 QString HArcObj::TagName()
@@ -516,14 +571,28 @@ void HPieObj::writeData(QDataStream* data)
     *data<<(int)spanAngle;
 }
 
-void HPieObj::readXml(QDomElement* data)
+void HPieObj::readXml(QDomElement* dom)
 {
-
+    if(!dom) return;
+    HBaseObj::readData(dom);
+    topLeft.setX(dom->attribute("topLeftx").toDouble());
+    topLeft.setY(dom->attribute("topLeftx").toDouble());
+    rectWidth = dom->attribute("rectWidth").toInt();
+    rectHeight = dom->attribute("arrowEnd").toInt();
+    startAngle = dom->attribute("startAngle").toInt();
+    spanAngle = dom->attribute("spanAngle").toInt();
 }
 
-void HPieObj::writeXml(QDomElement* data)
+void HPieObj::writeXml(QDomElement* dom)
 {
-
+    if(!dom)return;
+    HBaseObj::writeData(dom);
+    dom->setAttribute("topLeftx",topLeft.x());
+    dom->setAttribute("topLefty",topLeft.y());
+    dom->setAttribute("rectWidth",rectWidth);
+    dom->setAttribute("rectHeight",rectHeight);
+    dom->setAttribute("startAngle",startAngle);
+    dom->setAttribute("spanAngle",spanAngle);
 }
 
 QString HPieObj::TagName()
@@ -658,14 +727,43 @@ void HTextObj::writeData(QDataStream* data)
 }
 
 //xml文件读写
-void HTextObj::readXml(QDomElement* data)
+void HTextObj::readXml(QDomElement* dom)
 {
+    if(!dom) return;
+    HBaseObj::readData(dom);
+    topLeft.setX(dom->attribute("topLeftx").toDouble());
+    topLeft.setY(dom->attribute("topLeftx").toDouble());
+    rectWidth = dom->attribute("rectWidth").toInt();
+    rectHeight = dom->attribute("arrowEnd").toInt();
+    strTextContent = dom->attribute("strTextContent");
+    textColorName = dom->attribute("textColorName");
+    textFontName = dom->attribute("textFontName");
+    layout = dom->attribute("layout").toInt();
+    horizontalAlign = dom->attribute("horizontalAlign").toInt();
+    verticalAlign = dom->attribute("verticalAlign").toInt();
+    pointSize = dom->attribute("pointSize").toInt();
+    weight = dom->attribute("weight").toInt();
+    italic = dom->attribute("italic").toInt();
 
 }
 
-void HTextObj::writeXml(QDomElement* data)
+void HTextObj::writeXml(QDomElement* dom)
 {
-
+    if(!dom)return;
+    HBaseObj::writeData(dom);
+    dom->setAttribute("topLeftx",topLeft.x());
+    dom->setAttribute("topLefty",topLeft.y());
+    dom->setAttribute("rectWidth",rectWidth);
+    dom->setAttribute("rectHeight",rectHeight);
+    dom->setAttribute("textContent",strTextContent);
+    dom->setAttribute("colorName",textColorName);
+    dom->setAttribute("fontName",textFontName);
+    dom->setAttribute("layout",layout);
+    dom->setAttribute("horizontalAlign",horizontalAlign);
+    dom->setAttribute("verticalAlign",verticalAlign);
+    dom->setAttribute("pointSize",pointSize);
+    dom->setAttribute("weight",weight);
+    dom->setAttribute("italic",italic);
 }
 
 QString HTextObj::TagName()

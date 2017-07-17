@@ -59,13 +59,13 @@ void HIconTemplate::readXml(QDomElement* dom)
     if(!dom)
         return;
 
-    strIconTypeName = dom->attribute("AttrName");
-    nIconTypeId = dom->attribute("AttrType").toInt();
+    strIconTypeName = dom->attribute("IconTypeName");
+    nIconTypeId = dom->attribute("IconTypeId").toInt();
     uUid = QUuid(dom->attribute("UUID"));
     double w = dom->attribute("DefaultWidth").toDouble();
     double h = dom->attribute("DefaultHeight").toDouble();
     sDefaultSize = QSizeF(w,h);
-    QDomElement symbolDom = dom->namedItem(strIconTypeName).toElement();
+    QDomElement symbolDom = dom->namedItem("IconTemplate").toElement();
     if(!symbolDom.isNull())
     {
         pIconSymbol->readXml(&symbolDom);
@@ -77,8 +77,8 @@ void HIconTemplate::writeXml(QDomElement *dom)
     if(!dom)
         return;
 
-    dom->setAttribute("TypeName",strIconTypeName);
-    dom->setAttribute("AttrType",nIconTypeId);
+    dom->setAttribute("IconTypeName",strIconTypeName);
+    dom->setAttribute("IconTypeId",nIconTypeId);
     dom->setAttribute("UUID",uUid.toString());
     dom->setAttribute("DefaultWidth",sDefaultSize.width());
     dom->setAttribute("DefaultHeight",sDefaultSize.height());
