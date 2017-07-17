@@ -100,7 +100,7 @@ void HPropertyDlg::initBaseTab()
     ui->x_rotate->setSuffix(QStringLiteral("°"));
     ui->x_rotate->setValue(0);
 
-    QString strObjName = pCurObj->getProperty("Name").toString();
+    QString strObjName = pCurObj->getObjName();
     ui->objName->setText(strObjName);
 
 
@@ -256,7 +256,7 @@ void HPropertyDlg::initLineTab()
     ui->lineWidth->setCurrentIndex(0);
     if(pCurObj)
     {
-        int nLineWidthIndex = ui->lineWidth->findData(pCurObj->getProperty("LineWidth").toInt());
+        int nLineWidthIndex = ui->lineWidth->findData(pCurObj->getLineWidth());
         ui->lineWidth->setCurrentIndex(nLineWidthIndex);
     }
 
@@ -274,7 +274,7 @@ void HPropertyDlg::initLineTab()
     ui->lineStyle->setCurrentIndex(0);
     if(pCurObj)
     {
-        int nLineStyleIndex = ui->lineStyle->findData(pCurObj->getProperty("LineStyle").toInt());
+        int nLineStyleIndex = ui->lineStyle->findData((quint8)pCurObj->getLineStyle());
         ui->lineStyle->setCurrentIndex(nLineStyleIndex);
     }
 
@@ -527,7 +527,7 @@ void HPropertyDlg::lineColor_clicked()
     QColor curColor = QColor(Qt::white);
     if(pCurObj)
     {
-        strLineColor = pCurObj->getProperty("LineColor").toString();
+        strLineColor = pCurObj->getLineColorName();
         curColor = QColor(strLineColor);
     }
     const QColor color = QColorDialog::getColor(curColor, this, QStringLiteral("选择颜色"));

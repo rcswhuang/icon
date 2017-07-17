@@ -17,12 +17,12 @@ QString HIconType::getIconTypeName()
 
 void HIconType::setIconType(int type)
 {
-    nIconType = type;
+    nIconTypeId = type;
 }
 
 int HIconType::getIconType()
 {
-    return nIconType;
+    return nIconTypeId;
 }
 
 void HIconType::setParentType(int pType)

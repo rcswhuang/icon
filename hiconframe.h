@@ -43,6 +43,8 @@ public:
     //粘贴
     void paste();
 
+    void del();
+
     //移动到顶层
     void bringToTop();
 
@@ -51,6 +53,9 @@ public:
 
     //设置scene的逻辑区域
     void setLogicRect(QRectF& rectF);
+
+    //在pattern增加Item对象
+    HIconGraphicsItem* addItemByIconObj(int nPattern,HBaseObj* pObj);
 
     //增加scene的显示方案
     void addItemByPatternId(int nPatternId);

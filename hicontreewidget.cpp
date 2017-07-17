@@ -141,11 +141,11 @@ void HIconTreeWidget::newIcon()
     bool ok;
     QString strName = QInputDialog::getText(this,QStringLiteral("输入图元的名称"),QStringLiteral("图元名称:"),QLineEdit::Normal,"",&ok);
     if(!ok) return;
-    int nIconType;
+    int nIconTypeId;
     HIconTreeWidgetItem* item = (HIconTreeWidgetItem*)currentItem();
     if(!item) return;
-    nIconType = item->type();
-    emit IconNew(strName,nIconType);
+    nIconTypeId = item->type();
+    emit IconNew(strName,nIconTypeId);
 }
 
 void HIconTreeWidget::openIcon(QTreeWidgetItem* item,int col)
@@ -176,7 +176,7 @@ void HIconTreeWidget::deleteIcon()
         return;
     if(QMessageBox::Ok == QMessageBox::warning(NULL,QStringLiteral("删除图元"),QStringLiteral("确认删除此图元信息?"),QMessageBox::Ok|QMessageBox::Cancel))
     {
-        int nIconType;
+        int nIconTypeId;
         HIconTreeWidgetItem* item = (HIconTreeWidgetItem*)currentItem();
         if(!item)
         {
@@ -186,10 +186,10 @@ void HIconTreeWidget::deleteIcon()
         HIconTreeWidgetItem* itemparent = (HIconTreeWidgetItem*)item->parent();
         if(!itemparent)
             return;
-        nIconType = itemparent->type();
+        nIconTypeId = itemparent->type();
         QString strName = itemparent->text(0);
         QString strUuid = item->data(0,Qt::UserRole).toString();//item->getUuid()
-        emit IconDel(strName,nIconType,strUuid);
+        emit IconDel(strName,nIconTypeId,strUuid);
     }
 }
 
@@ -217,7 +217,7 @@ void HIconTreeWidget::addIconTreeWigetItem()
     HIconTreeWidgetItem* newItem = new HIconTreeWidgetItem(parentItem,TEMPLATE_TYPE_CHILD);
     newItem->setUuid(strUuid);
     newItem->setData(0,Qt::UserRole,QVariant(strUuid));
-    newItem->setText(0,pIconMgr->getIconTemplate()->getAttrName());
+    newItem->setText(0,pIconMgr->getIconTemplate()->getIconTypeName());
     parentItem->addChild(newItem);
     setCurrentItem(newItem);
 

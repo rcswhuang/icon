@@ -72,7 +72,6 @@ QString HLineObj::TagName()
 void HLineObj::copyTo(HBaseObj* obj)
 {
     HLineObj* ob = (HLineObj*)obj;
-    HBaseObj::copyTo(oj);
     ob->setArrowStart(arrowStart);
     ob->setArrowEnd(arrowEnd);
     ob->setArrowWidth(arrowWidth);
@@ -81,19 +80,24 @@ void HLineObj::copyTo(HBaseObj* obj)
     ob->pfTailPoint = pfTailPoint;
 }
 
-HLineObj* HLineObj::clone()
+void HLineObj::clone(HBaseObj* obj)
 {
-    HLineObj* newObj = new HLineObj;
-    if(newObj)
-    {
-        copyTo(newObj);
-    }
-    return newObj;
+    if(!obj) return;
+    HBaseObj::clone(obj);
+    copyTo(obj);
 }
 
 DRAWSHAPE HLineObj::getShapeType()
 {
     return enumLine;
+}
+
+void HLineObj::moveBy(qreal dx, qreal dy)
+{
+    pfHeadPoint.setX(pfHeadPoint.x() + dx);
+    pfHeadPoint.setY(pfHeadPoint.y() + dy);
+    pfTailPoint.setX(pfTailPoint.x() + dx);
+    pfTailPoint.setY(pfTailPoint.y() + dy);
 }
 
 void HLineObj::setArrowStart(quint8 start)
@@ -147,6 +151,32 @@ HRectObj::~HRectObj()
 
 }
 
+//二进制读写
+void HRectObj::readData(QDataStream* data)
+{
+    if(!data) return;
+    HBaseObj::readData(data);
+    qreal qr;
+    *data>>qr;
+    topLeft.setX(qr);
+    *data>>qr;
+    topLeft.setY(qr);
+    *data>>qr;
+    rectWidth = qr;
+    *data>>qr;
+    rectHeight = qr;
+}
+
+void HRectObj::writeData(QDataStream* data)
+{
+    if(!data) return;
+    HBaseObj::writeData(data);
+    *data<<(qreal)topLeft.x();
+    *data<<(qreal)topLeft.y();
+    *data<<(double)rectWidth;
+    *data<<(double)rectHeight;
+}
+
 void HRectObj::readXml(QDomElement* data)
 {
 
@@ -165,7 +195,17 @@ QString HRectObj::TagName()
 //拷贝克隆
 void HRectObj::copyTo(HBaseObj* obj)
 {
-    HBaseObj::copyTo(obj);
+    HRectObj* ob = (HRectObj*)obj;
+    ob->topLeft = topLeft;
+    ob->rectWidth = rectWidth;
+    ob->rectHeight = rectHeight;
+}
+
+void HRectObj::clone(HBaseObj *obj)
+{
+    if(!obj) return;
+    HBaseObj::clone(obj);
+    copyTo(obj);
 }
 
 DRAWSHAPE HRectObj::getShapeType()
@@ -173,6 +213,11 @@ DRAWSHAPE HRectObj::getShapeType()
     return enumRectangle;
 }
 
+void HRectObj::moveBy(qreal dx, qreal dy)
+{
+    topLeft.setX(topLeft.x() + dx);
+    topLeft.setY(topLeft.y() + dy);
+}
 
 ///////////////////////////////////HEllipseObj//////////////////////////////////////////////////
 HEllipseObj::HEllipseObj()
@@ -184,6 +229,32 @@ HEllipseObj::HEllipseObj()
 HEllipseObj::~HEllipseObj()
 {
 
+}
+
+//二进制读写
+void HEllipseObj::readData(QDataStream* data)
+{
+    if(!data) return;
+    HBaseObj::readData(data);
+    qreal qr;
+    *data>>qr;
+    topLeft.setX(qr);
+    *data>>qr;
+    topLeft.setY(qr);
+    *data>>qr;
+    rectWidth = qr;
+    *data>>qr;
+    rectHeight = qr;
+}
+
+void HEllipseObj::writeData(QDataStream* data)
+{
+    if(!data) return;
+    HBaseObj::writeData(data);
+    *data<<(qreal)topLeft.x();
+    *data<<(qreal)topLeft.y();
+    *data<<(double)rectWidth;
+    *data<<(double)rectHeight;
 }
 
 void HEllipseObj::readXml(QDomElement* data)
@@ -204,7 +275,17 @@ QString HEllipseObj::TagName()
 //拷贝克隆
 void HEllipseObj::copyTo(HBaseObj* obj)
 {
-    HBaseObj::copyTo(obj);
+    HEllipseObj* ob = (HEllipseObj*)obj;
+    ob->topLeft = topLeft;
+    ob->rectWidth = rectWidth;
+    ob->rectHeight = rectHeight;
+}
+
+void HEllipseObj::clone(HBaseObj *obj)
+{
+    if(!obj) return;
+    HBaseObj::clone(obj);
+    copyTo(obj);
 }
 
 DRAWSHAPE HEllipseObj::getShapeType()
@@ -212,6 +293,11 @@ DRAWSHAPE HEllipseObj::getShapeType()
     return enumEllipse;
 }
 
+void HEllipseObj::moveBy(qreal dx, qreal dy)
+{
+    topLeft.setX(topLeft.x() + dx);
+    topLeft.setY(topLeft.y() + dy);
+}
 ///////////////////////////////////////////////HPolygonObj//////////////////////////////////////
 HPolygonObj::HPolygonObj()
 {
@@ -244,12 +330,21 @@ void HPolygonObj::copyTo(HBaseObj* obj)
     HBaseObj::copyTo(obj);
 }
 
+void HPolygonObj::clone(HBaseObj *obj)
+{
+
+}
+
 DRAWSHAPE HPolygonObj::getShapeType()
 {
     return enumPolygon;
 }
 
-
+void HPolygonObj::moveBy(qreal dx, qreal dy)
+{
+    //topLeft.setX(topLeft.x() + dx);
+    //topLeft.setY(topLeft.y() + dy);
+}
 
 ///////////////////////////////////////////////HArcObj//////////////////////////////////////
 HArcObj::HArcObj()
@@ -262,6 +357,43 @@ HArcObj::HArcObj()
 HArcObj::~HArcObj()
 {
 
+}
+
+//二进制读写
+void HArcObj::readData(QDataStream* data)
+{
+    if(!data) return;
+    HBaseObj::readData(data);
+    qreal qr;
+    *data>>qr;
+    topLeft.setX(qr);
+    *data>>qr;
+    topLeft.setY(qr);
+    *data>>qr;
+    rectWidth = qr;
+    *data>>qr;
+    rectHeight = qr;
+    int n;
+    *data>>n;
+    startAngle = n;
+    *data>>n;
+    spanAngle = n;
+    bool b;
+    *data>>b;
+    bCloseCheck = b;
+}
+
+void HArcObj::writeData(QDataStream* data)
+{
+    if(!data) return;
+    HBaseObj::writeData(data);
+    *data<<(qreal)topLeft.x();
+    *data<<(qreal)topLeft.y();
+    *data<<(double)rectWidth;
+    *data<<(double)rectHeight;
+    *data<<(int)startAngle;
+    *data<<(int)spanAngle;
+    *data<<(bool)bCloseCheck;
 }
 
 void HArcObj::readXml(QDomElement* data)
@@ -282,9 +414,21 @@ QString HArcObj::TagName()
 //拷贝克隆
 void HArcObj::copyTo(HBaseObj* obj)
 {
-    HBaseObj::copyTo(obj);
+    HArcObj* ob = (HArcObj*)obj;
+    ob->topLeft = topLeft;
+    ob->rectWidth = rectWidth;
+    ob->rectHeight = rectHeight;
+    ob->startAngle = startAngle;
+    ob->spanAngle = spanAngle;
+    ob->bCloseCheck = bCloseCheck;
 }
 
+void HArcObj::clone(HBaseObj *obj)
+{
+    if(!obj) return;
+    HBaseObj::clone(obj);
+    copyTo(obj);
+}
 
 DRAWSHAPE HArcObj::getShapeType()
 {
@@ -321,6 +465,11 @@ bool HArcObj::getCloseStatus()
     return bCloseCheck;
 }
 
+void HArcObj::moveBy(qreal dx, qreal dy)
+{
+    topLeft.setX(topLeft.x() + dx);
+    topLeft.setY(topLeft.y() + dy);
+}
 
 ///////////////////////////////////////////////HPieObj//////////////////////////////////////
 HPieObj::HPieObj()
@@ -332,6 +481,39 @@ HPieObj::HPieObj()
 HPieObj::~HPieObj()
 {
 
+}
+
+//二进制读写
+void HPieObj::readData(QDataStream* data)
+{
+    if(!data) return;
+    HBaseObj::readData(data);
+    qreal qr;
+    *data>>qr;
+    topLeft.setX(qr);
+    *data>>qr;
+    topLeft.setY(qr);
+    *data>>qr;
+    rectWidth = qr;
+    *data>>qr;
+    rectHeight = qr;
+    int n;
+    *data>>n;
+    startAngle = n;
+    *data>>n;
+    spanAngle = n;
+}
+
+void HPieObj::writeData(QDataStream* data)
+{
+    if(!data) return;
+    HBaseObj::writeData(data);
+    *data<<(qreal)topLeft.x();
+    *data<<(qreal)topLeft.y();
+    *data<<(double)rectWidth;
+    *data<<(double)rectHeight;
+    *data<<(int)startAngle;
+    *data<<(int)spanAngle;
 }
 
 void HPieObj::readXml(QDomElement* data)
@@ -352,9 +534,20 @@ QString HPieObj::TagName()
 //拷贝克隆
 void HPieObj::copyTo(HBaseObj* obj)
 {
-    HBaseObj::copyTo(obj);
+    HPieObj* ob = (HPieObj*)obj;
+    ob->topLeft = topLeft;
+    ob->rectWidth = rectWidth;
+    ob->rectHeight = rectHeight;
+    ob->startAngle = startAngle;
+    ob->spanAngle = spanAngle;
 }
 
+void HPieObj::clone(HBaseObj *obj)
+{
+    if(!obj) return;
+    HBaseObj::clone(obj);
+    copyTo(obj);
+}
 
 DRAWSHAPE HPieObj::getShapeType()
 {
@@ -381,6 +574,11 @@ int HPieObj::getSpanAngle()
     return spanAngle;
 }
 
+void HPieObj::moveBy(qreal dx, qreal dy)
+{
+    topLeft.setX(topLeft.x() + dx);
+    topLeft.setY(topLeft.y() + dy);
+}
 
 ///////////////////////////////////////////////////////////////////////
 HTextObj::HTextObj()
@@ -395,12 +593,68 @@ HTextObj::HTextObj()
     pointSize = 10;//字体大小
     weight = QFont::Normal;//粗体
     italic = false;//斜体
-    bFrameSee = false;
+    bFrameSee = false;//???
 }
 
 HTextObj::~HTextObj()
 {
 
+}
+
+//二进制读写
+void HTextObj::readData(QDataStream* data)
+{
+    if(!data) return;
+    HBaseObj::readData(data);
+    qreal qr;
+    *data>>qr;
+    topLeft.setX(qr);
+    *data>>qr;
+    topLeft.setY(qr);
+    *data>>qr;
+    rectWidth = qr;
+    *data>>qr;
+    rectHeight = qr;
+    QString s;
+    *data>>s;
+    strTextContent = s;
+    *data>>s;
+    textColorName = s;
+    *data>>s;
+    textFontName = s;
+    quint8 n8;
+    *data>>n8;
+    layout = n8;
+    int n;
+    *data>>n;
+    horizontalAlign = n;
+    *data>>n;
+    verticalAlign = n;
+    *data>>n;
+    pointSize = n;
+    *data>>n;
+    weight = n;
+    *data>>n;
+    italic = n;
+}
+
+void HTextObj::writeData(QDataStream* data)
+{
+    if(!data) return;
+    HBaseObj::writeData(data);
+    *data<<(qreal)topLeft.x();
+    *data<<(qreal)topLeft.y();
+    *data<<(double)rectWidth;
+    *data<<(double)rectHeight;
+    *data<<(QString)strTextContent;
+    *data<<(QString)textColorName;
+    *data<<(QString)textFontName;
+    *data<<(quint8)layout;
+    *data<<(int)horizontalAlign;
+    *data<<(int)verticalAlign;
+    *data<<(int)pointSize;
+    *data<<(int)weight;
+    *data<<(int)italic;
 }
 
 //xml文件读写
@@ -422,7 +676,26 @@ QString HTextObj::TagName()
 //拷贝克隆
 void HTextObj::copyTo(HBaseObj* obj)
 {
-    HBaseObj::copyTo(obj);
+    HTextObj* ob = (HTextObj*)obj;
+    ob->topLeft = topLeft;
+    ob->rectWidth = rectWidth;
+    ob->rectHeight = rectHeight;
+    ob->strTextContent = strTextContent;
+    ob->textColorName = textColorName;
+    ob->textFontName = textFontName;
+    ob->layout = layout;
+    ob->horizontalAlign = horizontalAlign;
+    ob->verticalAlign = verticalAlign;
+    ob->pointSize = pointSize;
+    ob->weight = weight;
+    ob->italic = italic;
+}
+
+void HTextObj::clone(HBaseObj *obj)
+{
+    if(!obj) return;
+    HBaseObj::clone(obj);
+    copyTo(obj);
 }
 
 DRAWSHAPE HTextObj::getShapeType()
@@ -551,3 +824,8 @@ double HTextObj::getRectHeight()
     return rectHeight;
 }
 
+void HTextObj::moveBy(qreal dx, qreal dy)
+{
+    topLeft.setX(topLeft.x() + dx);
+    topLeft.setY(topLeft.y() + dy);
+}

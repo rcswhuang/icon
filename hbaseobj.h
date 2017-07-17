@@ -30,7 +30,7 @@ public:
 
     //拷贝克隆
     virtual void copyTo(HBaseObj* obj);
-    virtual HBaseObj* clone();
+    virtual void clone(HBaseObj* obj);
 
     virtual void setObjName(const QString strName);
     virtual QString getObjName();
@@ -137,6 +137,8 @@ public:
     double curZoomScale();
 
     virtual bool contains(int nPatternId);
+
+    virtual void moveBy(qreal dx,qreal dy);
 
 //绘制对象的属性
 public:

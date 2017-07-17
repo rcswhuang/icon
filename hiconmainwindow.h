@@ -81,13 +81,13 @@ public slots:
     //void save();
 
     //新建对象
-    void New(const QString& catalogName,const int& nIconType);
+    void New(const QString& catalogName,const int& nIconTypeId);
 
     //打开 save falg = true
-    void Open(const QString& catalogName,const int& nIconType,const QString& uuid);
+    void Open(const QString& catalogName,const int& nIconTypeId,const QString& uuid);
 
     //
-    void Del(const QString& catalogName,const int& nIconType,const QString& uuid);
+    void Del(const QString& catalogName,const int& nIconTypeId,const QString& uuid);
 
     //撤销
     void undo();
@@ -105,7 +105,7 @@ public slots:
     void paste();
 
     //删除
-    void Delete();
+    void del();
 
     //对齐方式--左对齐
     void alignLeft();

@@ -20,7 +20,7 @@ public:
    int getParentType();
 private:
     QString strIconTypeName; //开关、刀闸、遥测、接地牌....
-    int nIconType;//开关、刀闸等类型
+    int nIconTypeId;//开关、刀闸等类型
     int nParentType; //遥信、遥测、接地牌等
 };
 

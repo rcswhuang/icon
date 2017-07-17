@@ -9,7 +9,7 @@ HIconTemplate::HIconTemplate(QObject* parent)
     }
     pIconSymbol = new HIconSymbol;
     sDefaultSize = QSizeF(50,50);
-    nIconType = 0;
+    nIconTypeId = 0;
     nVersion = 1;
 }
 
@@ -58,13 +58,14 @@ void HIconTemplate::readXml(QDomElement* dom)
 {
     if(!dom)
         return;
+
+    strIconTypeName = dom->attribute("AttrName");
+    nIconTypeId = dom->attribute("AttrType").toInt();
     uUid = QUuid(dom->attribute("UUID"));
-    strAttrName = dom->attribute("AttrName");
-    nIconType = dom->attribute("AttrType").toInt();
     double w = dom->attribute("DefaultWidth").toDouble();
     double h = dom->attribute("DefaultHeight").toDouble();
     sDefaultSize = QSizeF(w,h);
-    QDomElement symbolDom = dom->namedItem(strAttrName).toElement();
+    QDomElement symbolDom = dom->namedItem(strIconTypeName).toElement();
     if(!symbolDom.isNull())
     {
         pIconSymbol->readXml(&symbolDom);
@@ -75,9 +76,10 @@ void HIconTemplate::writeXml(QDomElement *dom)
 {
     if(!dom)
         return;
+
+    dom->setAttribute("TypeName",strIconTypeName);
+    dom->setAttribute("AttrType",nIconTypeId);
     dom->setAttribute("UUID",uUid.toString());
-    dom->setAttribute("AttrName",getAttrName());
-    dom->setAttribute("AttrType",nIconType);
     dom->setAttribute("DefaultWidth",sDefaultSize.width());
     dom->setAttribute("DefaultHeight",sDefaultSize.height());
 
@@ -99,24 +101,24 @@ int HIconTemplate::getVersion()
     return nVersion;
 }
 
-void HIconTemplate::setAttrName(QString name)
+void HIconTemplate::setIconTypeName(QString name)
 {
-    strAttrName = name;
+    strIconTypeName = name;
 }
 
-QString HIconTemplate::getAttrName()
+QString HIconTemplate::getIconTypeName()
 {
-    return strAttrName;
+    return strIconTypeName;
 }
 
-void HIconTemplate::setIconType(int type)
+void HIconTemplate::setIconTypeId(int type)
 {
-    nIconType = type;
+    nIconTypeId = type;
 }
 
-int HIconTemplate::getIconType()
+int HIconTemplate::getIconTypeId()
 {
-    return nIconType;
+    return nIconTypeId;
 }
 
 void HIconTemplate::setDefaultSize(const QSizeF& size)

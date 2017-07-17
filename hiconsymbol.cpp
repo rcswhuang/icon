@@ -1,6 +1,7 @@
 ﻿#include "hiconsymbol.h"
 #include "hiconapi.h"
 #include "hiconshowpattern.h"
+#include "hiconobj.h"
 #include <QVariant>
 HIconSymbol::HIconSymbol(QObject* parent):QObject(parent)
 {
@@ -74,16 +75,75 @@ void HIconSymbol::readXml(QDomElement* dom)
 
 void HIconSymbol::writeXml(QDomElement *dom)
 {
+    if(!dom)
+        return;
+    dom->setAttribute("IconSymbolName",strSymbolName);
+    dom->setAttribute("IconSymbolType",usSymbolType);
 
+    QDomElement childDom = dom->ownerDocument().createElement("Children");
+    dom->appendChild(childDom);
+    for(int i = 0; i < pShowPatternVector[i];i++)
+    {
+        HIconShowPattern* pattern = (HIconShowPattern*)pShowPatternVector[i];
+        if(!pattern)continue;
+        pattern->writeXml(childDom);
+    }
+
+    QDomElement patternDom = dom->ownerDocument().createElement("ShowPatterns");
+    dom->appendChild(patternDom);
+    for(int i = 0; i < pShowPatternVector[i];i++)
+    {
+        HIconShowPattern* pattern = (HIconShowPattern*)pShowPatternVector[i];
+        if(!pattern)continue;
+        QDomElement patternChildDom = dom->ownerDocument().createElement("ShowPattern");
+        patternChildDom.setAttribute("Name",pattern->strName);
+        patternChildDom.setAttribute("Alias",pattern->strAlias);
+        patternChildDom.setAttribute("PatternID",pattern->nPattern);
+        patternDom.appendChild(patternChild);
+    }
+}
+
+HBaseObj* HIconSymbol::newObj(int nObjType)
+{
+    HBaseObj* pObj = NULL;
+    if(nObjType == enumLine)
+    {
+        pObj = new HLineObj();
+    }
+    else if(nObjType == enumRectangle)
+    {
+        pObj = new HRectObj();
+    }
+    else if(nObjType == enumEllipse)
+    {
+        pObj = new HEllipseObj();
+    }
+    else if(nObjType == enumArc)
+    {
+        pObj = new HArcObj();
+    }
+    else if(nObjType == enumPie)
+    {
+        pObj = new HPieObj();
+    }
+    else if(nObjType == enumText)
+    {
+        pObj = new HTextObj();
+    }
+    if(pObj)
+    {
+        int objID = getObjID();
+        pObj->setObjID(objID);
+    }
+    return pObj;
 }
 
 void HIconSymbol::addObj(HBaseObj* pObj)
 {
     if(!pObj)
         return;
-    int objID = getObjID();
-    pObj->setObjID(objID);
-    QString strObjName = QString("%1_%2_%3").arg(pObj->TagName()).arg(pObj->getShapeType()).arg(objID);
+
+    QString strObjName = QString("%1_%2_%3").arg(pObj->TagName()).arg(pObj->getShapeType()).arg(pObj->getObjID());
     pObj->setObjName(strObjName);
     HIconShowPattern* pSP = getCurrentPatternPtr();
     if(!pSP)

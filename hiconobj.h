@@ -20,9 +20,11 @@ public:
 
     //拷贝克隆
     virtual void copyTo(HBaseObj* obj);
-    virtual HLineObj* clone();
+    virtual void clone(HBaseObj* obj);
 
     virtual DRAWSHAPE getShapeType();
+
+    virtual void moveBy(qreal dx,qreal dy);
 
 public:
 
@@ -48,11 +50,18 @@ public:
     QPointF pfTailPoint;
 };
 
+///////////////////////////////////////////HRectObj///////////////////////////////////////////
 class HRectObj : public HBaseObj
 {
 public:
     HRectObj();
     virtual ~HRectObj();
+
+    //二进制读写
+    virtual void readData(QDataStream* data);
+    virtual void writeData(QDataStream* data);
+
+
     //xml文件读写
     virtual void readXml(QDomElement* data);
     virtual void writeXml(QDomElement* data);
@@ -61,9 +70,11 @@ public:
 
     //拷贝克隆
     virtual void copyTo(HBaseObj* obj);
+    virtual void clone(HBaseObj* obj);
 
     virtual DRAWSHAPE getShapeType();
 
+    virtual void moveBy(qreal dx,qreal dy);
 public:
     QPointF topLeft;
     //QPointF rectTop;
@@ -77,6 +88,12 @@ class HEllipseObj : public HBaseObj
 public:
     HEllipseObj();
     virtual ~HEllipseObj();
+
+    //二进制读写
+    virtual void readData(QDataStream* data);
+    virtual void writeData(QDataStream* data);
+
+
     //xml文件读写
     virtual void readXml(QDomElement* data);
     virtual void writeXml(QDomElement* data);
@@ -84,8 +101,11 @@ public:
     virtual QString TagName();
     //拷贝克隆
     virtual void copyTo(HBaseObj* obj);
+    virtual void clone(HBaseObj* obj);
 
     virtual DRAWSHAPE getShapeType();
+
+    virtual void moveBy(qreal dx,qreal dy);
 
 public:
     QPointF topLeft;
@@ -107,8 +127,12 @@ public:
     virtual QString TagName();
     //拷贝克隆
     virtual void copyTo(HBaseObj* obj);
+    virtual void clone(HBaseObj* obj);
 
     virtual DRAWSHAPE getShapeType();
+
+
+    virtual void moveBy(qreal dx,qreal dy);
 
 public:
    QVector<QPointF> pylist;
@@ -119,6 +143,12 @@ class HArcObj : public HBaseObj
 public:
     HArcObj();
     virtual ~HArcObj();
+
+    //二进制读写
+    virtual void readData(QDataStream* data);
+    virtual void writeData(QDataStream* data);
+
+
     //xml文件读写
     virtual void readXml(QDomElement* data);
     virtual void writeXml(QDomElement* data);
@@ -127,8 +157,11 @@ public:
 
     //拷贝克隆
     virtual void copyTo(HBaseObj* obj);
+    virtual void clone(HBaseObj* obj);
 
     virtual DRAWSHAPE getShapeType();
+
+    virtual void moveBy(qreal dx,qreal dy);
 
 public:
     void setStartAngle(int sAngle);
@@ -153,6 +186,11 @@ class HPieObj : public HBaseObj
 public:
     HPieObj();
     virtual ~HPieObj();
+
+    //二进制读写
+    virtual void readData(QDataStream* data);
+    virtual void writeData(QDataStream* data);
+
     //xml文件读写
     virtual void readXml(QDomElement* data);
     virtual void writeXml(QDomElement* data);
@@ -160,8 +198,11 @@ public:
     virtual QString TagName();
     //拷贝克隆
     virtual void copyTo(HBaseObj* obj);
+    virtual void clone(HBaseObj* obj);
 
     virtual DRAWSHAPE getShapeType();
+
+    virtual void moveBy(qreal dx,qreal dy);
 
 public:
     void setStartAngle(int sAngle);
@@ -185,6 +226,12 @@ class HTextObj : public HBaseObj
 public:
     HTextObj();
     virtual ~HTextObj();
+
+    //二进制读写
+    virtual void readData(QDataStream* data);
+    virtual void writeData(QDataStream* data);
+
+
     //xml文件读写
     virtual void readXml(QDomElement* data);
     virtual void writeXml(QDomElement* data);
@@ -192,8 +239,11 @@ public:
     virtual QString TagName();
     //拷贝克隆
     virtual void copyTo(HBaseObj* obj);
+    virtual void clone(HBaseObj* obj);
 
     virtual DRAWSHAPE getShapeType();
+
+    virtual void moveBy(qreal dx,qreal dy);
 
 public:
     void setTopLeftPoint(QPointF topLeft);

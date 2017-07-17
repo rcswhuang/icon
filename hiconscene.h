@@ -2,8 +2,6 @@
 #define HICONSCENE_H
 
 #include <QGraphicsScene>
-#include "hevent.h"
-
 class HIconFrame;
 class HIconMgr;
 class HIconLineItem;
@@ -14,6 +12,8 @@ class HIconArcItem;
 class HIconPieItem;
 class HIconTextItem;
 class HIconSelectionItem;
+class HIconGraphicsItem;
+class HBaseObj;
 class HIconScene : public QGraphicsScene
 {
     Q_OBJECT
@@ -27,6 +27,7 @@ public:
     bool getItemAt(const QPointF& pos);
     void setItemProperty(QGraphicsItem *item);
     void setItemCursor(QGraphicsSceneMouseEvent *mouseEvent);
+    HIconGraphicsItem* addItemByIconObj(int nPattern,HBaseObj* pObj);
     void addItemByPatternId(int nPatternId);
     void delItemByPatternId(int nPatternId);
     void setItemVisible(int nPatternId);
@@ -48,11 +49,10 @@ public slots:
     void cutItem();
     void copyItem();
     void delItem();
-    //void showPattern();
+    void pasteItem();
     void showProperty();
 private:
     HIconMgr* pIconMgr;
-    HIconFrame* pIconFrame;
     HIconLineItem* line;
     HIconRectItem* rectangle;
     HIconEllipseItem* ellipse;

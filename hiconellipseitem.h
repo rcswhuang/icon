@@ -34,6 +34,7 @@ public:
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
     virtual void keyPressEvent(QKeyEvent *event);
+
 public:
     virtual ushort pointInRect(QPointF& point);
     virtual void setItemCursor(int position);

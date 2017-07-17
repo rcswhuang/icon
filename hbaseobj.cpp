@@ -122,7 +122,6 @@ void HBaseObj::writeData(QDataStream *data)
     if(!data) return;
     *data<<strObjName;
     *data<<(quint32)nObjectId;
-
     *data<<(quint8)drawShape;
     *data<<(double)originX;
     *data<<(double)originY;
@@ -152,12 +151,40 @@ void HBaseObj::writeData(QDataStream *data)
 
 void HBaseObj::readXml(QDomElement* dom)
 {
-   /* if(!dom)
+    if(!dom)
         return;
-    drawShape = (DRAWSHAPE)dom->attribute("ObjType").toUInt();
+
+
+  /*  *data<<(bool)bFrameSee;
+    *data<<(quint8)nTransparency;
+    *data<<(float)fRotateAngle;
+    *data<<(bool)bHorizonTurn;
+    *data<<(bool)bVerticalTurn;
+    *data<<(quint8)bVisible;
+    *data<<(quint64)nStackOrder;
+    *data<<(quint8)nPattern.count();
+    for(int i = 0; i < nPattern.count();i++)
+    {
+        *data<<(quint8)nPattern[i];
+    }*/
+
+    nObjectId = dom->attribute("ObjId").toUInt();
     strObjName = dom->attribute("ObjName");
+    drawShape = (quint8)dom->attribute("ObjType").toUInt();
     originX = dom->attribute("X").toDouble();
     originY = dom->attribute("Y").toDouble();
+
+    /**data<<(QString)strLineColor;
+    *data<<(quint8)nLineWidth;
+    *data<<(quint8)nLineStyle;
+    *data<<(quint8)nLineJoinStyle;
+    *data<<(quint8)nLineCapStyle;
+    *data<<(quint8)nFillWay;
+    *data<<(quint8)nFillStyle;
+    *data<<(QString)strFillColor;
+    *data<<(quint8)nFillDirection;
+    *data<<(quint8)nFillPercentage;*/
+/*
     fRotateAngle = dom->attribute("RotateAngle").toDouble();
     fLightRange = dom->attribute("LightRange").toDouble();
     nLineWidth = dom->attribute("LineWidth").toUInt();
@@ -173,8 +200,8 @@ void HBaseObj::readXml(QDomElement* dom)
     if(!lc.isEmpty())
     {
         mLineColor = QColor(lc);
-    }*/
-
+    }
+*/
 
 }
 
@@ -233,8 +260,14 @@ void HBaseObj::copyTo(HBaseObj* obj)
     obj->bVerticalTurn = bVerticalTurn;
     obj->bVisible = bVisible;
     obj->nStackOrder = nStackOrder;
-    for(i = 0;i<nPattern.count();i++)
-        obj->nPattern.append(nPatter[i]);
+    for(int i = 0;i<nPattern.count();i++)
+        obj->nPattern.append(nPattern[i]);
+}
+
+void HBaseObj::clone(HBaseObj* ob)
+{
+    if(!ob) return;
+    copyTo(ob);
 }
 
 //设置属性值 By Name
@@ -281,7 +314,7 @@ double HBaseObj::getOY()
 //形状类型
 DRAWSHAPE HBaseObj::getShapeType()
 {
-    return drawShape;
+    return (DRAWSHAPE)drawShape;
 }
 
 void HBaseObj::setShapeType(DRAWSHAPE t)
@@ -520,5 +553,10 @@ void HBaseObj::setStackOrder(qint64 nStack)
 bool HBaseObj::contains(int nPatternId)
 {
     return nPattern.contains(nPatternId);
+}
+
+void HBaseObj::moveBy(qreal dx, qreal dy)
+{
+
 }
 

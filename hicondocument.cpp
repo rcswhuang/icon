@@ -26,8 +26,8 @@ void HIconDocument::New(const QString &strTemplateName,int nTemplateType)
 
     //新建新的文件
     pCurIconTemplate = new HIconTemplate;
-    pCurIconTemplate->setAttrName(strTemplateName);//普通开关
-    pCurIconTemplate->setIconType(nTemplateType);//遥信类
+    pCurIconTemplate->setIconTypeName(strTemplateName);//普通开关
+    pCurIconTemplate->setIconTypeId(nTemplateType);//遥信类
     pIconTemplateList.append(pCurIconTemplate);
     //for(int i=0;i<pCurIconTemplate->getSymbol()->
 }
@@ -39,7 +39,7 @@ void HIconDocument::Del(const QString &strTemplateName, int nTemplateType, const
         HIconTemplate* pIconTemplate = (HIconTemplate*)pIconTemplateList.at(i);
         if(!pIconTemplate)
             return;
-        if(pIconTemplate->getIconType() == nTemplateType && pIconTemplate->getUuid().toString() == strUuid)
+        if(pIconTemplate->getIconTypeId() == nTemplateType && pIconTemplate->getUuid().toString() == strUuid)
         {
             pIconTemplateList.removeOne(pIconTemplate);
             delete pIconTemplate;
@@ -51,7 +51,7 @@ void HIconDocument::Del(const QString &strTemplateName, int nTemplateType, const
 void HIconDocument::Open(const QString &strTemplateName, int nTemplateType, const QString &strUuid)
 {
     HIconTemplate* pTemplate = findIconTemplateByTypeAndUuid(nTemplateType,strUuid);
-    if(pTemplate && pTemplate->getAttrName() == strTemplateName)
+    if(pTemplate && pTemplate->getIconTypeName() == strTemplateName)
         pCurIconTemplate = pTemplate;
     else
         pCurIconTemplate = NULL;
@@ -74,7 +74,7 @@ HIconTemplate* HIconDocument::findIconTemplateByTypeAndUuid(int nTemplateType, c
         HIconTemplate* pIconTemplate = (HIconTemplate*)pIconTemplateList.at(i);
         if(!pIconTemplate)
             return NULL;
-        if(pIconTemplate->getIconType() == nTemplateType && pIconTemplate->getUuid().toString() == strUuid)
+        if(pIconTemplate->getIconTypeId() == nTemplateType && pIconTemplate->getUuid().toString() == strUuid)
         {
             return pIconTemplate;
         }

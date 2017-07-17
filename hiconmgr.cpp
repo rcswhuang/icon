@@ -64,14 +64,14 @@ bool HIconMgr::getShowCenterLine()
 }
 
 
-void HIconMgr::New(const QString &catalogName, const int &nIconType)
+void HIconMgr::New(const QString &catalogName, const int &nIconTypeId)
 {
-    pIconDocument->New(catalogName,nIconType);
+    pIconDocument->New(catalogName,nIconTypeId);
 }
 
-void HIconMgr::Del(const QString& catalogName,const int& nIconType,const QString& uuid)
+void HIconMgr::Del(const QString& catalogName,const int& nIconTypeId,const QString& uuid)
 {
-    pIconDocument->Del(catalogName,nIconType,uuid);
+    pIconDocument->Del(catalogName,nIconTypeId,uuid);
 }
 
 bool HIconMgr::Save()
@@ -79,9 +79,9 @@ bool HIconMgr::Save()
     return pIconDocument->Save();
 }
 
-void HIconMgr::Open(const QString &catalogName, const int &nIconType, const QString &uuid)
+void HIconMgr::Open(const QString &catalogName, const int &nIconTypeId, const QString &uuid)
 {
-    pIconDocument->Open(catalogName,nIconType,uuid);
+    pIconDocument->Open(catalogName,nIconTypeId,uuid);
 }
 
 

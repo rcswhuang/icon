@@ -68,13 +68,19 @@ void HIconMainWindow::createActions()
 
     cutAct = new QAction(QIcon(":/images/cut.png"), QStringLiteral("剪切(&X)"), this);
     cutAct->setShortcuts(QKeySequence::Cut);
+    connect(cutAct,SIGNAL(triggered(bool)),this,SLOT(cut()));
 
     copyAct = new QAction(QIcon(":/images/copy.png"), QStringLiteral("复制(&C)"), this);
     copyAct->setShortcuts(QKeySequence::Copy);
+    connect(copyAct,SIGNAL(triggered(bool)),this,SLOT(copy()));
 
     pasteAct = new QAction(QIcon(":/images/paste.png"), QStringLiteral("粘贴(&P)"), this);
     pasteAct->setShortcuts(QKeySequence::Paste);
+    connect(pasteAct,SIGNAL(triggered(bool)),this,SLOT(paste()));
 
+    deleteAct = new QAction(QIcon(":/images/del.png"),QStringLiteral("删除(&D)"),this);
+    deleteAct->setShortcut(QKeySequence::Delete);
+    connect(deleteAct,SIGNAL(triggered(bool)),this,SLOT(del()));
 
     //视图项
     showRulerAct = new QAction(QIcon(":/images/ruler.png"), QStringLiteral("标尺(&R)"), this);
@@ -113,12 +119,8 @@ void HIconMainWindow::createActions()
 
     toBottomAct = new QAction(QIcon(":/images/move_backward.png"),QStringLiteral("置底"),this);
     connect(toBottomAct,SIGNAL(triggered(bool)),this,SLOT(bringToBottom()));
-    //其他项
-    selectAct = new QAction(QIcon(":/images/select.png"), QStringLiteral("选择"), this);
-    connect(selectAct,SIGNAL(triggered(bool)),this,SLOT(drawSelection()));
-    selectAct->setCheckable(true);
-    selectAct->setChecked(true);
-    rotateAct = new QAction(QIcon(":/images/rotate.png"), QStringLiteral("旋转"), this);
+
+
 
     //绘制项
     lineAct = new QAction(QIcon(":/images/line.png"), tr("L&ine"), this);
@@ -153,6 +155,11 @@ void HIconMainWindow::createActions()
     textAct = new QAction(QIcon(":/images/text.png"),tr("&Text"),this);
     textAct->setCheckable(true);
     connect(textAct,SIGNAL(triggered()),this,SLOT(drawText()));
+
+    selectAct = new QAction(QIcon(":/images/select.png"), QStringLiteral("选择"), this);
+    connect(selectAct,SIGNAL(triggered(bool)),this,SLOT(drawSelection()));
+    selectAct->setCheckable(true);
+    selectAct->setChecked(true);
 
     QActionGroup * actionGroup = new QActionGroup(this);
     actionGroup->addAction(lineAct);
@@ -221,6 +228,7 @@ void HIconMainWindow::createToolBars()
     editToolBar->addAction(cutAct);
     editToolBar->addAction(copyAct);
     editToolBar->addAction(pasteAct);
+    editToolBar->addAction(deleteAct);
 
     zoomToolBar = addToolBar(tr("zoomBar"));
     zoomToolBar->setIconSize(QSize(32,32));
@@ -245,7 +253,7 @@ void HIconMainWindow::createToolBars()
 
     otherBar = addToolBar(tr("other"));
     otherBar->addAction(selectAct);
-    otherBar->addAction(rotateAct);
+    //otherBar->addAction(rotateAct);
 }
 
 void HIconMainWindow::createMenuBars()
@@ -400,13 +408,13 @@ void HIconMainWindow::quit()
 //void save();
 
 //新建对象
-void HIconMainWindow::New(const QString& catalogName,const int& nIconType)//"开关",遥信
+void HIconMainWindow::New(const QString& catalogName,const int& nIconTypeId)//"开关",遥信
 {
 
     //弹出对话框
 
     pIconWidget->delIconWidget();//先删除目前
-    pIconMgr->New(catalogName,nIconType);
+    pIconMgr->New(catalogName,nIconTypeId);
     pIconWidget->setIconMgr(pIconMgr);
     pIconWidget->newIconWidget();
     pIconTreeWidget->addIconTreeWigetItem();
@@ -418,7 +426,7 @@ void HIconMainWindow::New(const QString& catalogName,const int& nIconType)//"开
 }
 
 //打开 save falg = true
-void HIconMainWindow::Open(const QString& catalogName,const int& nIconType,const QString& uuid)
+void HIconMainWindow::Open(const QString& catalogName,const int& nIconTypeId,const QString& uuid)
 {
     //获取当前Template 提示是否保存
     //保存成功后 关闭显示 close Template
@@ -428,7 +436,7 @@ void HIconMainWindow::Open(const QString& catalogName,const int& nIconType,const
     }
 
     pIconWidget->delIconWidget();//先删除目前
-    pIconMgr->Open(catalogName,nIconType,uuid);
+    pIconMgr->Open(catalogName,nIconTypeId,uuid);
     pIconWidget->setIconMgr(pIconMgr); //设置iconWidget
     pIconWidget->openIconWidget();//打开新的
     pIconPreview->init();
@@ -438,13 +446,13 @@ void HIconMainWindow::Open(const QString& catalogName,const int& nIconType,const
 
 //
 
-void HIconMainWindow::Del(const QString& catalogName,const int& nIconType,const QString& uuid)
+void HIconMainWindow::Del(const QString& catalogName,const int& nIconTypeId,const QString& uuid)
 {
     if(!pIconTreeWidget || !pIconWidget || !pIconMgr)
         return;
     pIconTreeWidget->delIconTreeWidgetItem();
     pIconWidget->delIconWidget();
-    pIconMgr->Del(catalogName,nIconType,uuid);
+    pIconMgr->Del(catalogName,nIconTypeId,uuid);
     pIconPreview->init();
 }
 
@@ -463,25 +471,36 @@ void HIconMainWindow::redo()
 //剪切
 void HIconMainWindow::cut()
 {
+    if(!pIconMgr || !pIconMgr->getIconFrame())
+        return;
+    pIconMgr->getIconFrame()->cut();
 
 }
 
 //复制
 void HIconMainWindow::copy()
 {
+    if(!pIconMgr || !pIconMgr->getIconFrame())
+        return;
+    pIconMgr->getIconFrame()->copy();
 
 }
 
 //粘贴
 void HIconMainWindow::paste()
 {
+    if(!pIconMgr || !pIconMgr->getIconFrame())
+        return;
+    pIconMgr->getIconFrame()->paste();
 
 }
 
 //删除
-void HIconMainWindow::Delete()
+void HIconMainWindow::del()
 {
-
+    if(!pIconMgr || !pIconMgr->getIconFrame())
+        return;
+    pIconMgr->getIconFrame()->del();
 }
 
 //对齐方式--左对齐

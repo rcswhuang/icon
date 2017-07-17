@@ -19,9 +19,7 @@
         <file>images/center.png</file>
         <file>images/grid.png</file>
         <file>images/ruler.png</file>
-        <file>images/del.png</file>
         <file>images/close.png</file>
-        <file>images/rotate.png</file>
         <file>images/tree.png</file>
         <file>images/apply.png</file>
         <file>images/no.png</file>
@@ -32,5 +30,7 @@
         <file>images/text.png</file>
         <file>images/move_backward.png</file>
         <file>images/move_forward.png</file>
+        <file>images/redo.png</file>
+        <file>images/del.png</file>
     </qresource>
 </RCC>

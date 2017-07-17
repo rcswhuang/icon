@@ -25,8 +25,6 @@ HIconLineItem::HIconLineItem(const QLineF &line, HIconGraphicsItem *parent):HIco
     setFlag(QGraphicsItem::ItemSendsGeometryChanges,true);
     setFlag(QGraphicsItem::ItemIsFocusable,true);
     pLineObj = NULL;
-    //bSelected = false;
-    setSelected(false);
 }
 
 
@@ -264,6 +262,7 @@ QLineF HIconLineItem::line() const
 {
     return lineF;
 }
+
 void HIconLineItem::setLine(const QLineF &line)
 {
     if(lineF == line) return;
@@ -276,7 +275,6 @@ void HIconLineItem::setItemObj(HBaseObj *pObj)
 {
     pLineObj = (HLineObj*)pObj;
 }
-
 
 HBaseObj* HIconLineItem::getItemObj()
 {

@@ -17,7 +17,14 @@ public:
 public:
     void readXml(QDomElement* dom);
     void writeXml(QDomElement *dom);
+
+    //新建一个图元元素(按类型)
+    HBaseObj* newObj(int nObjType);
+
+    //增加一个图元元素
     void addObj(HBaseObj* pObj);
+
+    //删除一个图元元素
     void delObj(HBaseObj* pObj);
 
     void setIconSymbolWidth(double width);
@@ -57,7 +64,7 @@ private:
     QString strSymbolName;
     int usSymbolType;
     //属性
-    double fWidth;
+/*    double fWidth;
     double fHeight;
 /*    double fTransparent;//透明度
     int nFillStyle;//填充风格
