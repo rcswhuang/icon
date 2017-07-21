@@ -9,8 +9,14 @@ HIconDocument::HIconDocument(HIconMgr* iconMgr):pIconMgr(iconMgr)
 void HIconDocument::loadIconDoucument()
 {
     //先找路径，在找文件夹，然后文件夹里面搜索添加完成
-    QString iconsPath = QProcessEnvironment::systemEnvironment().value("wfsystem_dir");
+    QString iconsPath ;
+#ifdef WIN32
+    iconsPath = QProcessEnvironment::systemEnvironment().value("wfsystem_dir");
+#else
+    iconsPath = "/users/huangw";
+#endif
     iconsPath.append("/icons");
+
     QDir dirIconsPath(iconsPath);
     if(!dirIconsPath.exists())
         return;
@@ -49,7 +55,12 @@ void HIconDocument::loadIconTemplateFile(QString strIconsPath)//加载所有的�
 
 void HIconDocument::saveIconDoucument()
 {
-    QString iconsPath = QProcessEnvironment::systemEnvironment().value("wfsystem_dir");
+    QString iconsPath ;
+#ifdef WIN32
+    iconsPath = QProcessEnvironment::systemEnvironment().value("wfsystem_dir");
+#else
+    iconsPath = "/users/huangw";
+#endif
     iconsPath.append("/icons");
     QDir dirIconsPath(iconsPath);
     if(!dirIconsPath.exists())
@@ -116,7 +127,6 @@ void HIconDocument::New(const QString& strIconTypeName,const QString &strTemplat
     pCurIconTemplate->setIconTypeId(nTemplateType);//遥信类
     pCurIconTemplate->getSymbol()->setSymbolName(strTemplateName);
     pIconTemplateList.append(pCurIconTemplate);
-    //for(int i=0;i<pCurIconTemplate->getSymbol()->
 }
 
 void HIconDocument::Del(const QString &strTemplateName, int nTemplateType, const QString &strUuid)
@@ -138,7 +148,7 @@ void HIconDocument::Del(const QString &strTemplateName, int nTemplateType, const
 void HIconDocument::Open(const QString &strTemplateName, int nTemplateType, const QString &strUuid)
 {
     HIconTemplate* pTemplate = findIconTemplateByTypeAndUuid(nTemplateType,strUuid);
-    if(pTemplate && pTemplate->getIconTypeName() == strTemplateName)
+    if(pTemplate && pTemplate->getSymbol()->getSymolName() == strTemplateName)
         pCurIconTemplate = pTemplate;
     else
         pCurIconTemplate = NULL;

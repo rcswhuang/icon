@@ -13,7 +13,7 @@ public:
 public:
     void readXml(QDomElement* dom);
     void writeXml(QDomElement *dom);
-    void addObj(HBaseObj* pObj);
+    void addObj(HBaseObj* pObj,bool badd=true);
     void delObj(HBaseObj* pObj);
     void copyTo(HIconShowPattern* sp);
     void clear();

@@ -63,7 +63,7 @@ void HIconSymbol::readXml(QDomElement* dom)
         pattern->strName = e.attribute("Name");
         pattern->strAlias = e.attribute("Alias");
         pattern->nPattern = e.attribute("PatternID").toInt();
-        pShowPatternVector.append(pattern);
+        //pShowPatternVector.append(pattern);
     }
     updateShowPattern(pTempList);
 
@@ -233,7 +233,7 @@ void HIconSymbol::updateShowPattern(QList<HBaseObj*> &list)
     foreach (HBaseObj* pObj, list) {
         HIconShowPattern* pattern = findPatternById(pObj->nPattern.at(0));
         if(!pattern) continue;
-        pattern->addObj(pObj);
+        pattern->addObj(pObj,false);
     }
 }
 

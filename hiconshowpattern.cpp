@@ -48,11 +48,12 @@ void HIconShowPattern::writeXml(QDomElement *dom)
     }
 }
 
-void HIconShowPattern::addObj(HBaseObj* pObj)
+void HIconShowPattern::addObj(HBaseObj* pObj,bool badd)
 {
     if(!pObj)
         return;
-    pObj->nPattern.append(nPattern);
+    if(badd)
+        pObj->nPattern.append(nPattern);
     pObjList.append(pObj);
 }
 

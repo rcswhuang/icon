@@ -160,7 +160,7 @@ void HBaseObj::readXml(QDomElement* dom)
     drawShape = (quint8)dom->attribute("ObjType").toUInt();
     originX = dom->attribute("X").toDouble();
     originY = dom->attribute("Y").toDouble();
-    strLineColor = dom->attribute("strLineColor");
+    strLineColor = dom->attribute("LineColor");
     nLineWidth = dom->attribute("LineWidth").toUInt();
     nLineStyle = dom->attribute("LineStyle").toUInt();
     nLineJoinStyle = dom->attribute("LineJoinStyle").toUInt();
