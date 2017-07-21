@@ -81,7 +81,7 @@ public slots:
     //void save();
 
     //新建对象
-    void New(const QString& catalogName,const int& nIconTypeId);
+    void New(const QString& strIconTypeName,const QString& strTemplateName,const int& nTemplateTypeId);
 
     //打开 save falg = true
     void Open(const QString& catalogName,const int& nIconTypeId,const QString& uuid);

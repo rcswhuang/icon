@@ -23,27 +23,28 @@ void HIconShowPattern::readXml(QDomElement* dom)
     {
         QDomElement e = n.toElement();
         int patternID = e.attribute("PatternID").toInt();
-        HIconShowPattern* pattern = newPattern(patternID);
+        HIconShowPattern* pattern = pSymbol->newPattern(patternID);
         if(!pattern)
         {
             delete pattern;
             pattern = NULL;
             continue;
         }
-        pattern->readXml(e);
-        pShowPatternVector.append(pattern);
+        pattern->readXml(&e);
+        pSymbol->pShowPatternVector.append(pattern);
     }
 }
 
 void HIconShowPattern::writeXml(QDomElement *dom)
 {
     if(!dom) return;
-    QDomElement childEle;
     for(int i = 0; i < pObjList.count();i++)
     {
         HBaseObj* pObj = (HBaseObj*)pObjList[i];
-        childEle = dom->ownerDocument.createElement(pObj->TagName());
-        pObj->writeXml(childEle);
+        QDomElement childEle = dom->ownerDocument().createElement(pObj->TagName());
+        dom->appendChild(childEle);
+        pObj->writeXml(&childEle);
+
     }
 }
 

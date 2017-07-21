@@ -29,29 +29,46 @@ void HIconSymbol::readXml(QDomElement* dom)
 {
     if(dom->isNull())
         return;
-    strSymbolName = dom->attribute("SymbolName");
-    usSymbolType = dom->attribute("ObjType").toUInt();
+    strSymbolName = dom->attribute("IconSymbolName");
+    usSymbolType = dom->attribute("IconSymbolType").toUInt();
 
-    //先找到showPattern
-
-    QDomElement objEle = dom->namedItem("ShowPatterns").toElement();
-    //构建下面的元素对象
+    QDomElement objEle = dom->namedItem("Children").toElement();
     QDomNode n = objEle.firstChild();
-    int i = 0;
-    for(;!n.isNull();n=n.nextSibling(),i++)
+    QList<HBaseObj*> pTempList;
+    for(int i = 0;!n.isNull();n=n.nextSibling(),i++)
     {
         QDomElement e = n.toElement();
-        int patternID = e.attribute("PatternID").toInt();
-        HIconShowPattern* pattern = newPattern(patternID);
+        QString strTagName = e.tagName();
+        HBaseObj* pObj = newObj(strTagName);
+        if(!pObj) continue;
+        pTempList.append(pObj);
+        pObj->readXml(&e);
+    }
+
+    QDomElement spEle = dom->namedItem("ShowPatterns").toElement();
+    //构建下面的元素对象
+    n = spEle.firstChild();
+    for(int i = 0;!n.isNull();n=n.nextSibling(),i++)
+    {
+        QDomElement e = n.toElement();
+        if(e.tagName() != "ShowPattern") continue;
+
+        HIconShowPattern* pattern = newPattern();
         if(!pattern)
         {
             delete pattern;
             pattern = NULL;
             continue;
         }
-        pattern->readXml(e);
+        pattern->strName = e.attribute("Name");
+        pattern->strAlias = e.attribute("Alias");
+        pattern->nPattern = e.attribute("PatternID").toInt();
         pShowPatternVector.append(pattern);
     }
+    updateShowPattern(pTempList);
+
+    pTempList.clear();
+    //还要刷新一下 把对应的Obj 放到showPattern下面
 }
 
 void HIconSymbol::writeXml(QDomElement *dom)
@@ -61,9 +78,22 @@ void HIconSymbol::writeXml(QDomElement *dom)
     dom->setAttribute("IconSymbolName",strSymbolName);
     dom->setAttribute("IconSymbolType",usSymbolType);
 
+
+    //先创建所有子图元元素xml结构
+    QDomElement childDom = dom->ownerDocument().createElement("Children");
+    dom->appendChild(childDom);
+    for(int i = 0; i < pShowPatternVector.size();i++)
+    {
+        HIconShowPattern* pattern = (HIconShowPattern*)pShowPatternVector[i];
+        if(!pattern)continue;
+        pattern->writeXml(&childDom);
+    }
+
+
+    //再创建显示方案的xml结构
     QDomElement patternDom = dom->ownerDocument().createElement("ShowPatterns");
     dom->appendChild(patternDom);
-    for(int i = 0; i < pShowPatternVector[i];i++)
+    for(int i = 0; i < pShowPatternVector.size();i++)
     {
         HIconShowPattern* pattern = (HIconShowPattern*)pShowPatternVector[i];
         if(!pattern)continue;
@@ -71,9 +101,28 @@ void HIconSymbol::writeXml(QDomElement *dom)
         patternChildDom.setAttribute("Name",pattern->strName);
         patternChildDom.setAttribute("Alias",pattern->strAlias);
         patternChildDom.setAttribute("PatternID",pattern->nPattern);
-        patternDom.appendChild(patternChild);
-        pattern->writeXml(patternChildDom);
+        patternDom.appendChild(patternChildDom);
     }
+
+
+}
+
+HBaseObj* HIconSymbol::newObj(QString tagName)
+{
+    quint8 drawShape = enumNo;
+    if(tagName == "Line")
+        drawShape = enumLine;
+    else if(tagName == "Rectangle")
+        drawShape = enumRectangle;
+    else if(tagName == "Ellipse")
+        drawShape = enumEllipse;
+    else if(tagName == "Arc")
+        drawShape = enumArc;
+    else if(tagName == "Pie")
+        drawShape = enumPie;
+    else if(tagName == "Text")
+        drawShape = enumText;
+    return newObj(drawShape);
 }
 
 HBaseObj* HIconSymbol::newObj(int nObjType)
@@ -159,6 +208,16 @@ bool HIconSymbol::findObjID(int nObjID)
     return false;
 }
 
+void HIconSymbol::setSymbolName(const QString &strName)
+{
+    strSymbolName = strName;
+}
+
+QString HIconSymbol::getSymolName()
+{
+    return strSymbolName;
+}
+
 void HIconSymbol::setIconSymbolWidth(double width)
 {
     //fWidth = width;
@@ -168,6 +227,20 @@ void HIconSymbol::setIconSymbolHeight(double height)
 {
     //fHeight = height;
 }
+
+void HIconSymbol::updateShowPattern(QList<HBaseObj*> &list)
+{
+    foreach (HBaseObj* pObj, list) {
+        HIconShowPattern* pattern = findPatternById(pObj->nPattern.at(0));
+        if(!pattern) continue;
+        pattern->addObj(pObj);
+    }
+}
+
+
+
+
+
 
 bool HIconSymbol::PatterIsValid(int nId)
 {
@@ -268,7 +341,7 @@ int HIconSymbol::getCurrentPatternIndex()
 {
     if(!pCurPattern || pShowPatternVector.isEmpty())
         return -1;
-    pShowPatternVector.indexOf(pCurPattern);
+    return pShowPatternVector.indexOf(pCurPattern);
 }
 
 void HIconSymbol::setCurrentPatternPtr(HIconShowPattern* sp)

@@ -12,6 +12,13 @@ HIconMgr::HIconMgr()
     strBgClr = "#FFFFFF";
 }
 
+HIconDocument* HIconMgr::getIconDocument()
+{
+    if(pIconDocument)
+        return pIconDocument;
+    return NULL;
+}
+
 HIconTemplate* HIconMgr::getIconTemplate()
 {
     if(pIconDocument)
@@ -64,9 +71,9 @@ bool HIconMgr::getShowCenterLine()
 }
 
 
-void HIconMgr::New(const QString &catalogName, const int &nIconTypeId)
+void HIconMgr::New(const QString& strIconTypeName,const QString& strTemplateName,const int& nTemplateTypeId)
 {
-    pIconDocument->New(catalogName,nIconTypeId);
+    pIconDocument->New(strIconTypeName,strTemplateName,nTemplateTypeId);
 }
 
 void HIconMgr::Del(const QString& catalogName,const int& nIconTypeId,const QString& uuid)

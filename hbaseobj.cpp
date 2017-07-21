@@ -178,6 +178,14 @@ void HBaseObj::readXml(QDomElement* dom)
     bVerticalTurn = dom->attribute("VerticalTurn").toInt();
     bVisible = dom->attribute("Visible").toInt();
     nStackOrder = dom->attribute("StackOrder").toInt();
+    QStringList patternList = dom->attribute("ShowPattern").split(",",QString::SkipEmptyParts);
+    nPattern.clear();
+    for(int i = 0; i<patternList.size();i++)
+    {
+        int sp = patternList.at(i).toInt();
+        if(sp<0)continue;
+        nPattern.append(sp);
+    }
 }
 
 void HBaseObj::writeXml(QDomElement* dom)
@@ -206,6 +214,10 @@ void HBaseObj::writeXml(QDomElement* dom)
     dom->setAttribute("VerticalTurn",bVerticalTurn);
     dom->setAttribute("Visible",bVisible);
     dom->setAttribute("StackOrder",nStackOrder);
+    QStringList patternList;
+    for(int i = 0; i < nPattern.size();i++)
+        patternList<<QString::number(nPattern.at(i));
+    dom->setAttribute("ShowPattern",patternList.join(","));
 
 }
 

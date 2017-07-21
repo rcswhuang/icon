@@ -54,6 +54,7 @@ void HIconMainWindow::createActions()
 
     saveAct = new QAction(QIcon(":/images/save.png"), QStringLiteral("保存(&S)"), this);
     saveAct->setShortcuts(QKeySequence::Save);
+    connect(saveAct,SIGNAL(triggered(bool)),this,SLOT(save()));
 
     closeAct = new QAction(QIcon(":/images/close.png"),QStringLiteral("退出(&E)"),this);
     closeAct->setShortcut(QKeySequence::Quit);
@@ -303,7 +304,7 @@ void HIconMainWindow::createDockWindows()
     browserIconDock->setWidget(pIconTreeWidget);
     addDockWidget(Qt::LeftDockWidgetArea,browserIconDock);
     pIconTreeWidget->init();
-    connect(pIconTreeWidget,SIGNAL(IconNew(const QString&,const int&)),this,SLOT(New(const QString&,const int&)));
+    connect(pIconTreeWidget,SIGNAL(IconNew(const QString&,const QString&,const int&)),this,SLOT(New(const QString&,const QString&,const int&)));
     connect(pIconTreeWidget,SIGNAL(IconDel(const QString&,const int&,const QString&)),this,SLOT(Del(const QString&,const int&,const QString&)));
     connect(pIconTreeWidget,SIGNAL(IconOpen(const QString&,const int&,const QString&)),this,SLOT(Open(const QString&,const int&,const QString&)));
 
@@ -327,7 +328,7 @@ void HIconMainWindow::open()
 
 void HIconMainWindow::save()
 {
-
+    pIconMgr->Save();
 }
 
 void HIconMainWindow::saveAs()
@@ -408,17 +409,19 @@ void HIconMainWindow::quit()
 //void save();
 
 //新建对象
-void HIconMainWindow::New(const QString& catalogName,const int& nIconTypeId)//"开关",遥信
+void HIconMainWindow::New(const QString& strIconTypeName,const QString& strTemplateName,const int& nTemplateTypeId)//"开关",遥信
 {
 
     //弹出对话框
 
     pIconWidget->delIconWidget();//先删除目前
-    pIconMgr->New(catalogName,nIconTypeId);
+    pIconMgr->New(strIconTypeName,strTemplateName,nTemplateTypeId);
     pIconWidget->setIconMgr(pIconMgr);
     pIconWidget->newIconWidget();
     pIconTreeWidget->addIconTreeWigetItem();
     pIconPreview->init();
+
+
     //改用函数来实现
     pIconMgr->getIconFrame()->scaleChangedTo(0.6);
     QString strScale = QString("%1%").arg(pIconMgr->getIconFrame()->scale()*100);

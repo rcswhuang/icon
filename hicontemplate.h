@@ -10,7 +10,7 @@
 class HIconTemplate : public QObject
 {
 public:
-    HIconTemplate(QObject* parent = 0);
+    HIconTemplate(const QUuid& uuid,QObject* parent = 0);
     ~HIconTemplate();
 public:
     void readXml(const QString &strXmlFile);

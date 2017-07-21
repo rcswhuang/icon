@@ -12,11 +12,17 @@ class HIconDocument : public QObject
 public:
     HIconDocument(HIconMgr* iconMgr);
 public:
-    void loadTemplateFile();//加载所有的模板文件
+    void loadIconDoucument();
+    void loadIconTemplateFile(QString strIconsPath);//加载所有的模板文件
+    void saveIconDoucument();
+    void saveIconTemplateFile(const QString& strIconsPath,const QString& strFolderName);//保存所有的模板文件
     void initIconType();
 
+    //通过图元类型来获得存储的文件夹类型
+    bool IsIconInFolder(const QString& strFolderName,const quint8& nIconType);
+
 public:
-    void New(const QString& strTemplateName,int nTemplateType);
+    void New(const QString& strIconTypeName,const QString& strTemplateName,int nTemplateType);
     void Del(const QString& strTemplateName,int nTemplateType,const QString& strUuid);
     void Open(const QString& strTemplateName,int nTemplateType,const QString& strUuid);
     bool Save();

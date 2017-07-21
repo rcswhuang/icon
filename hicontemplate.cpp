@@ -1,7 +1,10 @@
 ﻿#include "hicontemplate.h"
 #include <QFile>
 #include <QTextStream>
-HIconTemplate::HIconTemplate(QObject* parent)
+#include <QDomProcessingInstruction>
+#include <QTextCodec>
+HIconTemplate::HIconTemplate(const QUuid& uuid,QObject* parent)
+    :uUid(uuid)
 {
     if(uUid.isNull())
     {
@@ -22,7 +25,6 @@ HIconTemplate::~HIconTemplate()
     }
 }
 
-
 void HIconTemplate::readXml(const QString &strXmlFile)
 {
     QFile file(strXmlFile);
@@ -30,27 +32,19 @@ void HIconTemplate::readXml(const QString &strXmlFile)
         return;
     QTextStream dsm(&file);
     QDomDocument doc;
-    doc.setContent(dsm.readAll());
+    dsm.setCodec("GB2312");
+    QString errorString;
+    int errorLine;
+    int errorColumn;
+    if(!doc.setContent(&file,false,&errorString,&errorLine,&errorColumn))
+    {
+        file.close();
+        return;
+    }
     QDomElement root = doc.documentElement();
     if(root.isNull())
         return;
     readXml(&root);
-    file.close();
-}
-
-void HIconTemplate::writeXml(const QString &strXmlFile)
-{
-    QFile file(strXmlFile);
-    if(!file.open(QIODevice::WriteOnly))
-        return;
-    QDomDocument doc;
-    QDomElement root = doc.createElement("IconTemplate");
-    if(root.isNull())
-        return;
-    doc.appendChild(root);
-    writeXml(&root);
-    QDataStream dsm(&file);
-    dsm<<doc.toString();
     file.close();
 }
 
@@ -59,17 +53,38 @@ void HIconTemplate::readXml(QDomElement* dom)
     if(!dom)
         return;
 
-    strIconTypeName = dom->attribute("IconTypeName");
-    nIconTypeId = dom->attribute("IconTypeId").toInt();
+    strIconTypeName = dom->attribute("TypeName");
+    nIconTypeId = dom->attribute("TypeId").toInt();
     uUid = QUuid(dom->attribute("UUID"));
     double w = dom->attribute("DefaultWidth").toDouble();
     double h = dom->attribute("DefaultHeight").toDouble();
     sDefaultSize = QSizeF(w,h);
-    QDomElement symbolDom = dom->namedItem("IconTemplate").toElement();
+    QDomElement symbolDom = dom->namedItem("IconSymbol").toElement();
     if(!symbolDom.isNull())
     {
         pIconSymbol->readXml(&symbolDom);
     }
+}
+
+void HIconTemplate::writeXml(const QString &strXmlFile)
+{
+    QFile file(strXmlFile);
+    if(!file.open(QIODevice::WriteOnly))
+        return;
+    QTextStream dsm(&file);
+    QDomDocument doc;
+    QTextCodec* c = QTextCodec::codecForLocale();
+    QString strLocal = QString("version=\"1.0\" encoding=\"GB2312\"");
+    QDomProcessingInstruction instruct = doc.createProcessingInstruction("xml",strLocal);
+    doc.appendChild(instruct);
+    QDomElement root = doc.createElement("IconTemplate");
+    if(root.isNull())
+        return;
+    doc.appendChild(root);
+    writeXml(&root);
+    dsm.setCodec("GB2312");
+    doc.save(dsm,4);
+    file.close();
 }
 
 void HIconTemplate::writeXml(QDomElement *dom)
@@ -77,11 +92,12 @@ void HIconTemplate::writeXml(QDomElement *dom)
     if(!dom)
         return;
 
-    dom->setAttribute("IconTypeName",strIconTypeName);
-    dom->setAttribute("IconTypeId",nIconTypeId);
+    dom->setAttribute("TypeName",strIconTypeName);
+    dom->setAttribute("TypeId",nIconTypeId);
     dom->setAttribute("UUID",uUid.toString());
     dom->setAttribute("DefaultWidth",sDefaultSize.width());
     dom->setAttribute("DefaultHeight",sDefaultSize.height());
+
 
     QDomElement symbolDom = dom->ownerDocument().createElement("IconSymbol");
     dom->appendChild(symbolDom);

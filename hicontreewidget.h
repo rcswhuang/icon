@@ -49,15 +49,18 @@ public:
     ~HIconTreeWidget();
 public:
     void init();
+    void initTemplateFile();
     void initTemplateMenu(QContextMenuEvent *event);
     void initTemplateChildMenu(QContextMenuEvent* event);
     void addIconTreeWigetItem();
     void delIconTreeWidgetItem();
+    HIconTreeWidgetItem* findIconTreeWigetItem(int treeData);
+    void expandIconItem(HIconTreeWidgetItem* item);
 
 protected:
     void contextMenuEvent(QContextMenuEvent *event);
 signals:
-    void IconNew(const QString& strName,const int& nIconTypeId);
+    void IconNew(const QString& strIconTypeName,const QString& strName,const int& nIconTypeId);
     void IconDel(const QString& strName,const int& nIconTypeId,const QString& strUuid);
     void IconOpen(const QString& strName,const int& nIconTypeId,const QString& strUuid);
 public slots:

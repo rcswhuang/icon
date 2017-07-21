@@ -42,45 +42,46 @@ void HIconTreeWidget::init()
     HIconTreeWidgetItem *rootItem = new HIconTreeWidgetItem(this);
     rootItem->setText(0,QStringLiteral("测点"));
     addTopLevelItem(rootItem);
-
-    digitalItem = new HIconTreeWidgetItem(this,TEMPLATE_TYPE_DIGITAL);
+    expandItem(rootItem);
+    digitalItem = new HIconTreeWidgetItem(rootItem,TEMPLATE_TYPE_DIGITAL);
     digitalItem->setIcon(0,QIcon(":/images/tree.png"));
     digitalItem->setText(0,QStringLiteral("遥信"));
-    rootItem->addChild(digitalItem);
+    //rootItem->addChild(digitalItem);
 
-    analogueItem = new HIconTreeWidgetItem(this,TEMPLATE_TYPE_ANALGOUE);
+    analogueItem = new HIconTreeWidgetItem(rootItem,TEMPLATE_TYPE_ANALGOUE);
     analogueItem->setIcon(0,QIcon(":/images/tree.png"));
     analogueItem->setText(0,QStringLiteral("遥测"));
-    rootItem->addChild(analogueItem);
+    //rootItem->addChild(analogueItem);
 
-    controlItem = new HIconTreeWidgetItem(this,TEMPLATE_TYPE_YK);
+    controlItem = new HIconTreeWidgetItem(rootItem,TEMPLATE_TYPE_YK);
     controlItem->setIcon(0,QIcon(":/images/tree.png"));
     controlItem->setText(0,QStringLiteral("遥控"));
-    rootItem->addChild(controlItem);
+    //rootItem->addChild(controlItem);
 
-    pulseItem = new HIconTreeWidgetItem(this,TEMPLATE_TYPE_PLUSE);
+    pulseItem = new HIconTreeWidgetItem(rootItem,TEMPLATE_TYPE_PLUSE);
     pulseItem->setIcon(0,QIcon(":/images/tree.png"));
     pulseItem->setText(0,QStringLiteral("遥脉"));
-    rootItem->addChild(pulseItem);
+    //rootItem->addChild(pulseItem);
 
-    tapItem = new HIconTreeWidgetItem(this,TEMPLATE_TYPE_TAP);
+    tapItem = new HIconTreeWidgetItem(rootItem,TEMPLATE_TYPE_TAP);
     tapItem->setIcon(0,QIcon(":/images/tree.png"));
     tapItem->setText(0,QStringLiteral("档位"));
-    rootItem->addChild(tapItem);
+    //rootItem->addChild(tapItem);
 
-    lightItem = new HIconTreeWidgetItem(this,TEMPLATE_TYPE_LIGHT);
+    lightItem = new HIconTreeWidgetItem(rootItem,TEMPLATE_TYPE_LIGHT);
     lightItem->setIcon(0,QIcon(":/images/tree.png"));
     lightItem->setText(0,QStringLiteral("光字牌"));
-    rootItem->addChild(lightItem);
+    //rootItem->addChild(lightItem);
 
-    paiItem = new HIconTreeWidgetItem(this,TEMPLATE_TYPE_JDPAI);
+    paiItem = new HIconTreeWidgetItem(rootItem,TEMPLATE_TYPE_JDPAI);
     paiItem->setIcon(0,QIcon(":/images/tree.png"));
     paiItem->setText(0,QStringLiteral("接地牌"));
-    rootItem->addChild(paiItem);
+    //rootItem->addChild(paiItem);
 
     //connect(this,SIGNAL(itemSelectionChanged()),SLOT(openIcon()));
     connect(this,SIGNAL(itemClicked(QTreeWidgetItem*,int)),SLOT(openIcon(QTreeWidgetItem*,int)));
-    expandAll();
+    initTemplateFile();
+    //expandAll();
 
 }
 
@@ -141,11 +142,9 @@ void HIconTreeWidget::newIcon()
     bool ok;
     QString strName = QInputDialog::getText(this,QStringLiteral("输入图元的名称"),QStringLiteral("图元名称:"),QLineEdit::Normal,"",&ok);
     if(!ok) return;
-    int nIconTypeId;
     HIconTreeWidgetItem* item = (HIconTreeWidgetItem*)currentItem();
     if(!item) return;
-    nIconTypeId = item->type();
-    emit IconNew(strName,nIconTypeId);
+    emit IconNew(item->text(0),strName,item->type());
 }
 
 void HIconTreeWidget::openIcon(QTreeWidgetItem* item,int col)
@@ -155,8 +154,7 @@ void HIconTreeWidget::openIcon(QTreeWidgetItem* item,int col)
     int nCurType = pCurItem->type();
     if(nCurType > TEMPLATE_TYPE_NULL && nCurType < TEMPLATE_TYPE_MAX)
     {
-        collapseAll();
-        expandItem(pCurItem);
+        expandIconItem(pCurItem);
     }
     else if(nCurType == TEMPLATE_TYPE_CHILD)
     {
@@ -217,7 +215,7 @@ void HIconTreeWidget::addIconTreeWigetItem()
     HIconTreeWidgetItem* newItem = new HIconTreeWidgetItem(parentItem,TEMPLATE_TYPE_CHILD);
     newItem->setUuid(strUuid);
     newItem->setData(0,Qt::UserRole,QVariant(strUuid));
-    newItem->setText(0,pIconMgr->getIconTemplate()->getIconTypeName());
+    newItem->setText(0,pIconMgr->getIconTemplate()->getSymbol()->getSymolName());
     parentItem->addChild(newItem);
     setCurrentItem(newItem);
 
@@ -237,5 +235,55 @@ void HIconTreeWidget::delIconTreeWidgetItem()
     setCurrentItem(parentItem);
 }
 
+void HIconTreeWidget::initTemplateFile()
+{
+    if(!pIconMgr || !pIconMgr->getIconDocument())
+        return;
 
+    for(int i = 0; i < pIconMgr->getIconDocument()->pIconTemplateList.count();i++ )
+    {
+        HIconTemplate* pTemplate = (HIconTemplate*)pIconMgr->getIconDocument()->pIconTemplateList[i];
+        if(!pTemplate) continue;
+        HIconTreeWidgetItem* treeItem = findIconTreeWigetItem(pTemplate->getIconTypeId());
+        if(!treeItem) continue;
 
+        QString strUuid =  pTemplate->getUuid().toString();
+        HIconTreeWidgetItem* newItem = new HIconTreeWidgetItem(treeItem,TEMPLATE_TYPE_CHILD);
+        if(!newItem) continue;
+        newItem->setUuid(strUuid);
+        newItem->setData(0,Qt::UserRole,QVariant(strUuid));
+        newItem->setText(0,pTemplate->getSymbol()->getSymolName());
+        treeItem->addChild(newItem);
+
+        collapseItem(treeItem);
+    }
+}
+
+HIconTreeWidgetItem* HIconTreeWidget::findIconTreeWigetItem(int treeData)
+{
+    int count = topLevelItemCount();
+    HIconTreeWidgetItem* rootItem = static_cast<HIconTreeWidgetItem*>(topLevelItem(0));
+    if(!rootItem) return NULL;
+    for(int i = 0;i < rootItem->childCount();i++)
+    {
+        HIconTreeWidgetItem* childItem = static_cast<HIconTreeWidgetItem*>(rootItem->child(i));
+        if(!childItem) continue;
+        if(treeData == childItem->type())
+            return childItem;
+    }
+    return NULL;
+}
+
+void HIconTreeWidget::expandIconItem(HIconTreeWidgetItem* item)
+{
+    int count = topLevelItemCount();
+    HIconTreeWidgetItem* rootItem = static_cast<HIconTreeWidgetItem*>(topLevelItem(0));
+    if(!rootItem) return;
+    int c = rootItem->childCount();
+    for(int i = 0;i < rootItem->childCount();i++)
+    {
+        HIconTreeWidgetItem* childItem = static_cast<HIconTreeWidgetItem*>(rootItem->child(i));
+        collapseItem(childItem);
+    }
+    expandItem(item);
+}

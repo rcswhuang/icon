@@ -12,6 +12,7 @@ class HIconMgr
 {
 public:
     HIconMgr();
+    HIconDocument* getIconDocument();
     HIconTemplate* getIconTemplate();
     HIconState* getIconState();
     HIconFrame* getIconFrame();
@@ -23,7 +24,7 @@ public:
     void setShowCenterLine(bool show);
     bool getShowCenterLine();
 public:
-    void New(const QString& catalogName,const int& nIconTypeId);
+    void New(const QString& strIconTypeName,const QString& strTemplateName,const int& nTemplateTypeId);
     void Del(const QString& catalogName,const int& nIconTypeId,const QString& uuid);
     bool Save();
     void Open(const QString& catalogName,const int& nIconTypeId,const QString& uuid);
