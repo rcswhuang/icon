@@ -330,7 +330,6 @@ void HIconScene::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
 
             menu.exec(event->screenPos());
         }
-
     }
 }
 
@@ -433,34 +432,35 @@ void HIconScene::addItemByPatternId(int nPatternId)
             addItem(text);
         }
 
-    }
-    if(drawShape == enumLine && line != 0)
-    {
-        line = 0;
-    }
-    else if(drawShape == enumRectangle && rectangle != 0)
-    {
-        rectangle = 0;
-    }
-    else if(drawShape == enumEllipse && ellipse != 0)
-    {
-        ellipse = 0;
-    }
-    else if(drawShape == enumPolygon && polygon !=0)
-    {
-        polygon = 0;
-    }
-    else if(drawShape == enumArc && arc !=0)
-    {
-        arc = 0;
-    }
-    else if(drawShape == enumPie && pie !=0)
-    {
-        pie = 0;
-    }
-    else if(drawShape == enumText && text != 0)
-    {
-        text = 0;
+        if(drawShape == enumLine && line != 0)
+        {
+            line = 0;
+        }
+        else if(drawShape == enumRectangle && rectangle != 0)
+        {
+            rectangle = 0;
+        }
+        else if(drawShape == enumEllipse && ellipse != 0)
+        {
+            ellipse = 0;
+        }
+        else if(drawShape == enumPolygon && polygon !=0)
+        {
+            polygon = 0;
+        }
+        else if(drawShape == enumArc && arc !=0)
+        {
+            arc = 0;
+        }
+        else if(drawShape == enumPie && pie !=0)
+        {
+            pie = 0;
+        }
+        else if(drawShape == enumText && text != 0)
+        {
+            text = 0;
+        }
+
     }
 
 }
@@ -528,7 +528,7 @@ void HIconScene::calcSelectedItem(const QRectF &rectF)
     setSelectionArea(path,transform);
 }
 
-
+//复制粘贴拷贝里面用到的函数
 HIconGraphicsItem* HIconScene::addItemByIconObj(int nPattern,HBaseObj* pObj)
 {
     if(!pObj) return NULL;

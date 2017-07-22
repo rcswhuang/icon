@@ -1,6 +1,7 @@
 ﻿#include "hicondocument.h"
 #include <QDir>
 #include <QProcessEnvironment>
+
 HIconDocument::HIconDocument(HIconMgr* iconMgr):pIconMgr(iconMgr)
 {
     pCurIconTemplate = NULL;
@@ -9,7 +10,7 @@ HIconDocument::HIconDocument(HIconMgr* iconMgr):pIconMgr(iconMgr)
 void HIconDocument::loadIconDoucument()
 {
     //先找路径，在找文件夹，然后文件夹里面搜索添加完成
-    QString iconsPath ;
+    QString iconsPath  = QString(getenv("wfsystem_dir"));
 #ifdef WIN32
     iconsPath = QProcessEnvironment::systemEnvironment().value("wfsystem_dir");
 #else
@@ -55,7 +56,7 @@ void HIconDocument::loadIconTemplateFile(QString strIconsPath)//加载所有的�
 
 void HIconDocument::saveIconDoucument()
 {
-    QString iconsPath ;
+    QString iconsPath = QString(getenv("wfsystem_dir"));;
 #ifdef WIN32
     iconsPath = QProcessEnvironment::systemEnvironment().value("wfsystem_dir");
 #else

@@ -193,7 +193,7 @@ void HBaseObj::writeXml(QDomElement* dom)
     if(!dom)
         return;
     dom->setAttribute("ObjName",strObjName);
-    dom->setAttribute("ObjID",nObjectId);
+    dom->setAttribute("ObjId",nObjectId);
     dom->setAttribute("ObjType",drawShape); 
     dom->setAttribute("X",originX);
     dom->setAttribute("Y",originY);

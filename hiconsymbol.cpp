@@ -152,6 +152,7 @@ HBaseObj* HIconSymbol::newObj(int nObjType)
     {
         pObj = new HTextObj();
     }
+    pObj->setShapeType((DRAWSHAPE)nObjType);
     if(pObj)
     {
         int objID = getObjID();

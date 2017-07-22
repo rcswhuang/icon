@@ -60,7 +60,7 @@ void HLineObj::readXml(QDomElement* dom)
     pfHeadPoint.setX(dom->attribute("pfHeadPointx").toDouble());
     pfHeadPoint.setY(dom->attribute("pfHeadPointy").toDouble());
     pfTailPoint.setX(dom->attribute("pfTailPointx").toDouble());
-    pfTailPoint.setY(dom->attribute("pfTailPointx").toDouble());
+    pfTailPoint.setY(dom->attribute("pfTailPointy").toDouble());
     arrowStart = dom->attribute("arrowStart").toInt();
     arrowEnd = dom->attribute("arrowEnd").toInt();
     arrowWidth = dom->attribute("arrowWidth").toInt();
@@ -201,7 +201,7 @@ void HRectObj::readXml(QDomElement* dom)
     if(!dom) return;
     HBaseObj::readXml(dom);
     topLeft.setX(dom->attribute("topLeftx").toDouble());
-    topLeft.setY(dom->attribute("topLeftx").toDouble());
+    topLeft.setY(dom->attribute("topLefty").toDouble());
     rectWidth = dom->attribute("rectWidth").toInt();
     rectHeight = dom->attribute("rectHeight").toInt();
 }
@@ -291,7 +291,7 @@ void HEllipseObj::readXml(QDomElement* dom)
     if(!dom) return;
     HBaseObj::readXml(dom);
     topLeft.setX(dom->attribute("topLeftx").toDouble());
-    topLeft.setY(dom->attribute("topLeftx").toDouble());
+    topLeft.setY(dom->attribute("topLefty").toDouble());
     rectWidth = dom->attribute("rectWidth").toInt();
     rectHeight = dom->attribute("rectHeight").toInt();
 }
@@ -440,7 +440,7 @@ void HArcObj::readXml(QDomElement* dom)
     if(!dom) return;
     HBaseObj::readXml(dom);
     topLeft.setX(dom->attribute("topLeftx").toDouble());
-    topLeft.setY(dom->attribute("topLeftx").toDouble());
+    topLeft.setY(dom->attribute("topLefty").toDouble());
     rectWidth = dom->attribute("rectWidth").toInt();
     rectHeight = dom->attribute("rectHeight").toInt();
     startAngle = dom->attribute("startAngle").toInt();
@@ -576,7 +576,7 @@ void HPieObj::readXml(QDomElement* dom)
     if(!dom) return;
     HBaseObj::readXml(dom);
     topLeft.setX(dom->attribute("topLeftx").toDouble());
-    topLeft.setY(dom->attribute("topLeftx").toDouble());
+    topLeft.setY(dom->attribute("topLefty").toDouble());
     rectWidth = dom->attribute("rectWidth").toInt();
     rectHeight = dom->attribute("rectHeight").toInt();
     startAngle = dom->attribute("startAngle").toInt();
@@ -732,10 +732,10 @@ void HTextObj::readXml(QDomElement* dom)
     if(!dom) return;
     HBaseObj::readXml(dom);
     topLeft.setX(dom->attribute("topLeftx").toDouble());
-    topLeft.setY(dom->attribute("topLeftx").toDouble());
+    topLeft.setY(dom->attribute("topLefty").toDouble());
     rectWidth = dom->attribute("rectWidth").toInt();
     rectHeight = dom->attribute("rectHeight").toInt();
-    strTextContent = dom->attribute("strTextContent");
+    strTextContent = dom->attribute("textContent");
     textColorName = dom->attribute("textColorName");
     textFontName = dom->attribute("textFontName");
     layout = dom->attribute("layout").toInt();
@@ -756,8 +756,8 @@ void HTextObj::writeXml(QDomElement* dom)
     dom->setAttribute("rectWidth",rectWidth);
     dom->setAttribute("rectHeight",rectHeight);
     dom->setAttribute("textContent",strTextContent);
-    dom->setAttribute("colorName",textColorName);
-    dom->setAttribute("fontName",textFontName);
+    dom->setAttribute("textColorName",textColorName);
+    dom->setAttribute("textFontName",textFontName);
     dom->setAttribute("layout",layout);
     dom->setAttribute("horizontalAlign",horizontalAlign);
     dom->setAttribute("verticalAlign",verticalAlign);
