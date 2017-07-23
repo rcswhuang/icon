@@ -10,7 +10,7 @@ HIconDocument::HIconDocument(HIconMgr* iconMgr):pIconMgr(iconMgr)
 void HIconDocument::loadIconDoucument()
 {
     //先找路径，在找文件夹，然后文件夹里面搜索添加完成
-    QString iconsPath  = QString(getenv("wfsystem_dir"));
+    QString iconsPath  = QString(qgetenv("wfsystem_dir"));
 #ifdef WIN32
     iconsPath = QProcessEnvironment::systemEnvironment().value("wfsystem_dir");
 #else

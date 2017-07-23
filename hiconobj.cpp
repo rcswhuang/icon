@@ -75,7 +75,7 @@ void HLineObj::writeXml(QDomElement* dom)
     dom->setAttribute("pfHeadPointx",pfHeadPoint.x());
     dom->setAttribute("pfHeadPointy",pfHeadPoint.y());
     dom->setAttribute("pfTailPointx",pfTailPoint.x());
-    dom->setAttribute("pfTailPointy",pfHeadPoint.y());
+    dom->setAttribute("pfTailPointy",pfTailPoint.y());
     dom->setAttribute("arrowStart",arrowStart);
     dom->setAttribute("arrowEnd",arrowEnd);
     dom->setAttribute("arrowWidth",arrowWidth);
