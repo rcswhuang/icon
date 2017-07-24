@@ -122,7 +122,7 @@ public:
 
     //是否删除
     virtual void setDeleted(bool bDel);
-    bool isDeleted();
+    virtual bool isDeleted();
 
     //叠放次序
     qint64 getStackOrder();

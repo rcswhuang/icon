@@ -45,7 +45,7 @@ void HBaseObj::init()
     bHorizonTurn = false;//水平翻转
     bVerticalTurn = false;//垂直翻转
     bVisible = true;//是否显示
-    bDeleted = true;//是否删除
+    bDeleted = false;//是否删除
     nStackOrder = 0;
 
     //父图符
@@ -521,7 +521,7 @@ qint8 HBaseObj::isVisible()
 //是否删除
 void HBaseObj::setDeleted(bool bDel)
 {
-
+    bDeleted = bDel;
 }
 
 bool HBaseObj::isDeleted()

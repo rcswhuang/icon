@@ -1,5 +1,7 @@
-#include "hiconcommand.h"
-
+﻿#include "hiconcommand.h"
+#include "hiconapi.h"
+#include "hbaseobj.h"
+#include "hiconobj.h"
 HIconCommand::HIconCommand(HIconMgr* iconMgr):pIconMgr(iconMgr)
 {
 
@@ -44,12 +46,14 @@ int HNewIconCommand::id() const
 
 void HNewIconCommand::redo()
 {
-
+  //回复新建
 }
 
 void HNewIconCommand::undo()
 {
-
+//删除新建的
+    pObj->setDeleted(true);
+    //隐藏对应的item
 }
 
 ////////////////////////////////////////删除///////////////////////////////////////////

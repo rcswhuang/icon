@@ -41,6 +41,12 @@ void HIconShowPattern::writeXml(QDomElement *dom)
     for(int i = 0; i < pObjList.count();i++)
     {
         HBaseObj* pObj = (HBaseObj*)pObjList[i];
+        if(pObj->isDeleted())
+        {
+            pObjList.removeAt(i);
+            delete pObj;
+            continue;
+        }
         QDomElement childEle = dom->ownerDocument().createElement(pObj->TagName());
         dom->appendChild(childEle);
         pObj->writeXml(&childEle);

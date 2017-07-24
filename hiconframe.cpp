@@ -185,9 +185,10 @@ void HIconFrame::del()
     foreach(QGraphicsItem* item,itemSelectList)
     {
         if(!item) continue;
-        pIconMgr->getIconTemplate()->getSymbol()->delObj(((HIconGraphicsItem*)item)->getItemObj());
-        iconScene()->removeItem(item);
-        delete item;
+        //不能直接删除 改成deleted=TRUE，只有到保存的时候才真正删除对象
+        HBaseObj* pObj = ((HIconGraphicsItem*)item)->getItemObj();
+        pObj->setDeleted(true);
+        item->setVisible(false);
     }
 }
 
