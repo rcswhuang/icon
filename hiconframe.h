@@ -73,6 +73,11 @@ public:
     void setItemVisible(int nPatternId);
 
     QString getClipboardFile();
+
+    //获取item
+    HIconGraphicsItem* getIconGraphicsItemByObj(HBaseObj* pObj);
+
+
 public slots:
 
 

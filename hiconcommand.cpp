@@ -2,6 +2,9 @@
 #include "hiconapi.h"
 #include "hbaseobj.h"
 #include "hiconobj.h"
+#include "hiconmgr.h"
+#include "hicongraphicsitem.h"
+#include "hiconlineitem.h"
 HIconCommand::HIconCommand(HIconMgr* iconMgr):pIconMgr(iconMgr)
 {
 
@@ -47,13 +50,28 @@ int HNewIconCommand::id() const
 void HNewIconCommand::redo()
 {
   //回复新建
+    if(!pIconMgr || !pObj || !pIconMgr->getIconFrame())
+        return;
+    //删除新建的
+    pObj->setDeleted(false);
+    //获取Item
+    HIconGraphicsItem* item = pIconMgr->getIconFrame()->getIconGraphicsItemByObj(pObj);
+    pIconMgr->getIconFrame()->view()->ensureVisible(item);
+    item->setVisible(true);
+    pIconMgr->getIconFrame()->refreshSelected(item->boundingRect());
 }
 
 void HNewIconCommand::undo()
 {
-//删除新建的
+    if(!pIconMgr || !pObj || !pIconMgr->getIconFrame())
+        return;
+    //删除新建的
     pObj->setDeleted(true);
-    //隐藏对应的item
+    //获取Item
+    HIconGraphicsItem* item = pIconMgr->getIconFrame()->getIconGraphicsItemByObj(pObj);
+    pIconMgr->getIconFrame()->view()->ensureVisible(item);
+    item->setVisible(false);
+    pIconMgr->getIconFrame()->refreshSelected(item->boundingRect());
 }
 
 ////////////////////////////////////////删除///////////////////////////////////////////
@@ -74,12 +92,38 @@ int HDelIconCommand::id() const
 
 void HDelIconCommand::redo()
 {
-
+    if(!pIconMgr || !pObj || !pIconMgr->getIconFrame())
+        return;
+    QRectF bounding;
+    for(int i = 0; i < pObjList.count();i++)
+    {
+        HBaseObj* obj = (HBaseObj*)pObjList[i];
+        if(!obj) continue;
+        HIconGraphicsItem* item = pIconMgr->getIconFrame()->getIconGraphicsItemByObj(obj);
+        if(!item) continue;
+        obj->setDeleted(true);
+        bounding = bounding.united(item->boundingRect());
+        item->setVisible(false);
+    }
+    pIconMgr->getIconFrame()->refreshSelected(bounding);
 }
 
 void HDelIconCommand::undo()
 {
-
+    if(!pIconMgr || !pObj || !pIconMgr->getIconFrame())
+        return;
+    QRectF bounding;
+    for(int i = 0; i < pObjList.count();i++)
+    {
+        HBaseObj* obj = (HBaseObj*)pObjList[i];
+        if(!obj) continue;
+        HIconGraphicsItem* item = pIconMgr->getIconFrame()->getIconGraphicsItemByObj(obj);
+        if(!item) continue;
+        obj->setDeleted(false);
+        bounding = bounding.united(item->boundingRect());
+        item->setVisible(true);
+    }
+    pIconMgr->getIconFrame()->refreshSelected(bounding);
 }
 
 
@@ -101,12 +145,38 @@ int HPasteIconCommand::id() const
 
 void HPasteIconCommand::redo()
 {
-
+    if(!pIconMgr || !pObj || !pIconMgr->getIconFrame())
+        return;
+    QRectF bounding;
+    for(int i = 0; i < pObjList.count();i++)
+    {
+        HBaseObj* obj = (HBaseObj*)pObjList[i];
+        if(!obj) continue;
+        HIconGraphicsItem* item = pIconMgr->getIconFrame()->getIconGraphicsItemByObj(obj);
+        if(!item) continue;
+        obj->setDeleted(false);
+        bounding = bounding.united(item->boundingRect());
+        item->setVisible(true);
+    }
+    pIconMgr->getIconFrame()->refreshSelected(bounding);
 }
 
 void HPasteIconCommand::undo()
 {
-
+    if(!pIconMgr || !pObj || !pIconMgr->getIconFrame())
+        return;
+    QRectF bounding;
+    for(int i = 0; i < pObjList.count();i++)
+    {
+        HBaseObj* obj = (HBaseObj*)pObjList[i];
+        if(!obj) continue;
+        HIconGraphicsItem* item = pIconMgr->getIconFrame()->getIconGraphicsItemByObj(obj);
+        if(!item) continue;
+        obj->setDeleted(true);
+        bounding = bounding.united(item->boundingRect());
+        item->setVisible(false);
+    }
+    pIconMgr->getIconFrame()->refreshSelected(bounding);
 }
 
 
@@ -151,12 +221,44 @@ int HMoveIconCommand::id() const
 
 void HMoveIconCommand::redo()
 {
-
+    if(!pIconMgr || !pObj || !pIconMgr->getIconFrame())
+        return;
+    QRectF oldBounding;
+    QRectF newBounding;
+    for(int i = 0; i < pObjList.count();i++)
+    {
+        HBaseObj* obj = (HBaseObj*)pObjList[i];
+        if(!obj) continue;
+        HIconGraphicsItem* item = pIconMgr->getIconFrame()->getIconGraphicsItemByObj(obj);
+        if(!item) continue;
+        oldBounding = oldBounding.united(item->boundingRect());
+        newBounding = newBounding.united(item->boundingRect().translate(dxList[i],dyList[i]));
+        item->moveBy(dxList[i],dyList[i]);
+    }
+    pIconMgr->getIconFrame()->refreshSelected(oldBounding);
+    pIconMgr->getIconFrame()->refreshSelected(newBounding);
+    pIconMgr->getIconFrame()->view()->ensureVisible(newBounding);
 }
 
 void HMoveIconCommand::undo()
 {
-
+    if(!pIconMgr || !pObj || !pIconMgr->getIconFrame())
+        return;
+    QRectF oldBounding;
+    QRectF newBounding;
+    for(int i = 0; i < pObjList.count();i++)
+    {
+        HBaseObj* obj = (HBaseObj*)pObjList[i];
+        if(!obj) continue;
+        HIconGraphicsItem* item = pIconMgr->getIconFrame()->getIconGraphicsItemByObj(obj);
+        if(!item) continue;
+        oldBounding = oldBounding.united(item->boundingRect());
+        newBounding = newBounding.united(item->boundingRect().translate(dxList[i],dyList[i]));
+        item->moveBy(-dxList[i],-dyList[i]);
+    }
+    pIconMgr->getIconFrame()->refreshSelected(oldBounding);
+    pIconMgr->getIconFrame()->refreshSelected(newBounding);
+    pIconMgr->getIconFrame()->view()->ensureVisible(newBounding);
 }
 
 
@@ -189,12 +291,44 @@ int HRotateIconCommand::id() const
 
 void HRotateIconCommand::redo()
 {
-
+    if(!pIconMgr || !pObj || !pIconMgr->getIconFrame())
+        return;
+    QRectF oldBounding;
+    QRectF newBounding;
+    for(int i = 0; i < pObjList.count();i++)
+    {
+        HBaseObj* obj = (HBaseObj*)pObjList[i];
+        if(!obj) continue;
+        HIconGraphicsItem* item = pIconMgr->getIconFrame()->getIconGraphicsItemByObj(obj);
+        if(!item) continue;
+        oldBounding = oldBounding.united(item->boundingRect());
+        item->setRotation(obj->getRotateAngle() - angleList[i]);
+        newBounding = newBounding.united(item->boundingRect());
+    }
+    pIconMgr->getIconFrame()->refreshSelected(oldBounding);
+    pIconMgr->getIconFrame()->refreshSelected(newBounding);
+    pIconMgr->getIconFrame()->view()->ensureVisible(newBounding);
 }
 
 void HRotateIconCommand::undo()
 {
-
+    if(!pIconMgr || !pObj || !pIconMgr->getIconFrame())
+        return;
+    QRectF oldBounding;
+    QRectF newBounding;
+    for(int i = 0; i < pObjList.count();i++)
+    {
+        HBaseObj* obj = (HBaseObj*)pObjList[i];
+        if(!obj) continue;
+        HIconGraphicsItem* item = pIconMgr->getIconFrame()->getIconGraphicsItemByObj(obj);
+        if(!item) continue;
+        oldBounding = oldBounding.united(item->boundingRect());
+        item->setRotation(obj->getRotateAngle() + angleList[i]);
+        newBounding = newBounding.united(item->boundingRect());
+    }
+    pIconMgr->getIconFrame()->refreshSelected(oldBounding);
+    pIconMgr->getIconFrame()->refreshSelected(newBounding);
+    pIconMgr->getIconFrame()->view()->ensureVisible(newBounding);
 }
 
 
@@ -245,10 +379,46 @@ int HResizeIconCommand::id() const
 
 void HResizeIconCommand::redo()
 {
-
+    if(!pIconMgr || !pObj || !pIconMgr->getIconFrame())
+        return;
+    QRectF oldBounding;
+    QRectF newBounding;
+    for(int i = 0; i < pObjList.count();i++)
+    {
+        HBaseObj* obj = (HBaseObj*)pObjList[i];
+        if(!obj) continue;
+        HIconGraphicsItem* item = pIconMgr->getIconFrame()->getIconGraphicsItemByObj(obj);
+        if(!item) continue;
+        oldBounding = oldBounding.united(item->boundingRect());
+        if(item->type() == enumLine)
+        {
+            //QPolygonF pf = oldPtList[i];
+            //((HIconLineItem*)item)->setLine(QLineF(pf.at()));
+        }
+        newBounding = newBounding.united(item->boundingRect());
+    }
+    pIconMgr->getIconFrame()->refreshSelected(oldBounding);
+    pIconMgr->getIconFrame()->refreshSelected(newBounding);
+    pIconMgr->getIconFrame()->view()->ensureVisible(newBounding);
 }
 
 void HResizeIconCommand::undo()
 {
-
+    if(!pIconMgr || !pObj || !pIconMgr->getIconFrame())
+        return;
+    QRectF oldBounding;
+    QRectF newBounding;
+    for(int i = 0; i < pObjList.count();i++)
+    {
+        HBaseObj* obj = (HBaseObj*)pObjList[i];
+        if(!obj) continue;
+        HIconGraphicsItem* item = pIconMgr->getIconFrame()->getIconGraphicsItemByObj(obj);
+        if(!item) continue;
+        oldBounding = oldBounding.united(item->boundingRect());
+        newBounding = newBounding.united(item->boundingRect().translate(dxList[i],dyList[i]));
+        item->moveBy(-dxList[i],-dyList[i]);
+    }
+    pIconMgr->getIconFrame()->refreshSelected(oldBounding);
+    pIconMgr->getIconFrame()->refreshSelected(newBounding);
+    pIconMgr->getIconFrame()->view()->ensureVisible(newBounding);
 }

@@ -12,6 +12,7 @@
 #include "hpropertydlg.h"
 #include "hiconshowpattern.h"
 #include "hiconselectionitem.h"
+#include "hiconcommand.h"
 #include <QGraphicsSceneMouseEvent>
 #include <QCursor>
 #include <QMenu>
@@ -68,6 +69,7 @@ void HIconScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
         line->setItemObj(pObj);
         pIconMgr->getIconState()->appendObj(pObj);
         addItem(line);
+        addNewIconCommand(pObj);
     }
         break;
     case enumRectangle:
@@ -80,6 +82,7 @@ void HIconScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
         rectangle->setItemObj(pObj);
         pIconMgr->getIconState()->appendObj(pObj);
         addItem(rectangle);
+        addNewIconCommand(pObj);
     }
         break;
     case enumEllipse:
@@ -92,6 +95,7 @@ void HIconScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
         ellipse->setItemObj(pObj);
         pIconMgr->getIconState()->appendObj(pObj);
         addItem(ellipse);
+        addNewIconCommand(pObj);
     }
         break;
     case enumPolygon:
@@ -109,6 +113,7 @@ void HIconScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
         arc->setItemObj(pObj);
         pIconMgr->getIconState()->appendObj(pObj);
         addItem(arc);
+        addNewIconCommand(pObj);
     }
         break;
     case enumPie:
@@ -121,6 +126,7 @@ void HIconScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
         pie->setItemObj(pObj);
         pIconMgr->getIconState()->appendObj(pObj);
         addItem(pie);
+        addNewIconCommand(pObj);
     }
         break;
     case enumText:
@@ -133,6 +139,7 @@ void HIconScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
         text->setItemObj(pObj);
         pIconMgr->getIconState()->appendObj(pObj);
         addItem(text);
+        addNewIconCommand(pObj);
     }
         break;
     case enumMulSelection:
@@ -142,6 +149,7 @@ void HIconScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
         tempF.setBottomRight(mouseEvent->scenePos());
         select = new HIconSelectionItem(tempF);
         addItem(select);
+        break;
     }
     default:
         break;
@@ -670,3 +678,14 @@ void HIconScene::bringToBottom()
         ((HIconGraphicsItem*)pItem)->getItemObj()->setStackOrder(minZValue);
     }
 }
+
+void HIconScene::addNewIconCommand(HBaseObj *pObj)
+{
+    if(!pIconMgr || !pIconMgr->getIconUndoStack())
+        return;
+    HNewIconCommand* newIconCommand = new HNewIconCommand(pIconMgr,pObj);
+    pIconMgr->getIconUndoStack()->push(newIconCommand);
+}
+
+
+

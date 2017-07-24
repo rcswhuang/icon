@@ -7,6 +7,7 @@ HIconMgr::HIconMgr()
     //pIconFrame->setIconMgr(this);
     pIconDocument = new HIconDocument(this);
     pIconState = new HIconState(this);
+    pIconUndoStack = new QUndoStack;
     bShowGrid = true;
     bShowCenterLine = true;
     strBgClr = "#FFFFFF";
@@ -37,6 +38,13 @@ HIconFrame* HIconMgr::getIconFrame()
 {
     if(pIconFrame)
         return pIconFrame;
+    return NULL;
+}
+
+QUndoStack* HIconMgr::getIconUndoStack()
+{
+    if(pIconUndoStack)
+        return pIconUndoStack;
     return NULL;
 }
 

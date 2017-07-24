@@ -20,9 +20,7 @@ class HIconScene : public QGraphicsScene
 public:
     HIconScene(HIconMgr* iconMgr);
 public:
-    //移动到顶层
     void bringToTop();
-    //移动到底层
     void bringToBottom();
     bool getItemAt(const QPointF& pos);
     void setItemProperty(QGraphicsItem *item);
@@ -32,6 +30,8 @@ public:
     void delItemByPatternId(int nPatternId);
     void setItemVisible(int nPatternId);
     void calcSelectedItem(const QRectF& rectF);
+
+    void addNewIconCommand(HBaseObj* pObj);
 protected:
     virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
     virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent);

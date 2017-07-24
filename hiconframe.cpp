@@ -258,3 +258,25 @@ QString HIconFrame::getClipboardFile()
     clipboardPath.append("/iconclipboard.data");
     return clipboardPath;
 }
+
+HIconGraphicsItem* HIconFrame::getIconGraphicsItemByObj(HBaseObj *pObj)
+{
+    if(!pObj || !iconScene()) return NULL;
+    QList<QGraphicsItem*> items = iconScene()->items();
+    foreach (QGraphicsItem *item1, items)
+    {
+        HIconGraphicsItem* item = qgraphicsitem_cast<HIconGraphicsItem*>(item1);
+        if(!item) continue;
+        if(pObj->getShapeType() != item->type()) continue;
+        HBaseObj* obj = item->getItemObj();
+        if(obj->getObjID() == pObj->getObjID())
+            return item;
+    }
+    return NULL;
+}
+
+
+
+
+
+

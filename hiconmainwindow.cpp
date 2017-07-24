@@ -62,10 +62,12 @@ void HIconMainWindow::createActions()
 
     //编辑项
     undoAct = new QAction(QIcon(":/images/undo.png"),QStringLiteral("撤销(&U)"),this);
-    undoAct->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_Z));
+    undoAct->setShortcut(QKeySequence(QKeySequence::Undo));
+    connect(undoAct,SIGNAL(triggered(bool)),this,SLOT(undo()));
 
     redoAct = new QAction(QIcon(":/images/redo.png"),QStringLiteral("重做(&R)"),this);
-    redoAct->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_Y));
+    redoAct->setShortcut(QKeySequence(QKeySequence::Redo));
+    connect(redoAct,SIGNAL(triggered(bool)),this,SLOT(redo()));
 
     cutAct = new QAction(QIcon(":/images/cut.png"), QStringLiteral("剪切(&X)"), this);
     cutAct->setShortcuts(QKeySequence::Cut);
@@ -462,13 +464,17 @@ void HIconMainWindow::Del(const QString& catalogName,const int& nIconTypeId,cons
 //撤销
 void HIconMainWindow::undo()
 {
-
+    if(!pIconMgr || !pIconMgr->getIconUndoStack())
+        return;
+    pIconMgr->getIconUndoStack()->undo();
 }
 
 //重做
 void HIconMainWindow::redo()
 {
-
+    if(!pIconMgr || !pIconMgr->getIconUndoStack())
+        return;
+    pIconMgr->getIconUndoStack()->redo();
 }
 
 //剪切
