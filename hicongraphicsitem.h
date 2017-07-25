@@ -1,4 +1,4 @@
-#ifndef HICONGRAPHICSITEM_H
+﻿#ifndef HICONGRAPHICSITEM_H
 #define HICONGRAPHICSITEM_H
 #include <QGraphicsItem>
 class QPointF;
@@ -19,6 +19,8 @@ public:
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
     virtual void keyPressEvent(QKeyEvent *event);
 public:
+    virtual void setRect(const QRectF& rect);
+    virtual QRectF rect()const;
     virtual void setItemObj(HBaseObj*);
     virtual HBaseObj* getItemObj();
     virtual ushort pointInRect(QPointF& point);

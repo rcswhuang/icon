@@ -8,6 +8,7 @@
 HIconCommand::HIconCommand(HIconMgr* iconMgr):pIconMgr(iconMgr)
 {
 
+    bFirstTime = true;
 }
 
 HIconCommand::~HIconCommand()
@@ -50,6 +51,7 @@ int HNewIconCommand::id() const
 void HNewIconCommand::redo()
 {
   //回复新建
+
     if(!pIconMgr || !pObj || !pIconMgr->getIconFrame())
         return;
     //删除新建的
@@ -92,7 +94,7 @@ int HDelIconCommand::id() const
 
 void HDelIconCommand::redo()
 {
-    if(!pIconMgr || !pObj || !pIconMgr->getIconFrame())
+    if(!pIconMgr || pObjList.isEmpty() || !pIconMgr->getIconFrame())
         return;
     QRectF bounding;
     for(int i = 0; i < pObjList.count();i++)
@@ -110,7 +112,7 @@ void HDelIconCommand::redo()
 
 void HDelIconCommand::undo()
 {
-    if(!pIconMgr || !pObj || !pIconMgr->getIconFrame())
+    if(!pIconMgr || pObjList.isEmpty() || !pIconMgr->getIconFrame())
         return;
     QRectF bounding;
     for(int i = 0; i < pObjList.count();i++)
@@ -145,7 +147,7 @@ int HPasteIconCommand::id() const
 
 void HPasteIconCommand::redo()
 {
-    if(!pIconMgr || !pObj || !pIconMgr->getIconFrame())
+    if(!pIconMgr || pObjList.isEmpty() || !pIconMgr->getIconFrame())
         return;
     QRectF bounding;
     for(int i = 0; i < pObjList.count();i++)
@@ -163,7 +165,7 @@ void HPasteIconCommand::redo()
 
 void HPasteIconCommand::undo()
 {
-    if(!pIconMgr || !pObj || !pIconMgr->getIconFrame())
+    if(!pIconMgr || pObjList.isEmpty() || !pIconMgr->getIconFrame())
         return;
     QRectF bounding;
     for(int i = 0; i < pObjList.count();i++)
@@ -221,7 +223,13 @@ int HMoveIconCommand::id() const
 
 void HMoveIconCommand::redo()
 {
-    if(!pIconMgr || !pObj || !pIconMgr->getIconFrame())
+    //redo只能是undo完成之后的动作，第一次不能有redo动作
+    if(bFirstTime)
+    {
+        bFirstTime = false;
+        return;
+    }
+    if(!pIconMgr || pObjList.isEmpty() || !pIconMgr->getIconFrame())
         return;
     QRectF oldBounding;
     QRectF newBounding;
@@ -232,8 +240,9 @@ void HMoveIconCommand::redo()
         HIconGraphicsItem* item = pIconMgr->getIconFrame()->getIconGraphicsItemByObj(obj);
         if(!item) continue;
         oldBounding = oldBounding.united(item->boundingRect());
-        newBounding = newBounding.united(item->boundingRect().translate(dxList[i],dyList[i]));
+        newBounding = newBounding.united(item->boundingRect().translated(dxList[i],dyList[i]));
         item->moveBy(dxList[i],dyList[i]);
+        obj->moveBy(dxList[i],dyList[i]);
     }
     pIconMgr->getIconFrame()->refreshSelected(oldBounding);
     pIconMgr->getIconFrame()->refreshSelected(newBounding);
@@ -242,7 +251,7 @@ void HMoveIconCommand::redo()
 
 void HMoveIconCommand::undo()
 {
-    if(!pIconMgr || !pObj || !pIconMgr->getIconFrame())
+    if(!pIconMgr || pObjList.isEmpty() || !pIconMgr->getIconFrame())
         return;
     QRectF oldBounding;
     QRectF newBounding;
@@ -253,8 +262,9 @@ void HMoveIconCommand::undo()
         HIconGraphicsItem* item = pIconMgr->getIconFrame()->getIconGraphicsItemByObj(obj);
         if(!item) continue;
         oldBounding = oldBounding.united(item->boundingRect());
-        newBounding = newBounding.united(item->boundingRect().translate(dxList[i],dyList[i]));
+        newBounding = newBounding.united(item->boundingRect().translated(dxList[i],dyList[i]));
         item->moveBy(-dxList[i],-dyList[i]);
+        obj->moveBy(-dxList[i],-dyList[i]);
     }
     pIconMgr->getIconFrame()->refreshSelected(oldBounding);
     pIconMgr->getIconFrame()->refreshSelected(newBounding);
@@ -291,7 +301,7 @@ int HRotateIconCommand::id() const
 
 void HRotateIconCommand::redo()
 {
-    if(!pIconMgr || !pObj || !pIconMgr->getIconFrame())
+    if(!pIconMgr || pObjList.isEmpty() || !pIconMgr->getIconFrame())
         return;
     QRectF oldBounding;
     QRectF newBounding;
@@ -312,7 +322,7 @@ void HRotateIconCommand::redo()
 
 void HRotateIconCommand::undo()
 {
-    if(!pIconMgr || !pObj || !pIconMgr->getIconFrame())
+    if(!pIconMgr || pObjList.isEmpty() || !pIconMgr->getIconFrame())
         return;
     QRectF oldBounding;
     QRectF newBounding;
@@ -379,7 +389,7 @@ int HResizeIconCommand::id() const
 
 void HResizeIconCommand::redo()
 {
-    if(!pIconMgr || !pObj || !pIconMgr->getIconFrame())
+    if(!pIconMgr || pObjList.isEmpty() || !pIconMgr->getIconFrame())
         return;
     QRectF oldBounding;
     QRectF newBounding;
@@ -390,10 +400,22 @@ void HResizeIconCommand::redo()
         HIconGraphicsItem* item = pIconMgr->getIconFrame()->getIconGraphicsItemByObj(obj);
         if(!item) continue;
         oldBounding = oldBounding.united(item->boundingRect());
-        if(item->type() == enumLine)
+        quint8 ntype = item->type();
+        if(ntype == enumLine)
         {
-            //QPolygonF pf = oldPtList[i];
-            //((HIconLineItem*)item)->setLine(QLineF(pf.at()));
+            QPolygonF pf = newPtList[i];
+            if(pf.count() != 2) continue;
+            QPointF pf1 = pf.at(0);
+            QPointF pf2 = pf.at(1);
+            ((HIconLineItem*)item)->setLine(QLineF(pf1,pf2));
+        }
+        else if(ntype == enumRectangle || ntype == enumArc || ntype == enumPie || ntype == enumEllipse || ntype == enumText)
+        {
+            QPolygonF pf = newPtList[i];
+            QPointF pf1 = pf.at(0);//左上角
+            QPointF pf2 = pf.at(1);//右下角
+            QRectF rectF(pf1,pf2);
+            item->setRect(rectF);
         }
         newBounding = newBounding.united(item->boundingRect());
     }
@@ -404,7 +426,7 @@ void HResizeIconCommand::redo()
 
 void HResizeIconCommand::undo()
 {
-    if(!pIconMgr || !pObj || !pIconMgr->getIconFrame())
+    if(!pIconMgr || pObjList.isEmpty() || !pIconMgr->getIconFrame())
         return;
     QRectF oldBounding;
     QRectF newBounding;
@@ -415,8 +437,24 @@ void HResizeIconCommand::undo()
         HIconGraphicsItem* item = pIconMgr->getIconFrame()->getIconGraphicsItemByObj(obj);
         if(!item) continue;
         oldBounding = oldBounding.united(item->boundingRect());
-        newBounding = newBounding.united(item->boundingRect().translate(dxList[i],dyList[i]));
-        item->moveBy(-dxList[i],-dyList[i]);
+        quint8 ntype = item->type();
+        if(ntype == enumLine)
+        {
+            QPolygonF pf = oldPtList[i];
+            if(pf.count() != 2) continue;
+            QPointF pf1 = pf.at(0);
+            QPointF pf2 = pf.at(1);
+            ((HIconLineItem*)item)->setLine(QLineF(pf1,pf2));
+        }
+        else if(ntype == enumRectangle || ntype == enumArc || ntype == enumPie || ntype == enumEllipse || ntype == enumText)
+        {
+            QPolygonF pf = oldPtList[i];
+            QPointF pf1 = pf.at(0);//左上角
+            QPointF pf2 = pf.at(1);//右下角
+            QRectF rectF(pf1,pf2);
+            item->setRect(rectF);
+        }
+        newBounding = newBounding.united(item->boundingRect());
     }
     pIconMgr->getIconFrame()->refreshSelected(oldBounding);
     pIconMgr->getIconFrame()->refreshSelected(newBounding);

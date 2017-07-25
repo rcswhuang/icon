@@ -53,7 +53,8 @@ void HIconScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
     if(mouseEvent->button() != Qt::LeftButton)
         return;
 
-
+    bLeftShift = true;
+    prePoint = mouseEvent->scenePos();
     DRAWSHAPE drawShape = pIconMgr->getIconState()->getDrawShape();
     //处于选择状态同时没有选到任何item,就是多选状态
     if(!getItemAt(mouseEvent->scenePos()) && drawShape == enumSelection)
@@ -242,11 +243,11 @@ void HIconScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
         select->setRect(newRect);
     }
     //判断当前是否处于选择状态
-    if(drawShape == enumSelection)
+    if(drawShape == enumSelection )
     {
         setItemCursor(mouseEvent);
         QGraphicsScene::mouseMoveEvent(mouseEvent);
-     }
+    }
 }
 
 void HIconScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
@@ -296,6 +297,12 @@ void HIconScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
         select = 0;
     }
 
+    //要检查是不是移动过
+    if(drawShape == enumSelection && bLeftShift)
+    {
+        prepareMoveItem(mouseEvent);
+    }
+    bLeftShift = false;
     pIconMgr->getIconState()->setDrawShape(enumSelection);
     QGraphicsScene::mouseReleaseEvent(mouseEvent);
 }
@@ -685,6 +692,26 @@ void HIconScene::addNewIconCommand(HBaseObj *pObj)
         return;
     HNewIconCommand* newIconCommand = new HNewIconCommand(pIconMgr,pObj);
     pIconMgr->getIconUndoStack()->push(newIconCommand);
+}
+
+void HIconScene::prepareMoveItem(QGraphicsSceneMouseEvent *mouseEvent)
+{
+    QList<QGraphicsItem*> selectedItemList = selectedItems();
+    if(selectedItemList.count() == 0) return;
+    QPointF pt = mouseEvent->scenePos();
+    if(abs(pt.x()-prePoint.x()) < 0.0001 & abs(pt.y() - prePoint.y()) < 0.0001)
+        return;
+    qreal dx = pt.x() - prePoint.x();
+    qreal dy = pt.y() - prePoint.y();
+    QList<HBaseObj*> objList;
+    for(int i = 0; i < selectedItemList.count();i++)
+    {
+        HIconGraphicsItem* item = (HIconGraphicsItem*)selectedItemList.at(i);
+        if(!item) continue;
+        objList.append(item->getItemObj());
+    }
+    HMoveIconCommand* moveIconCommand = new HMoveIconCommand(pIconMgr,objList,dx,dy);
+    pIconMgr->getIconUndoStack()->push(moveIconCommand);
 }
 
 

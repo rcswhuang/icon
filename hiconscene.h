@@ -31,6 +31,7 @@ public:
     void setItemVisible(int nPatternId);
     void calcSelectedItem(const QRectF& rectF);
 
+    void prepareMoveItem(QGraphicsSceneMouseEvent *mouseEvent);
     void addNewIconCommand(HBaseObj* pObj);
 protected:
     virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
@@ -52,6 +53,11 @@ public slots:
     void pasteItem();
     void showProperty();
 private:
+    bool bLeftShift;
+    QPointF prePoint;
+    QPointF curPoint;
+
+
     HIconMgr* pIconMgr;
     HIconLineItem* line;
     HIconRectItem* rectangle;

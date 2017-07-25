@@ -74,3 +74,13 @@ void HIconGraphicsItem::keyPressEvent(QKeyEvent *event)
 {
     QGraphicsItem::keyPressEvent(event);
 }
+
+void HIconGraphicsItem::setRect(const QRectF& rect)
+{
+
+}
+
+QRectF HIconGraphicsItem::rect()const
+{
+    return QRectF(0,0,0,0);
+}

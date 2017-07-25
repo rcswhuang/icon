@@ -268,6 +268,8 @@ void HIconLineItem::setLine(const QLineF &line)
     if(lineF == line) return;
     prepareGeometryChange();
     lineF = line;
+    pLineObj->pfHeadPoint = mapToScene(lineF.p1());
+    pLineObj->pfTailPoint =  mapToScene(lineF.p2());
     update();
 }
 

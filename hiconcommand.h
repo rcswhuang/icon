@@ -31,6 +31,7 @@ public:
     virtual void undo();
 protected:
     HIconMgr* pIconMgr;
+    bool bFirstTime;
 };
 
 

@@ -21,8 +21,8 @@ public:
     HIconRectItem(HIconGraphicsItem *parent = Q_NULLPTR);
     HIconRectItem(const QRectF &rectF, HIconGraphicsItem *parent = Q_NULLPTR);
 public:
-    void setRect(const QRectF& rect);
-    QRectF rect()const;
+    virtual void setRect(const QRectF& rect);
+    virtual QRectF rect()const;
 public:
     virtual QRectF boundingRect() const;
     virtual bool contains(const QPointF &point) const;

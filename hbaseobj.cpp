@@ -57,11 +57,11 @@ void HBaseObj::readData(QDataStream *data)
 {
     if(!data) return;
     QString s;
-    *data>>s;
-    strObjName = s;
-    quint32 n32;
-    *data>>n32;
-    nObjectId = n32;
+    //*data>>s;
+    //strObjName = s;
+    //quint32 n32;
+    //*data>>n32;
+    //nObjectId = n32;
     quint8 n8;
     *data>>n8;
     drawShape = n8;
@@ -120,8 +120,8 @@ void HBaseObj::readData(QDataStream *data)
 void HBaseObj::writeData(QDataStream *data)
 {
     if(!data) return;
-    *data<<strObjName;
-    *data<<(quint32)nObjectId;
+    //*data<<strObjName;
+    //*data<<(quint32)nObjectId;
     *data<<(quint8)drawShape;
     *data<<(double)originX;
     *data<<(double)originY;

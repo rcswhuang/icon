@@ -9,6 +9,7 @@
 #include "hiconmgr.h"
 #include "hiconstate.h"
 #include "hicongraphicsitem.h"
+#include "hiconcommand.h"
 HIconFrame::HIconFrame(QWidget * parent, Qt::WindowFlags f )
     :HFrame(parent,f)
 {
@@ -134,12 +135,14 @@ void HIconFrame::paste()
     int nPattern;
     stream>>nPattern;
     quint8 nType;
+    QList<HBaseObj*> objList;
     for(int i = 0; i < num;i++)
     {
         stream>>nType;
         HBaseObj* pObj = pIconMgr->getIconTemplate()->getSymbol()->newObj(nType);
         if(!pObj) continue;
         pObj->readData(&stream);
+        objList.append(pObj);
         HIconGraphicsItem* item = addItemByIconObj(pIconMgr->getIconTemplate()->getSymbol()->getCurrentPattern(),pObj);
         if(!item)
         {
@@ -177,11 +180,14 @@ void HIconFrame::paste()
         }
     }
     iconScene()->update(getLogicRect());
+    HPasteIconCommand* pasteIconCommand = new HPasteIconCommand(pIconMgr,objList);
+    pIconMgr->getIconUndoStack()->push(pasteIconCommand);
 }
 
 void HIconFrame::del()
 {
     QList<QGraphicsItem*> itemSelectList = iconScene()->selectedItems();
+    QList<HBaseObj*> objList;
     foreach(QGraphicsItem* item,itemSelectList)
     {
         if(!item) continue;
@@ -189,7 +195,10 @@ void HIconFrame::del()
         HBaseObj* pObj = ((HIconGraphicsItem*)item)->getItemObj();
         pObj->setDeleted(true);
         item->setVisible(false);
+        objList.append(pObj);
     }
+    HDelIconCommand *delIconCommand = new HDelIconCommand(pIconMgr,objList);
+    pIconMgr->getIconUndoStack()->push(delIconCommand);
 }
 
 void HIconFrame::bringToTop()

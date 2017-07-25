@@ -230,8 +230,6 @@ void HIconEllipseItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
 void HIconEllipseItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
     QPointF pt = event->scenePos() - pointStart;
-    //ushort location = pointInRect(event->scenePos());
-    //qDebug()<<"location:"<<location;
     pointStart = event->scenePos();
     bool bShift = false;
     if(event->modifiers() == Qt::ShiftModifier)
