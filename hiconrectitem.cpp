@@ -340,12 +340,7 @@ void HIconRectItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 void HIconRectItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     QPointF pt = event->scenePos();
-    pRectObj->topLeft = mapToScene(rect().topLeft());
-    pRectObj->rectWidth = rect().width();
-    pRectObj->rectHeight = rect().height();
-    QPointF p = mapToScene(rect().center());
-    pRectObj->setOX(p.x());
-    pRectObj->setOY(p.y());
+
     HIconGraphicsItem::mouseReleaseEvent(event);
 }
 
@@ -396,15 +391,7 @@ void HIconRectItem::setRect(const QRectF& rect)
     if(rect == rectF) return;
     prepareGeometryChange();
     rectF = rect;
-
-    //可以做一个独立函数 调用resizecommand 还要商榷
-    pRectObj->topLeft = mapToScene(rectF.topLeft());
-    pRectObj->rectWidth = rectF.width();
-    pRectObj->rectHeight = rectF.height();
-    QPointF p = mapToScene(rectF.center());
-    pRectObj->setOX(p.x());
-    pRectObj->setOY(p.y());
-
+    refreshBaseObj();
     update();
 }
 
@@ -423,6 +410,23 @@ HBaseObj* HIconRectItem::getItemObj()
     if(pRectObj)
         return pRectObj;
     return NULL;
+}
+
+void HIconRectItem::moveItemBy(qreal dx, qreal dy)
+{
+    QRectF newRectF;
+    newRectF = rect().translated(dx,dy);
+    setRect(newRectF);
+}
+
+void HIconRectItem::refreshBaseObj()
+{
+    pRectObj->topLeft = mapToScene(rect().topLeft());
+    pRectObj->rectWidth = rect().width();
+    pRectObj->rectHeight = rect().height();
+    QPointF p = mapToScene(rect().center());
+    pRectObj->setOX(p.x());
+    pRectObj->setOY(p.y());
 }
 
 void HIconRectItem::setItemCursor(int location)

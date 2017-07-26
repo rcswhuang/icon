@@ -14,6 +14,7 @@ class QPainter;
 class QStyleOptionGraphicsItem;
 class QKeyEvent;
 class QGraphicsSceneMouseEvent;
+class QPolygonF;
 
 class HIconLineItem : public HIconGraphicsItem
 {
@@ -36,6 +37,8 @@ public:
 public:
     QLineF line() const;
     void setLine(const QLineF& lineF);
+    void refreshBaseObj();
+    void resizeItem(const QPolygonF& polygonF);
 public:
     virtual QRectF boundingRect() const;
     virtual bool contains(const QPointF &point) const;
@@ -51,6 +54,7 @@ public:
     virtual void setItemCursor(int position);
     virtual void setItemObj(HBaseObj*);
     virtual HBaseObj* getItemObj();
+    virtual void moveItemBy(qreal dx, qreal dy);
 public:
     QLineF lineF;
     HLineObj* pLineObj;

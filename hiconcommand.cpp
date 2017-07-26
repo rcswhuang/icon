@@ -94,6 +94,11 @@ int HDelIconCommand::id() const
 
 void HDelIconCommand::redo()
 {
+    if(bFirstTime)
+    {
+        bFirstTime = false;
+        return;
+    }
     if(!pIconMgr || pObjList.isEmpty() || !pIconMgr->getIconFrame())
         return;
     QRectF bounding;
@@ -147,6 +152,11 @@ int HPasteIconCommand::id() const
 
 void HPasteIconCommand::redo()
 {
+    if(bFirstTime)
+    {
+        bFirstTime = false;
+        return;
+    }
     if(!pIconMgr || pObjList.isEmpty() || !pIconMgr->getIconFrame())
         return;
     QRectF bounding;
@@ -241,8 +251,7 @@ void HMoveIconCommand::redo()
         if(!item) continue;
         oldBounding = oldBounding.united(item->boundingRect());
         newBounding = newBounding.united(item->boundingRect().translated(dxList[i],dyList[i]));
-        item->moveBy(dxList[i],dyList[i]);
-        obj->moveBy(dxList[i],dyList[i]);
+        item->moveItemBy(dxList[i],dyList[i]);
     }
     pIconMgr->getIconFrame()->refreshSelected(oldBounding);
     pIconMgr->getIconFrame()->refreshSelected(newBounding);
@@ -263,8 +272,7 @@ void HMoveIconCommand::undo()
         if(!item) continue;
         oldBounding = oldBounding.united(item->boundingRect());
         newBounding = newBounding.united(item->boundingRect().translated(dxList[i],dyList[i]));
-        item->moveBy(-dxList[i],-dyList[i]);
-        obj->moveBy(-dxList[i],-dyList[i]);
+        item->moveItemBy(-dxList[i],-dyList[i]);
     }
     pIconMgr->getIconFrame()->refreshSelected(oldBounding);
     pIconMgr->getIconFrame()->refreshSelected(newBounding);
@@ -301,6 +309,11 @@ int HRotateIconCommand::id() const
 
 void HRotateIconCommand::redo()
 {
+    if(bFirstTime)
+    {
+        bFirstTime = false;
+        return;
+    }
     if(!pIconMgr || pObjList.isEmpty() || !pIconMgr->getIconFrame())
         return;
     QRectF oldBounding;
@@ -389,6 +402,11 @@ int HResizeIconCommand::id() const
 
 void HResizeIconCommand::redo()
 {
+    if(bFirstTime)
+    {
+        bFirstTime = false;
+        return;
+    }
     if(!pIconMgr || pObjList.isEmpty() || !pIconMgr->getIconFrame())
         return;
     QRectF oldBounding;

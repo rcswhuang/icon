@@ -186,19 +186,20 @@ void HIconLineItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     //shift键
     //setSelected(false);
     QPointF sizeF = event->scenePos() - curPointF;
-    QLineF line1 = line();//
     curPointF = event->scenePos();
     if(lineMode == LineSize)
     {
+        QPolygonF pf;
+        pf.clear();
         if(pointLocation == LOCATIONLEFT)
         {
-           line1 = QLineF(line1.p1()+sizeF,line1.p2());
+           pf<<line().p1()+sizeF<<line().p2();
         }
         else if(pointLocation == LOCATIONRIGHT)
         {
-            line1 = QLineF(line1.p1(),line1.p2() + sizeF);
+            pf<<line().p1()<<line().p2()+sizeF;
         }
-        setLine(line1);
+        resizeItem(pf);
     }
     else
     {
@@ -209,8 +210,6 @@ void HIconLineItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 void HIconLineItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     lineMode = LineNo;
-    pLineObj->pfHeadPoint = mapToScene(line().p1());
-    pLineObj->pfTailPoint =  mapToScene(line().p2());
     HIconGraphicsItem::mouseReleaseEvent(event);
 }
 
@@ -268,8 +267,7 @@ void HIconLineItem::setLine(const QLineF &line)
     if(lineF == line) return;
     prepareGeometryChange();
     lineF = line;
-    pLineObj->pfHeadPoint = mapToScene(lineF.p1());
-    pLineObj->pfTailPoint =  mapToScene(lineF.p2());
+    refreshBaseObj();
     update();
 }
 
@@ -283,6 +281,27 @@ HBaseObj* HIconLineItem::getItemObj()
     if(pLineObj)
         return pLineObj;
     return NULL;
+}
+
+void HIconLineItem::moveItemBy(qreal dx, qreal dy)
+{
+    QLineF newLineF;
+    newLineF = line().translated(dx,dy);
+    setLine(newLineF);
+}
+
+void HIconLineItem::refreshBaseObj()
+{
+    pLineObj->pfHeadPoint = mapToScene(line().p1());
+    pLineObj->pfTailPoint =  mapToScene(line().p2());
+}
+
+void HIconLineItem::resizeItem(const QPolygonF& polygonF)
+{
+    if(polygonF.size() != 2)
+        return;
+    QLineF newLineF(polygonF.at(0),polygonF.at(1));
+    setLine(newLineF);
 }
 
 ushort HIconLineItem::pointInRect(QPointF &point)

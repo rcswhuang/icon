@@ -329,6 +329,7 @@ void HIconEllipseItem::setRect(const QRectF& rect)
     if(rect == rectF) return;
     prepareGeometryChange();
     rectF = rect;
+    refreshBaseObj();
     update();
 }
 
@@ -347,6 +348,23 @@ HBaseObj* HIconEllipseItem::getItemObj()
     if(pEllipseObj)
         return pEllipseObj;
     return NULL;
+}
+
+void HIconEllipseItem::moveItemBy(qreal dx, qreal dy)
+{
+    QRectF newRectF;
+    newRectF = rect().translated(dx,dy);
+    setRect(newRectF);
+}
+
+void HIconEllipseItem::refreshBaseObj()
+{
+    pEllipseObj->topLeft = mapToScene(rect().topLeft());
+    pEllipseObj->rectWidth = rect().width();
+    pEllipseObj->rectHeight = rect().height();
+    QPointF p = mapToScene(rect().center());
+    pEllipseObj->setOX(p.x());
+    pEllipseObj->setOY(p.y());
 }
 
 ushort HIconEllipseItem::pointInRect(QPointF& point)

@@ -185,7 +185,7 @@ void HIconScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
             qreal dy = qAbs(mouseEvent->scenePos().y() - rectangle->rect().y());
             newRect = QRectF(rectangle->rect().topLeft(),QSize(qMin(dx,dy),qMin(dx,dy)));
         }*/
-        rectangle->setRect(newRect);
+        rectangle->setRect(newRect.normalized());
     }
     else if(drawShape == enumEllipse && ellipse != 0)
     {
@@ -240,7 +240,7 @@ void HIconScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
             newRect = QRectF(select->rect().topLeft(),mouseEvent->scenePos());
         else
             newRect = QRectF(mouseEvent->scenePos(),select->rect().bottomRight());
-        select->setRect(newRect);
+        select->setRect(newRect.normalized());
     }
     //判断当前是否处于选择状态
     if(drawShape == enumSelection )

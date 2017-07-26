@@ -187,12 +187,7 @@ void HIconArcItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 void HIconArcItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     //bSelected = false;
-    pArcObj->topLeft = mapToScene(rect().topLeft());
-    pArcObj->rectWidth = rect().width();
-    pArcObj->rectHeight = rect().height();
-    QPointF p = mapToScene(rect().center());
-    pArcObj->setOX(p.x());
-    pArcObj->setOY(p.y());
+
 
     HIconGraphicsItem::mouseReleaseEvent(event);
 }
@@ -244,6 +239,7 @@ void HIconArcItem::setRect(const QRectF& rect)
     if(rect == rectF) return;
     prepareGeometryChange();
     rectF = rect;
+    refreshBaseObj();
     update();
 }
 
@@ -262,6 +258,23 @@ HBaseObj* HIconArcItem::getItemObj()
     if(pArcObj)
         return pArcObj;
     return NULL;
+}
+
+void HIconArcItem::moveItemBy(qreal dx, qreal dy)
+{
+    QRectF newRectF;
+    newRectF = rect().translated(dx,dy);
+    setRect(newRectF);
+}
+
+void HIconArcItem::refreshBaseObj()
+{
+    pArcObj->topLeft = mapToScene(rect().topLeft());
+    pArcObj->rectWidth = rect().width();
+    pArcObj->rectHeight = rect().height();
+    QPointF p = mapToScene(rect().center());
+    pArcObj->setOX(p.x());
+    pArcObj->setOY(p.y());
 }
 
 void HIconArcItem::setItemCursor(int location)

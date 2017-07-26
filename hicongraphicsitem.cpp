@@ -84,3 +84,10 @@ QRectF HIconGraphicsItem::rect()const
 {
     return QRectF(0,0,0,0);
 }
+
+void HIconGraphicsItem::moveItemBy(qreal dx,qreal dy)
+{
+
+}
+
+

@@ -186,12 +186,7 @@ void HIconPieItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 void HIconPieItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     //bSelected = false;
-    pPieObj->topLeft = mapToScene(rect().topLeft());
-    pPieObj->rectWidth = rect().width();
-    pPieObj->rectHeight = rect().height();
-    QPointF p = mapToScene(rect().center());
-    pPieObj->setOX(p.x());
-    pPieObj->setOY(p.y());
+
     HIconGraphicsItem::mouseReleaseEvent(event);
 }
 
@@ -242,6 +237,7 @@ void HIconPieItem::setRect(const QRectF& rect)
     if(rect == rectF) return;
     prepareGeometryChange();
     rectF = rect;
+    refreshBaseObj();
     update();
 }
 
@@ -260,6 +256,23 @@ HBaseObj* HIconPieItem::getItemObj()
     if(pPieObj)
         return pPieObj;
     return NULL;
+}
+
+void HIconPieItem::moveItemBy(qreal dx, qreal dy)
+{
+    QRectF newRectF;
+    newRectF = rect().translated(dx,dy);
+    setRect(newRectF);
+}
+
+void HIconPieItem::refreshBaseObj()
+{
+    pPieObj->topLeft = mapToScene(rect().topLeft());
+    pPieObj->rectWidth = rect().width();
+    pPieObj->rectHeight = rect().height();
+    QPointF p = mapToScene(rect().center());
+    pPieObj->setOX(p.x());
+    pPieObj->setOY(p.y());
 }
 
 void HIconPieItem::setItemCursor(int location)

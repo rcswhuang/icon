@@ -285,12 +285,7 @@ void HIconTextItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 
 void HIconTextItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
-    pTextObj->setTopLeftPoint(mapToScene(rect().topLeft()));
-    pTextObj->setRectWidth(rect().width());
-    pTextObj->setRectHeight(rect().height());
-    QPointF p = mapToScene(rect().center());
-    pTextObj->setOX(p.x());
-    pTextObj->setOY(p.y());
+
     HIconGraphicsItem::mouseReleaseEvent(event);
 }
 
@@ -341,6 +336,7 @@ void HIconTextItem::setRect(const QRectF& rect)
     if(rect == rectF) return;
     prepareGeometryChange();
     rectF = rect;
+    refreshBaseObj();
     update();
 }
 
@@ -359,6 +355,23 @@ HBaseObj* HIconTextItem::getItemObj()
     if(pTextObj)
         return pTextObj;
     return NULL;
+}
+
+void HIconTextItem::moveItemBy(qreal dx, qreal dy)
+{
+    QRectF newRectF;
+    newRectF = rect().translated(dx,dy);
+    setRect(newRectF);
+}
+
+void HIconTextItem::refreshBaseObj()
+{
+    pTextObj->setTopLeftPoint(mapToScene(rect().topLeft()));
+    pTextObj->setRectWidth(rect().width());
+    pTextObj->setRectHeight(rect().height());
+    QPointF p = mapToScene(rect().center());
+    pTextObj->setOX(p.x());
+    pTextObj->setOY(p.y());
 }
 
 void HIconTextItem::setItemCursor(int location)

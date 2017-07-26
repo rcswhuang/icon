@@ -25,6 +25,7 @@ public:
     virtual HBaseObj* getItemObj();
     virtual ushort pointInRect(QPointF& point);
     virtual void setItemCursor(int position);
+    virtual void moveItemBy(qreal dx,qreal dy);
 
 };
 

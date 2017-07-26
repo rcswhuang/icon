@@ -30,7 +30,7 @@ QRectF HIconSelectionItem::boundingRect() const
 void HIconSelectionItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     painter->save();
-    QPen pen = QPen(QColor(Qt::black));
+    QPen pen = QPen(QColor(Qt::green));
     pen.setWidth(1);
     painter->setPen(pen);
     //QBrush brush();

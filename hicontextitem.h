@@ -27,6 +27,7 @@ public:
 public:
     virtual void setRect(const QRectF& rect);
     virtual QRectF rect()const;
+    void refreshBaseObj();
 public:
     virtual QRectF boundingRect() const;
     virtual bool contains(const QPointF &point) const;
@@ -42,6 +43,7 @@ public:
     virtual void setItemCursor(int position);
     virtual HBaseObj* getItemObj();
     virtual void setItemObj(HBaseObj*);
+    virtual void moveItemBy(qreal dx,qreal dy);
 public:
     QRectF rectF;
     HTextObj* pTextObj;
