@@ -40,6 +40,7 @@ public:
     virtual HBaseObj* getItemObj();
     virtual void setItemObj(HBaseObj*);
     virtual void moveItemBy(qreal dx,qreal dy);
+    virtual void resizeItem(const QPolygonF& polygonF);
 public:
     QRectF rectF;
     HRectObj* pRectObj;

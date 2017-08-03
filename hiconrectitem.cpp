@@ -419,6 +419,15 @@ void HIconRectItem::moveItemBy(qreal dx, qreal dy)
     setRect(newRectF);
 }
 
+void HIconRectItem::resizeItem(const QPolygonF& polygonF)
+{
+    if(polygonF.size() != 2)
+        return;
+    //topleft bottomright
+    QRectF newRectF(polygonF.at(0),polygonF.at(1));
+    setRect(newRectF);
+}
+
 void HIconRectItem::refreshBaseObj()
 {
     pRectObj->topLeft = mapToScene(rect().topLeft());

@@ -199,7 +199,8 @@ void HIconLineItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
         {
             pf<<line().p1()<<line().p2()+sizeF;
         }
-        resizeItem(pf);
+        //HResizeIconCommand* resizeIconCommand = new HResizeIconCommand(pIconMgr,objList,dx,dy);
+        //pIconMgr->getIconUndoStack()->push(moveIconCommand);
     }
     else
     {

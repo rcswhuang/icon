@@ -1,6 +1,7 @@
 ﻿#ifndef HICONGRAPHICSITEM_H
 #define HICONGRAPHICSITEM_H
 #include <QGraphicsItem>
+#include "hiconcommand.h"
 class QPointF;
 class HBaseObj;
 class QGraphicsItem;
@@ -26,6 +27,7 @@ public:
     virtual ushort pointInRect(QPointF& point);
     virtual void setItemCursor(int position);
     virtual void moveItemBy(qreal dx,qreal dy);
+    virtual void resizeItem(const QPolygonF& polygonF);
 
 };
 

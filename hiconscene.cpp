@@ -243,7 +243,7 @@ void HIconScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
         select->setRect(newRect.normalized());
     }
     //判断当前是否处于选择状态
-    if(drawShape == enumSelection )
+    if(drawShape == enumSelection)
     {
         setItemCursor(mouseEvent);
         QGraphicsScene::mouseMoveEvent(mouseEvent);

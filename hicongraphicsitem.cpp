@@ -90,4 +90,7 @@ void HIconGraphicsItem::moveItemBy(qreal dx,qreal dy)
 
 }
 
+void HIconGraphicsItem::resizeItem(const QPolygonF& polygonF)
+{
 
+}

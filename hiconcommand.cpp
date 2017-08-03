@@ -418,23 +418,7 @@ void HResizeIconCommand::redo()
         HIconGraphicsItem* item = pIconMgr->getIconFrame()->getIconGraphicsItemByObj(obj);
         if(!item) continue;
         oldBounding = oldBounding.united(item->boundingRect());
-        quint8 ntype = item->type();
-        if(ntype == enumLine)
-        {
-            QPolygonF pf = newPtList[i];
-            if(pf.count() != 2) continue;
-            QPointF pf1 = pf.at(0);
-            QPointF pf2 = pf.at(1);
-            ((HIconLineItem*)item)->setLine(QLineF(pf1,pf2));
-        }
-        else if(ntype == enumRectangle || ntype == enumArc || ntype == enumPie || ntype == enumEllipse || ntype == enumText)
-        {
-            QPolygonF pf = newPtList[i];
-            QPointF pf1 = pf.at(0);//左上角
-            QPointF pf2 = pf.at(1);//右下角
-            QRectF rectF(pf1,pf2);
-            item->setRect(rectF);
-        }
+        item->resizeItem(oldPtList[i]);
         newBounding = newBounding.united(item->boundingRect());
     }
     pIconMgr->getIconFrame()->refreshSelected(oldBounding);
@@ -455,23 +439,7 @@ void HResizeIconCommand::undo()
         HIconGraphicsItem* item = pIconMgr->getIconFrame()->getIconGraphicsItemByObj(obj);
         if(!item) continue;
         oldBounding = oldBounding.united(item->boundingRect());
-        quint8 ntype = item->type();
-        if(ntype == enumLine)
-        {
-            QPolygonF pf = oldPtList[i];
-            if(pf.count() != 2) continue;
-            QPointF pf1 = pf.at(0);
-            QPointF pf2 = pf.at(1);
-            ((HIconLineItem*)item)->setLine(QLineF(pf1,pf2));
-        }
-        else if(ntype == enumRectangle || ntype == enumArc || ntype == enumPie || ntype == enumEllipse || ntype == enumText)
-        {
-            QPolygonF pf = oldPtList[i];
-            QPointF pf1 = pf.at(0);//左上角
-            QPointF pf2 = pf.at(1);//右下角
-            QRectF rectF(pf1,pf2);
-            item->setRect(rectF);
-        }
+        item->resizeItem(newPtList[i]);
         newBounding = newBounding.united(item->boundingRect());
     }
     pIconMgr->getIconFrame()->refreshSelected(oldBounding);

@@ -277,6 +277,15 @@ void HIconArcItem::refreshBaseObj()
     pArcObj->setOY(p.y());
 }
 
+void HIconArcItem::resizeItem(const QPolygonF& polygonF)
+{
+    if(polygonF.size() != 2)
+        return;
+    //topleft bottomright
+    QRectF newRectF(polygonF.at(0),polygonF.at(1));
+    setRect(newRectF);
+}
+
 void HIconArcItem::setItemCursor(int location)
 {
     if(location == 1 || location == 4)
