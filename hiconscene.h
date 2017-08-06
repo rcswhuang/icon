@@ -30,8 +30,9 @@ public:
     void delItemByPatternId(int nPatternId);
     void setItemVisible(int nPatternId);
     void calcSelectedItem(const QRectF& rectF);
-
+    int pointInRect(QPointF& pointF);
     void prepareMoveItem(QGraphicsSceneMouseEvent *mouseEvent);
+    void prepareRezieItem(QGraphicsSceneMouseEvent *mouseEvent);
     void addNewIconCommand(HBaseObj* pObj);
 protected:
     virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
@@ -53,6 +54,7 @@ public slots:
     void pasteItem();
     void showProperty();
 private:
+    int nSelectMode;
     bool bLeftShift;
     QPointF prePoint;
     QPointF curPoint;

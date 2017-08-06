@@ -16,6 +16,7 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QCursor>
 #include <QMenu>
+#include <QDebug>
 HIconScene::HIconScene(HIconMgr* iconMgr)
     :pIconMgr(iconMgr)
 {
@@ -57,10 +58,27 @@ void HIconScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
     prePoint = mouseEvent->scenePos();
     DRAWSHAPE drawShape = pIconMgr->getIconState()->getDrawShape();
     //处于选择状态同时没有选到任何item,就是多选状态
-    if(!getItemAt(mouseEvent->scenePos()) && drawShape == enumSelection)
+    if(drawShape == enumSelection)
     {
-        drawShape = enumMulSelection;
-        pIconMgr->getIconState()->setDrawShape(enumMulSelection);
+        //如果选择到东西 先把选择到的取消掉 就可以了
+        QPointF pt = mouseEvent->scenePos();
+        if(!getItemAt(pt))
+        {
+            drawShape = enumMulSelection;
+            pIconMgr->getIconState()->setDrawShape(enumMulSelection);
+            nSelectMode = enumNo;
+        }
+        else
+        {
+            nSelectMode = enumSelect;
+        }
+        if(nSelectMode == enumSelect)
+        {
+            if(pointInRect(pt) != 0)
+                nSelectMode = enumSize;
+            else
+                nSelectMode = enumMove;
+        }
     }
     switch (drawShape) {
     case enumLine:
@@ -248,6 +266,7 @@ void HIconScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
         setItemCursor(mouseEvent);
         QGraphicsScene::mouseMoveEvent(mouseEvent);
     }
+
 }
 
 void HIconScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
@@ -298,7 +317,7 @@ void HIconScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
     }
 
     //要检查是不是移动过
-    if(drawShape == enumSelection && bLeftShift)
+    if(nSelectMode == enumMove && bLeftShift)
     {
         prepareMoveItem(mouseEvent);
     }
@@ -350,12 +369,28 @@ void HIconScene::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
 
 bool HIconScene::getItemAt(const QPointF &pos)
 {
+    //判断当前点位置是否有item被选择
     QTransform transform;
     QGraphicsItem* item = itemAt(pos,transform);
-    QList<QGraphicsItem*> itemList = selectedItems();
-    if(item || itemList.count() > 0)
+    if(item)
         return true;
     return false;
+}
+
+//如果任一选择对象处于resize状态就返回对应位置
+int HIconScene::pointInRect(QPointF& pointF)
+{
+    QList<QGraphicsItem*> itemList = selectedItems();
+    foreach(QGraphicsItem*item,itemList)
+    {
+        int location = ((HIconGraphicsItem*)item)->pointInRect(pointF);
+        if(location != 0)
+        {
+            return location;
+        }
+    }
+    nSelectMode = enumSelect;
+    return 0;
 }
 
 void HIconScene::setItemProperty(QGraphicsItem* item)
@@ -370,13 +405,16 @@ void HIconScene::setItemProperty(QGraphicsItem* item)
 void HIconScene::setItemCursor(QGraphicsSceneMouseEvent *mouseEvent)
 {
     QList<QGraphicsItem*> itemList = selectedItems();
-    if(itemList.size()== 1)
-    {
-        HIconGraphicsItem* pItem = qgraphicsitem_cast<HIconGraphicsItem*>(itemList.first());
-        QPointF pointF = mouseEvent->scenePos();
-        int location = pItem->pointInRect(pointF);
-        pItem->setItemCursor(location);
-    }
+    //获取所在item，只要item选择到即可
+    QTransform transform;
+    QPointF pointF = mouseEvent->scenePos();
+    QGraphicsItem* item = itemAt(pointF,transform);
+    if(itemList.indexOf(item) == -1)
+        return;
+
+    HIconGraphicsItem* pItem = qgraphicsitem_cast<HIconGraphicsItem*>(item);
+    int location = pItem->pointInRect(pointF);
+    pItem->setItemCursor(location);
 }
 
 void HIconScene::setItemVisible(int nPatternId)
@@ -714,5 +752,23 @@ void HIconScene::prepareMoveItem(QGraphicsSceneMouseEvent *mouseEvent)
     pIconMgr->getIconUndoStack()->push(moveIconCommand);
 }
 
+void HIconScene::prepareRezieItem(QGraphicsSceneMouseEvent *mouseEvent)
+{
+    QList<QGraphicsItem*> itemList = selectedItems();
+    //获取所在item，只要item选择到即可
+    QTransform transform;
+    QPointF pointF = mouseEvent->scenePos();
+    QGraphicsItem* item = itemAt(pointF,transform);
+    if(itemList.indexOf(item) == -1)
+        return;
+    if(abs(pt.x()-prePoint.x()) < 0.0001 & abs(pt.y() - prePoint.y()) < 0.0001)
+        return;
+    qreal dx = pt.x() - prePoint.x();
+    qreal dy = pt.y() - prePoint.y();
+    HIconGraphicsItem* iconItem = (HIconGraphicsItem*)item;
+    QList<HBaseObj*> objList;
+    objList.append(iconItem->getItemObj());
+
+}
 
 

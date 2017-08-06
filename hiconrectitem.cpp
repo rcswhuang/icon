@@ -256,6 +256,7 @@ void HIconRectItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     if(event->modifiers() == Qt::ShiftModifier)
         bShift = true;
     prepareGeometryChange();
+
     if(pointLocation == 1)
     {
         QRectF rectNew;
