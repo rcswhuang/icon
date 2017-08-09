@@ -220,7 +220,7 @@ void HIconFrame::setItemVisible(int nPatternId)
         iconScene()->setItemVisible(nPatternId);
     }
 }
-
+/*
 bool HIconFrame::eventFilter( QObject *obj, QEvent *event)
 {
     HFrame::eventFilter(obj,event);
@@ -228,7 +228,7 @@ bool HIconFrame::eventFilter( QObject *obj, QEvent *event)
 
 
     return false;
-}
+}*/
 
 HIconGraphicsItem* HIconFrame::addItemByIconObj(int nPattern,HBaseObj* pObj)
 {

@@ -84,7 +84,7 @@ public slots:
 protected:
 
     //事件过滤
-    virtual bool eventFilter( QObject *obj, QEvent *event);//过滤的对象，过滤的事件
+   // virtual bool eventFilter( QObject *obj, QEvent *event);//过滤的对象，过滤的事件
 
 private:
     QRectF sceneRect;

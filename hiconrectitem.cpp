@@ -422,10 +422,10 @@ void HIconRectItem::moveItemBy(qreal dx, qreal dy)
 
 void HIconRectItem::resizeItem(const QPolygonF& polygonF)
 {
-    if(polygonF.size() != 2)
+    if(polygonF.size() != 4)
         return;
     //topleft bottomright
-    QRectF newRectF(polygonF.at(0),polygonF.at(1));
+    QRectF newRectF(polygonF.at(0),polygonF.at(3));
     setRect(newRectF);
 }
 

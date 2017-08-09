@@ -34,6 +34,7 @@ public:
     void prepareMoveItem(QGraphicsSceneMouseEvent *mouseEvent);
     void prepareRezieItem(QGraphicsSceneMouseEvent *mouseEvent);
     void addNewIconCommand(HBaseObj* pObj);
+    void getIconGraphicsItemPointList(HIconGraphicsItem* item,QList<QPolygonF>& pfList);
 protected:
     virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
     virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent);
@@ -58,7 +59,8 @@ private:
     bool bLeftShift;
     QPointF prePoint;
     QPointF curPoint;
-
+    QList<QPolygonF> oldPolygonF;
+    QList<QPolygonF> newPolygonF;
 
     HIconMgr* pIconMgr;
     HIconLineItem* line;

@@ -418,7 +418,7 @@ void HResizeIconCommand::redo()
         HIconGraphicsItem* item = pIconMgr->getIconFrame()->getIconGraphicsItemByObj(obj);
         if(!item) continue;
         oldBounding = oldBounding.united(item->boundingRect());
-        item->resizeItem(oldPtList[i]);
+        item->resizeItem(newPtList[i]);
         newBounding = newBounding.united(item->boundingRect());
     }
     pIconMgr->getIconFrame()->refreshSelected(oldBounding);
@@ -439,7 +439,7 @@ void HResizeIconCommand::undo()
         HIconGraphicsItem* item = pIconMgr->getIconFrame()->getIconGraphicsItemByObj(obj);
         if(!item) continue;
         oldBounding = oldBounding.united(item->boundingRect());
-        item->resizeItem(newPtList[i]);
+        item->resizeItem(oldPtList[i]);
         newBounding = newBounding.united(item->boundingRect());
     }
     pIconMgr->getIconFrame()->refreshSelected(oldBounding);

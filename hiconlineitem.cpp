@@ -14,6 +14,7 @@
 HIconLineItem::HIconLineItem(HIconGraphicsItem *parent):HIconGraphicsItem(parent)
 {
     setFlags(QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsSelectable);
+    lineF.setLine(0,0,0,0);
 }
 
 HIconLineItem::HIconLineItem(const QLineF &line, HIconGraphicsItem *parent):HIconGraphicsItem(parent),lineF(line)
@@ -189,18 +190,16 @@ void HIconLineItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     curPointF = event->scenePos();
     if(lineMode == LineSize)
     {
-        QPolygonF pf;
-        pf.clear();
+        QLineF lineF;
         if(pointLocation == LOCATIONLEFT)
         {
-           pf<<line().p1()+sizeF<<line().p2();
+           lineF.setPoints(line().p1()+sizeF,line().p2());
         }
         else if(pointLocation == LOCATIONRIGHT)
         {
-            pf<<line().p1()<<line().p2()+sizeF;
+            lineF.setPoints(line().p1(),line().p2()+sizeF);
         }
-        //HResizeIconCommand* resizeIconCommand = new HResizeIconCommand(pIconMgr,objList,dx,dy);
-        //pIconMgr->getIconUndoStack()->push(moveIconCommand);
+        setLine(lineF);
     }
     else
     {
