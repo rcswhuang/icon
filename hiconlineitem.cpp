@@ -81,13 +81,22 @@ void HIconLineItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
         }
         else if(arrowS == 2)
         {
-            line().setLength(line().length() - w);
-            painter->drawLine(line());
+            //line().setLength(line().length() - 50);
+            //QLineF line1 = line();
+            //line1.setLength(line1.length() - 50);
+
+            //QPointF pt = line().pointAt(5);
             arrowP1 = line().p1() + QPointF(sin(angle+PI/3)*arrowLength,cos(angle+PI/3)*arrowLength);
             arrowP2 = line().p1() + QPointF(sin(angle+PI - PI/3)*arrowLength,cos(angle+PI-PI/3)*arrowLength);
             QPolygonF arrowHead;
-            arrowHead<<line().p1()<<arrowP1<<arrowP2;
-            painter->drawPolygon(arrowHead);
+            arrowHead<<arrowP1<<line().p1()<<arrowP2;
+            QPainterPath path;
+            path.addPolygon(arrowHead);
+            path.closeSubpath();
+            painter->drawPath(path);
+            double fh = pLineObj->getArrowHeight()/line().length();
+            QPointF pt = line().pointAt(fh);
+            painter->drawLine(line().p2(),pt);
         }
         else if(arrowS == 3)
         {

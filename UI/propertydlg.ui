@@ -41,7 +41,7 @@
     <string notr="true">基本</string>
    </property>
    <property name="currentIndex">
-    <number>1</number>
+    <number>0</number>
    </property>
    <widget class="QWidget" name="textTab">
     <attribute name="title">
@@ -90,7 +90,7 @@
         <x>90</x>
         <y>28</y>
         <width>200</width>
-        <height>25</height>
+        <height>30</height>
        </rect>
       </property>
      </widget>
@@ -100,7 +100,7 @@
         <x>380</x>
         <y>28</y>
         <width>200</width>
-        <height>25</height>
+        <height>30</height>
        </rect>
       </property>
      </widget>
@@ -129,7 +129,7 @@
         <x>380</x>
         <y>68</y>
         <width>200</width>
-        <height>25</height>
+        <height>30</height>
        </rect>
       </property>
      </widget>
@@ -139,7 +139,7 @@
         <x>90</x>
         <y>68</y>
         <width>200</width>
-        <height>25</height>
+        <height>30</height>
        </rect>
       </property>
      </widget>
@@ -590,7 +590,7 @@
         <x>100</x>
         <y>24</y>
         <width>200</width>
-        <height>25</height>
+        <height>30</height>
        </rect>
       </property>
       <property name="text">
@@ -616,7 +616,7 @@
         <x>100</x>
         <y>71</y>
         <width>200</width>
-        <height>25</height>
+        <height>30</height>
        </rect>
       </property>
      </widget>
@@ -639,7 +639,7 @@
         <x>500</x>
         <y>20</y>
         <width>200</width>
-        <height>25</height>
+        <height>30</height>
        </rect>
       </property>
      </widget>
@@ -662,7 +662,7 @@
         <x>500</x>
         <y>70</y>
         <width>200</width>
-        <height>25</height>
+        <height>30</height>
        </rect>
       </property>
      </widget>
@@ -685,7 +685,7 @@
         <x>500</x>
         <y>23</y>
         <width>200</width>
-        <height>25</height>
+        <height>30</height>
        </rect>
       </property>
      </widget>
@@ -695,7 +695,7 @@
         <x>100</x>
         <y>26</y>
         <width>200</width>
-        <height>25</height>
+        <height>30</height>
        </rect>
       </property>
      </widget>
@@ -1002,7 +1002,7 @@
         <x>100</x>
         <y>25</y>
         <width>200</width>
-        <height>25</height>
+        <height>30</height>
        </rect>
       </property>
      </widget>
@@ -1074,7 +1074,7 @@
         <x>100</x>
         <y>70</y>
         <width>200</width>
-        <height>25</height>
+        <height>30</height>
        </rect>
       </property>
      </widget>
