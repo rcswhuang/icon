@@ -41,8 +41,19 @@ void HIconTextItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
 {
     QRectF mainRectF = rect();
     QRectF drawRectF = mainRectF;
+    painter->save();
+    QPen pen = QPen(Qt::red);
+    pen.setStyle(Qt::SolidLine);
+    pen.setWidth(2);
+    painter->setPen(pen);
+    painter->drawRect(mainRectF);
+    painter->scale(5,5);
+    QRectF mainRectF1(mainRectF.x()/5,mainRectF.y()/5,mainRectF.width()/5,mainRectF.height()/5);
+    painter->drawText(mainRectF1,0,"strTextContent");
+    painter->restore();
 
-    QColor penClr = QColor(pTextObj->getLineColorName()); //线条颜色
+
+   /* QColor penClr = QColor(pTextObj->getLineColorName()); //线条颜色
     int penWidth = pTextObj->getLineWidth();//线条宽度
     Qt::PenStyle penStyle = pTextObj->getLineStyle(); //线条形状
     Qt::PenCapStyle capStyle = pTextObj->getLineCapStyle(); //线条角度
@@ -54,6 +65,8 @@ void HIconTextItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
     quint8 nFillDir = pTextObj->getFillDirection();//填充方向
     QColor fillClr = QColor(pTextObj->getFillColorName());//填充颜色
     quint8 nFillPercentage = pTextObj->getFillPercentage(); //填充比例
+    quint8 nLayout = pTextObj->getLayout();
+    QString strTextContent = pTextObj->getTextContent();
     painter->save();
     QPen pen = QPen(penClr);
     pen.setStyle(penStyle);
@@ -63,9 +76,10 @@ void HIconTextItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
         painter->setPen(pen);
     else
         painter->setPen(Qt::NoPen);
-    painter->drawRect(rect());
+   // painter->drawRect(rect());
     //需要判断nFillStyle 如果是linear的模式 就要考虑填充方向了
     //
+    painter->scale(2,2);
     QBrush brush;
     if(nFillWay >= 1)
     {
@@ -164,10 +178,10 @@ void HIconTextItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
         qreal top = rect().top()*(float)(nFillPercentage/100.00);
         drawRectF.setTop(top);
     }
-    painter->fillRect(drawRectF,brush);
-    painter->restore();
+   // painter->fillRect(drawRectF,brush);
+   // painter->restore();
 
-    painter->save();
+  //  painter->save();
     //设置字体部分
     QString strFontName = pTextObj->getTextFontName();
     int pointSize = pTextObj->getPointSize();
@@ -180,12 +194,21 @@ void HIconTextItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
     painter->setFont(font);
 
     int nAlign = pTextObj->getHorizontalAlign()|pTextObj->getVerticalAlign();
-    painter->drawText(mainRectF,nAlign,pTextObj->getTextContent());
+    QFontMetricsF fm(font);
+    if(nLayout == LAYOUT_TEXT_FULL)
+    {
+        double fw = fm.width(strTextContent);
+        double fh = fm.height();
+        fh = rect().height()/fh;
+        fw = (rect().width()+fh)/fw;
+        painter->scale(fw,fh);
+       // nAlign = Qt::AlignCenter ;//| Qt::TextSingleLine;
+    }
 
 
+    painter->drawText(mainRectF,Qt::AlignLeft,strTextContent);
     painter->restore();
-
-
+    */
     if(isSelected())
     {
         painter->save();

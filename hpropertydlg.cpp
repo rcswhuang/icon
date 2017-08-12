@@ -354,10 +354,6 @@ void HPropertyDlg::initLineTab()
 
 void HPropertyDlg::initShapeTab()
 {
-    //connect(ui->frameSee,SIGNAL(clicked(bool)),this,SLOT(frameSee_clicked()));
-    //connect(ui->noFill,SIGNAL(clicked(bool)),this,SLOT(fillWay_clicked()));
-    //connect(ui->colorFill,SIGNAL(clicked(bool)),this,SLOT(fillWay_clicked()));
-    //connect(ui->imageFill,SIGNAL(clicked(bool)),this,SLOT(fillWay_clicked()));
     connect(ui->transSlider,SIGNAL(valueChanged(int)),ui->transSpix,SLOT(setValue(int)));
     connect(ui->transSpix,SIGNAL(valueChanged(int)),ui->transSlider,SLOT(setValue(int)));
     connect(ui->fillStyle,SIGNAL(currentIndexChanged(int)),this,SLOT(fillStyle_clicked()));
