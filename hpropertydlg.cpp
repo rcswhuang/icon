@@ -189,8 +189,8 @@ void HPropertyDlg::initTextTab()
 
     ui->layoutComboBox->addItem(QStringLiteral("空"),LAYOUT_TEXT_NULL);
     ui->layoutComboBox->addItem(QStringLiteral("充满"),LAYOUT_TEXT_FULL);
-    ui->layoutComboBox->addItem(QStringLiteral("横向"),LAYOUT_TEXT_HORIZON);
-    ui->layoutComboBox->addItem(QStringLiteral("纵向"),LAYOUT_TEXT_VERTICAL);
+    //ui->layoutComboBox->addItem(QStringLiteral("横向"),LAYOUT_TEXT_HORIZON);
+    //ui->layoutComboBox->addItem(QStringLiteral("纵向"),LAYOUT_TEXT_VERTICAL);
 
     font.setFamily(QStringLiteral("微软雅黑"));
     font.setPointSize(12);

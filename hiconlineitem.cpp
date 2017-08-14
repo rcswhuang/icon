@@ -81,11 +81,6 @@ void HIconLineItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
         }
         else if(arrowS == 2)
         {
-            //line().setLength(line().length() - 50);
-            //QLineF line1 = line();
-            //line1.setLength(line1.length() - 50);
-
-            //QPointF pt = line().pointAt(5);
             arrowP1 = line().p1() + QPointF(sin(angle+PI/3)*arrowLength,cos(angle+PI/3)*arrowLength);
             arrowP2 = line().p1() + QPointF(sin(angle+PI - PI/3)*arrowLength,cos(angle+PI-PI/3)*arrowLength);
             QPolygonF arrowHead;
@@ -94,9 +89,16 @@ void HIconLineItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
             path.addPolygon(arrowHead);
             path.closeSubpath();
             painter->drawPath(path);
-            double fh = pLineObj->getArrowHeight()/line().length();
+            double h1 = cos(angle+PI/3)*arrowLength;
+            double h2 = cos(angle+PI-PI/3)*arrowLength;
+            double h3 = cos(PI/6)*arrowLength;
+            double h4 = line().length();
+            double fh = cos(PI/3)*arrowLength/line().length();
             QPointF pt = line().pointAt(fh);
             painter->drawLine(line().p2(),pt);
+
+            //ouble angle = atan2 (end_y - start_y, end_x - start_x) + M_PI;
+
         }
         else if(arrowS == 3)
         {
@@ -145,8 +147,8 @@ void HIconLineItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
     {
         QPen pen1 = QPen(penClr,penWidth,penStyle);
         painter->setPen(pen1);
-        QLineF line1 = line();
-        painter->drawLine(line1);
+        //QLineF line1 = line();
+        //painter->drawLine(line1);
         QPointF p1 = line().p1();
         QPointF p2 = line().p2();
         pen1.setStyle(Qt::SolidLine);
