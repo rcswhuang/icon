@@ -93,7 +93,7 @@ void HIconLineItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
             double h2 = cos(angle+PI-PI/3)*arrowLength;
             double h3 = cos(PI/6)*arrowLength;
             double h4 = line().length();
-            double fh = cos(PI/3)*arrowLength/line().length();
+            double fh = sin(PI/3)*arrowLength/line().length();
             QPointF pt = line().pointAt(fh);
             painter->drawLine(line().p2(),pt);
 

@@ -3,7 +3,7 @@
 
 #include <QObject>
 #include <QGraphicsSceneMouseEvent>
-#include <hiconscene.h>
+#include "hiconscene.h"
 #include "hiconapi.h"
 //绘制工具基类
 //class HIconState;
