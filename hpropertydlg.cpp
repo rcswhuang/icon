@@ -4,12 +4,23 @@
 #include <QColorDialog>
 #include <QFontDialog>
 #include <QVariant>
+#include <QFile>
 #include <math.h>
 HPropertyDlg::HPropertyDlg(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::PropertyDlg)
 {
     ui->setupUi(this);
+
+    /*QFile qss(":/qss/propertystylesheet.qss");
+    if( qss.open(QFile::ReadOnly))
+    {
+       qDebug("open success");
+       QString style = QLatin1String(qss.readAll());
+       setStyleSheet(style);
+       qss.close();
+    }*/
+    //setStyleSheet();
 
 }
 

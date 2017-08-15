@@ -31,9 +31,9 @@ HIconRectItem::HIconRectItem(const QRectF &rectF, HIconGraphicsItem *parent)
 
 QRectF HIconRectItem::boundingRect() const
 { 
-    //return shape().boundingRect();
-    qreal pw = 20;
-    return QRectF(rect().x() - pw/2,rect().y() - pw/2,rect().width() + pw,rect().height()+pw);
+    return shape().boundingRect();
+    //qreal pw = 20;
+    //return QRectF(rect().x() - pw/2,rect().y() - pw/2,rect().width() + pw,rect().height()+pw);
 }
 
 bool HIconRectItem::contains(const QPointF &point) const
@@ -69,7 +69,12 @@ void HIconRectItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
     else
         painter->setPen(Qt::NoPen);
 
+    QPointF centerPoint = boundingRect().center();
+    painter->translate(centerPoint);
+    painter->rotate(fRotateAngle);
+    painter->translate(-centerPoint);
     painter->drawRect(rect());
+
     //需要判断nFillStyle 如果是linear的模式 就要考虑填充方向了
     //
 
@@ -187,6 +192,11 @@ void HIconRectItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
         qreal halfpw = 14.00;
         QRectF rect1,rect2,rect3,rect4;
         rect1.setSize(QSizeF(halfpw,halfpw));
+        QPointF pt21,pt22,pt23,pt24;
+        pt21 = rect().topLeft();
+        pt22 = rect().topRight();
+        pt23 = rect().bottomLeft();
+        pt24 = rect().bottomRight();
         rect1.moveCenter(rect().topLeft());
         rect2.setSize(QSizeF(halfpw,halfpw));
         rect2.moveCenter(rect().topRight());
@@ -203,9 +213,18 @@ void HIconRectItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
 
     }
     painter->restore();
-    QPointF centerPoint = boundingRect().center();
-    setTransformOriginPoint(centerPoint);
-    setRotation(fRotateAngle);
+    QRectF rectold = rect();
+    QPointF pt1,pt2,pt3,pt4;
+    pt1 = rectold.topLeft();
+    pt2 = rectold.topRight();
+    pt3 = rectold.bottomLeft();
+    pt4 = rectold.bottomRight();
+
+
+
+
+
+
 }
 
 QPainterPath HIconRectItem::shape() const
@@ -216,6 +235,7 @@ QPainterPath HIconRectItem::shape() const
     rectPath.setY(rect().y() - 10);
     rectPath.setWidth(rect().width() + 20);
     rectPath.setHeight(rect().height() + 20);
+    //setRotation();
     path.addRect(rectPath);
     /*QPainterPathStroker ps;
     ps.setWidth(20);

@@ -69,7 +69,8 @@ SOURCES       = main.cpp \
     #hellipseobj.cpp
 RESOURCES     = \
     icon.qrc \
-    qmres.qrc
+    qmres.qrc \
+    qss.qrc
 QT += xml
 
 FORMS += \

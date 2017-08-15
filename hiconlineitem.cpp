@@ -54,7 +54,8 @@ void HIconLineItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
     pen.setWidth(penWidth);
     pen.setCapStyle(capStyle);
     painter->setPen(pen);
-    //
+    QPointF ptS = line().p1();
+    QPointF ptE = line().p2();
 
     //画箭头
     if(pLineObj->getArrowWidth() > 0 && pLineObj->getArrowHeight() > 0)
@@ -72,41 +73,33 @@ void HIconLineItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
         QPointF arrowP2;
         if(arrowS == 1)
         {
-            arrowP1 = line().p1() + QPointF(sin(angle+PI/3)*arrowLength,cos(angle+PI/3)*arrowLength);
-            arrowP2 = line().p1() + QPointF(sin(angle+PI - PI/3)*arrowLength,cos(angle+PI-PI/3)*arrowLength);
-
-            painter->drawLine(line());
-            painter->drawLine(arrowP1,line().p1());
-            painter->drawLine(arrowP2,line().p1());
+            arrowP1 = ptS + QPointF(sin(angle+PI/3)*arrowLength,cos(angle+PI/3)*arrowLength);
+            arrowP2 = ptS + QPointF(sin(angle+PI - PI/3)*arrowLength,cos(angle+PI-PI/3)*arrowLength);
+            painter->drawLine(arrowP1,ptS);
+            painter->drawLine(arrowP2,ptS);
         }
         else if(arrowS == 2)
         {
-            arrowP1 = line().p1() + QPointF(sin(angle+PI/3)*arrowLength,cos(angle+PI/3)*arrowLength);
-            arrowP2 = line().p1() + QPointF(sin(angle+PI - PI/3)*arrowLength,cos(angle+PI-PI/3)*arrowLength);
+            arrowP1 = ptS + QPointF(sin(angle+PI/3)*arrowLength,cos(angle+PI/3)*arrowLength);
+            arrowP2 = ptS + QPointF(sin(angle+PI - PI/3)*arrowLength,cos(angle+PI-PI/3)*arrowLength);
             QPolygonF arrowHead;
-            arrowHead<<arrowP1<<line().p1()<<arrowP2;
+            arrowHead<<arrowP1<<ptS<<arrowP2;
             QPainterPath path;
             path.addPolygon(arrowHead);
             path.closeSubpath();
             painter->drawPath(path);
-            double h1 = cos(angle+PI/3)*arrowLength;
-            double h2 = cos(angle+PI-PI/3)*arrowLength;
-            double h3 = cos(PI/6)*arrowLength;
-            double h4 = line().length();
+
             double fh = sin(PI/3)*arrowLength/line().length();
             QPointF pt = line().pointAt(fh);
-            painter->drawLine(line().p2(),pt);
-
-            //ouble angle = atan2 (end_y - start_y, end_x - start_x) + M_PI;
+            ptS = pt;
 
         }
         else if(arrowS == 3)
         {
-            painter->drawLine(line());
-            arrowP1 = line().p1() + QPointF(sin(angle+PI/3)*arrowLength,cos(angle+PI/3)*arrowLength);
-            arrowP2 = line().p1() + QPointF(sin(angle+PI - PI/3)*arrowLength,cos(angle+PI-PI/3)*arrowLength);
+            arrowP1 = ptS + QPointF(sin(angle+PI/3)*arrowLength,cos(angle+PI/3)*arrowLength);
+            arrowP2 = ptS + QPointF(sin(angle+PI - PI/3)*arrowLength,cos(angle+PI-PI/3)*arrowLength);
             QPolygonF arrowHead;
-            arrowHead<<line().p1()<<arrowP1<<arrowP2;
+            arrowHead<<ptS<<arrowP1<<arrowP2;
             painter->save();
             painter->setBrush(QColor(penClr));
             painter->drawPolygon(arrowHead);
@@ -115,40 +108,46 @@ void HIconLineItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
 
         if(arrowE == 1)
         {
-            arrowP1 = line().p2() + QPointF(sin(angle-PI/3)*arrowLength,cos(angle-PI/3)*arrowLength);
-            arrowP2 = line().p2() + QPointF(sin(angle-PI + PI/3)*arrowLength,cos(angle-PI+PI/3)*arrowLength);
-
-            painter->drawLine(line());
-            painter->drawLine(arrowP1,line().p2());
-            painter->drawLine(arrowP2,line().p2());
+            arrowP1 = ptE + QPointF(sin(angle-PI/3)*arrowLength,cos(angle-PI/3)*arrowLength);
+            arrowP2 = ptE + QPointF(sin(angle-PI + PI/3)*arrowLength,cos(angle-PI+PI/3)*arrowLength);
+            painter->drawLine(arrowP1,ptE);
+            painter->drawLine(arrowP2,ptE);
         }
         else if(arrowE == 2)
         {
+            arrowP1 = ptE + QPointF(sin(angle-PI/3)*arrowLength,cos(angle-PI/3)*arrowLength);
+            arrowP2 = ptE + QPointF(sin(angle-PI + PI/3)*arrowLength,cos(angle-PI+PI/3)*arrowLength);
+            QPolygonF arrowHead;
+            arrowHead<<arrowP1<<ptE<<arrowP2;
+            QPainterPath path;
+            path.addPolygon(arrowHead);
+            path.closeSubpath();
+            painter->drawPath(path);
 
+            double fh = sin(PI/3)*arrowLength/line().length();
+            QPointF pt = QLineF(ptE,ptS).pointAt(fh);
+            ptE = pt;
         }
         else if(arrowE == 3)
         {
-            painter->drawLine(line());
-            arrowP1 = line().p2() + QPointF(sin(angle-PI/3)*arrowLength,cos(angle-PI/3)*arrowLength);
-            arrowP2 = line().p2() + QPointF(sin(angle-PI + PI/3)*arrowLength,cos(angle-PI+PI/3)*arrowLength);
+            arrowP1 = ptE + QPointF(sin(angle-PI/3)*arrowLength,cos(angle-PI/3)*arrowLength);
+            arrowP2 = ptE + QPointF(sin(angle-PI + PI/3)*arrowLength,cos(angle-PI+PI/3)*arrowLength);
             QPolygonF arrowHead;
-            arrowHead<<line().p1()<<arrowP1<<arrowP2;
+            arrowHead<<ptE<<arrowP1<<arrowP2;
             painter->save();
             painter->setBrush(QColor(penClr));
             painter->drawPolygon(arrowHead);
             painter->restore();
         }
     }
-    else
-        painter->drawLine(line());
+
+    painter->drawLine(QLineF(ptS,ptE));
 
 
     if(isSelected())
     {
         QPen pen1 = QPen(penClr,penWidth,penStyle);
         painter->setPen(pen1);
-        //QLineF line1 = line();
-        //painter->drawLine(line1);
         QPointF p1 = line().p1();
         QPointF p2 = line().p2();
         pen1.setStyle(Qt::SolidLine);
@@ -169,7 +168,13 @@ QPainterPath HIconLineItem::shape() const
 {
     QPainterPath path;// = QGraphicsLineItem::shape();
     QPainterPathStroker ps;
-    ps.setWidth(20);
+    int w = pLineObj->getArrowWidth();
+    int h = pLineObj->getArrowHeight();
+    quint16 arrowLength = sqrt(w*w+h*h);
+    int pen = (int)(arrowLength*sin(PI/3))*2+1;
+    if(pen <= 20)
+        pen = 20;
+    ps.setWidth(pen);
     path.moveTo(line().p1());
     path.lineTo(line().p2());
     return ps.createStroke(path);
