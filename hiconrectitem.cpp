@@ -59,7 +59,16 @@ void HIconRectItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
     QColor fillClr = QColor(pRectObj->getFillColorName());//填充颜色
     quint8 nFillPercentage = pRectObj->getFillPercentage(); //填充比例
     qreal fRotateAngle = pRectObj->getRotateAngle();
+
     painter->save();
+    QPointF centerPoint = boundingRect().center();
+    setTransformOriginPoint(centerPoint);
+
+    QTransform transform;
+    transform.rotate(fRotateAngle);
+    setTransform(transform);
+
+
     QPen pen = QPen(penClr);
     pen.setStyle(penStyle);
     pen.setWidth(penWidth);
@@ -69,15 +78,9 @@ void HIconRectItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
     else
         painter->setPen(Qt::NoPen);
 
-    QPointF centerPoint = boundingRect().center();
-    painter->translate(centerPoint);
-    painter->rotate(fRotateAngle);
-    painter->translate(-centerPoint);
     painter->drawRect(rect());
-
     //需要判断nFillStyle 如果是linear的模式 就要考虑填充方向了
     //
-
     QBrush brush;//(Qt::NoBrush);
     if(nFillWay >= 1)
     {
@@ -179,8 +182,6 @@ void HIconRectItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
     //painter->setBrush(brush);
     //painter->drawRect(rect());
     painter->fillRect(drawRectF,brush);
-    //painter->restore();
-
 
 
     if(isSelected())
@@ -213,12 +214,7 @@ void HIconRectItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
 
     }
     painter->restore();
-    QRectF rectold = rect();
-    QPointF pt1,pt2,pt3,pt4;
-    pt1 = rectold.topLeft();
-    pt2 = rectold.topRight();
-    pt3 = rectold.bottomLeft();
-    pt4 = rectold.bottomRight();
+
 
 
 
@@ -264,11 +260,20 @@ void HIconRectItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
 void HIconRectItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
+    qreal fRotateAngle = pRectObj->getRotateAngle();
+
+    QLineF line(event->scenePos(),pointStart);
+    double angle = ::acos(line.dx() / line.length());
+    if(line.dy() >= 0)
+        angle = (PI*2) - angle;
+    //angle = angle - fRotateAngle;
+
+    //QPointF pt = transform.map(event->scenePos()) - transform.map(pointStart);
+
     QPointF pt = event->scenePos() - pointStart;
 
-    qreal fRotateAngle = pRectObj->getRotateAngle();
-    qreal deltaX = pt.x();//*qCos(fRotateAngle*PI/180.0) - pt.y()*qSin(fRotateAngle*PI/180.0);//*cosx;
-    qreal deltaY = pt.y();//*qCos(fRotateAngle*PI/180.0) + pt.x()*qSin(fRotateAngle*PI/180.0);//*siny;
+    qreal deltaX = line.length() * cos(angle+fRotateAngle);//*qCos(fRotateAngle*PI/180.0) - pt.y()*qSin(fRotateAngle*PI/180.0);//*cosx;
+    qreal deltaY = line.length() * sin(angle+fRotateAngle);//*qCos(fRotateAngle*PI/180.0) + pt.x()*qSin(fRotateAngle*PI/180.0);//*siny;
 
 
     pointStart = event->scenePos();
@@ -287,6 +292,8 @@ void HIconRectItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
        // setTransform(transform1);
         //rectNew = transform1.mapRect(rectNew);
         setRect(rectNew.normalized());///
+        ///
+
     }
     else if(pointLocation == 2)
     {
