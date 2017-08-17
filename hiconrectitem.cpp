@@ -19,21 +19,16 @@ HIconRectItem::HIconRectItem(HIconGraphicsItem *parent)
 HIconRectItem::HIconRectItem(const QRectF &rectF, HIconGraphicsItem *parent)
     :HIconGraphicsItem(parent),rectF(rectF)
 {
-    //pointLocation = LOCATIONNO;
     setFlag(QGraphicsItem::ItemIsMovable,true);
     setFlag(QGraphicsItem::ItemIsSelectable,true);
     setFlag(QGraphicsItem::ItemSendsGeometryChanges,true);
     setFlag(QGraphicsItem::ItemIsFocusable,true);
     pRectObj = NULL;
-   // QPointF centerPoint = rect().center();
-    //setTransformOriginPoint(centerPoint);
 }
 
 QRectF HIconRectItem::boundingRect() const
 { 
     return shape().boundingRect();
-    //qreal pw = 20;
-    //return QRectF(rect().x() - pw/2,rect().y() - pw/2,rect().width() + pw,rect().height()+pw);
 }
 
 bool HIconRectItem::contains(const QPointF &point) const
@@ -63,7 +58,6 @@ void HIconRectItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
     painter->save();
     QPointF centerPoint = boundingRect().center();
     setTransformOriginPoint(centerPoint);
-
     QTransform transform;
     transform.rotate(fRotateAngle);
     setTransform(transform);
@@ -146,8 +140,6 @@ void HIconRectItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
             lgrd.setSpread(QGradient::ReflectSpread);
             QBrush brush2(lgrd);
             brush = brush2;
-            //painter->setBrush(brush2);
-            //painter->drawRect(rect());
         }
         else if(nFillStyle == Qt::RadialGradientPattern)
         {
@@ -174,13 +166,10 @@ void HIconRectItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
             Qt::BrushStyle bs = (Qt::BrushStyle)nFillStyle;
             QBrush brush1(fillClr,bs);
             brush = brush1;
-            //painter->setBrush(brush);
         }
         qreal top = rect().top()*(float)(nFillPercentage/100.00);
         drawRectF.setTop(top);
     }
-    //painter->setBrush(brush);
-    //painter->drawRect(rect());
     painter->fillRect(drawRectF,brush);
 
 
@@ -261,21 +250,12 @@ void HIconRectItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
 void HIconRectItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
     qreal fRotateAngle = pRectObj->getRotateAngle();
-
-    QLineF line(event->scenePos(),pointStart);
-    double angle = ::acos(line.dx() / line.length());
-    if(line.dy() >= 0)
-        angle = (PI*2) - angle;
-    //angle = angle - fRotateAngle;
-
-    //QPointF pt = transform.map(event->scenePos()) - transform.map(pointStart);
-
-    QPointF pt = event->scenePos() - pointStart;
-
-    qreal deltaX = line.length() * cos(angle+fRotateAngle);//*qCos(fRotateAngle*PI/180.0) - pt.y()*qSin(fRotateAngle*PI/180.0);//*cosx;
-    qreal deltaY = line.length() * sin(angle+fRotateAngle);//*qCos(fRotateAngle*PI/180.0) + pt.x()*qSin(fRotateAngle*PI/180.0);//*siny;
-
-
+    QTransform transform;
+    transform.rotate(-fRotateAngle);
+    QPointF pt = transform.map(event->scenePos()) - transform.map(pointStart);
+    transform.rotate(fRotateAngle);
+    qreal deltaX =pt.x();
+    qreal deltaY = pt.y();
     pointStart = event->scenePos();
     bool bShift = false;
     if(event->modifiers() == Qt::ShiftModifier)
@@ -287,12 +267,7 @@ void HIconRectItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
         QRectF rectNew;
         rectNew.setTopLeft(QPointF(rect().left() + deltaX,rect().top() + deltaY));
         rectNew.setBottomRight(rect().bottomRight());
-        //setTransformOriginPoint(rectNew.center());
-       // transform1.rotate(-pRectObj->getRotateAngle());
-       // setTransform(transform1);
-        //rectNew = transform1.mapRect(rectNew);
-        setRect(rectNew.normalized());///
-        ///
+        setRect(rectNew.normalized());
 
     }
     else if(pointLocation == 2)
@@ -300,58 +275,17 @@ void HIconRectItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
         QRectF rectNew;
         rectNew.setTopRight(QPointF(rect().right() + deltaX,rect().top() + deltaY));
         rectNew.setBottomLeft(rect().bottomLeft());
-
         setRect(rectNew.normalized());
-        //QPointF centerPoint = boundingRect().center();
-        //setTransformOriginPoint(centerPoint);
     }
     else if(pointLocation == 3)
     {
         QRectF rectNew;
         rectNew.setBottomLeft(QPointF(rect().left() + deltaX,rect().bottom() + deltaY));
         rectNew.setTopRight(rect().topRight());
-        setTransformOriginPoint(rectNew.center());
         setRect(rectNew.normalized());
-        //QPointF centerPoint = boundingRect().center();
-        //setTransformOriginPoint(centerPoint);
     }
     else if(pointLocation == 4)
     {
-       /* QRectF rectNew = rect();
-        QPointF p1 = rect().topLeft();
-        QPointF p2 = rect().topRight();
-        QPointF p3 = rect().bottomLeft();
-        QPointF p4 = rect().bottomRight();
-
-        QTransform trans1 = transform();
-        trans1.translate(rectNew.center().x(),rectNew.center().y());
-        trans1.rotate(fRotateAngle*PI/180.0);
-        setTransform(trans1);
-        QRectF rect1 = trans1.mapRect(rect());
-        QPointF p11 = rect1.topLeft();
-        QPointF p12 = rect1.topRight();
-        QPointF p13 = rect1.bottomLeft();
-        QPointF p14 = rect1.bottomRight();
-
-
-
-        QTransform trans2 = trans1.rotate(-fRotateAngle*PI/180.0);
-        setTransform(trans2);
-        QRectF rect2 = trans2.mapRect(rect1);
-        rectNew.setBottomRight(QPointF(rect().right() + deltaX,rect().bottom() + deltaY));
-        rectNew.setTopLeft(rect().topLeft());
-
-        QPointF p21 = rect1.topLeft();
-        QPointF p22 = rect1.topRight();
-        QPointF p23 = rect1.bottomLeft();
-        QPointF p24 = rect1.bottomRight();
-
-
-        setRect(rectNew.normalized());
-
-
-        //QPointF centerPoint = boundingRect().center();
-        setTransformOriginPoint(rectNew.center());*/
         QRectF rectNew;
         rectNew.setBottomRight(QPointF(rect().right() + pt.x(),rect().bottom() + pt.y()));
         rectNew.setTopLeft(rect().topLeft());

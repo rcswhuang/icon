@@ -24,7 +24,6 @@ HIconEllipseItem::HIconEllipseItem(const QRectF &rectF, HIconGraphicsItem *paren
     setFlag(QGraphicsItem::ItemSendsGeometryChanges,true);
     setFlag(QGraphicsItem::ItemIsFocusable,true);
     pEllipseObj = NULL;
-    setSelected(false);
 }
 
 QRectF HIconEllipseItem::boundingRect() const
@@ -53,8 +52,15 @@ void HIconEllipseItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *
     quint8 nTransparency = pEllipseObj->getTransparency(); //透明度
     quint8 nFillDir = pEllipseObj->getFillDirection();//填充方向
     QColor fillClr = QColor(pEllipseObj->getFillColorName());//填充颜色
-    quint8 nFillPercentage = pEllipseObj->getFillPercentage(); //填充比例
+    //quint8 nFillPercentage = pEllipseObj->getFillPercentage(); //填充比例
+    qreal fRotateAngle = pEllipseObj->getRotateAngle();
     painter->save();
+    QPointF centerPoint = boundingRect().center();
+    setTransformOriginPoint(centerPoint);
+    QTransform transform;
+    transform.rotate(fRotateAngle);
+    setTransform(transform);
+
     QPen pen = QPen(penClr);
     pen.setStyle(penStyle);
     pen.setWidth(penWidth);
@@ -229,7 +235,13 @@ void HIconEllipseItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
 void HIconEllipseItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
-    QPointF pt = event->scenePos() - pointStart;
+
+    qreal fRotateAngle = pEllipseObj->getRotateAngle();
+    QTransform transform;
+    transform.rotate(-fRotateAngle);
+    QPointF pt = transform.map(event->scenePos()) - transform.map(pointStart);
+    transform.rotate(fRotateAngle);
+
     pointStart = event->scenePos();
     bool bShift = false;
     if(event->modifiers() == Qt::ShiftModifier)

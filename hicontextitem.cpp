@@ -19,7 +19,6 @@ HIconTextItem::HIconTextItem(HIconGraphicsItem *parent)
 HIconTextItem::HIconTextItem(const QRectF &rectF, HIconGraphicsItem *parent)
     :HIconGraphicsItem(parent),rectF(rectF)
 {
-    //pointLocation = LOCATIONNO;
     setFlag(QGraphicsItem::ItemIsMovable,true);
     setFlag(QGraphicsItem::ItemIsSelectable,true);
     setFlag(QGraphicsItem::ItemSendsGeometryChanges,true);
@@ -55,7 +54,14 @@ void HIconTextItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
     quint8 nFillPercentage = pTextObj->getFillPercentage(); //填充比例
     quint8 nLayout = pTextObj->getLayout();
     QString strTextContent = pTextObj->getTextContent();
+    qreal fRotateAngle = pTextObj->getRotateAngle();
     painter->save();
+    QPointF centerPoint = boundingRect().center();
+    setTransformOriginPoint(centerPoint);
+    QTransform transform;
+    transform.rotate(fRotateAngle);
+    setTransform(transform);
+
     QPen pen = QPen(penClr);
     pen.setStyle(penStyle);
     pen.setWidth(penWidth);
@@ -250,9 +256,11 @@ void HIconTextItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
 void HIconTextItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
-    QPointF pt = event->scenePos() - pointStart;
-    //ushort location = pointInRect(event->scenePos());
-    //qDebug()<<"location:"<<location;
+    qreal fRotateAngle = pTextObj->getRotateAngle();
+    QTransform transform;
+    transform.rotate(-fRotateAngle);
+    QPointF pt = transform.map(event->scenePos()) - transform.map(pointStart);
+    transform.rotate(fRotateAngle);
     pointStart = event->scenePos();
     bool bShift = false;
     if(event->modifiers() == Qt::ShiftModifier)

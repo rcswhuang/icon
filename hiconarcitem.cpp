@@ -40,9 +40,7 @@ bool HIconArcItem::contains(const QPointF &point) const
 
 void HIconArcItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    QRectF mainRectF = rect();
-    QRectF drawRectF = mainRectF;
-
+    QRectF drawRectF = rect();
     QColor penClr = QColor(pArcObj->getLineColorName()); //线条颜色
     int penWidth = pArcObj->getLineWidth();//线条宽度
     Qt::PenStyle penStyle = pArcObj->getLineStyle(); //线条形状
@@ -52,10 +50,18 @@ void HIconArcItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
     quint8 nFillWay = pArcObj->getFillWay();//填充选择
     quint8 nFillStyle = pArcObj->getFillStyle(); //填充风格
     quint8 nTransparency = pArcObj->getTransparency(); //透明度
-    //quint8 nFillDir = pRectObj->getFillDirection();//填充方向
+    quint8 nFillDir = pArcObj->getFillDirection();//填充方向
     QColor fillClr = QColor(pArcObj->getFillColorName());//填充颜色
     //quint8 nFillPercentage = pRectObj->getFillPercentage(); //填充比例
+    qreal fRotateAngle = pArcObj->getRotateAngle();
     painter->save();
+
+    QPointF centerPoint = boundingRect().center();
+    setTransformOriginPoint(centerPoint);
+    QTransform transform;
+    transform.rotate(fRotateAngle);
+    setTransform(transform);
+
     QPen pen = QPen(penClr);
     pen.setStyle(penStyle);
     pen.setWidth(penWidth);
@@ -70,21 +76,115 @@ void HIconArcItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
     bool bClose = pArcObj->getCloseStatus();
 
     QBrush brush = QBrush(Qt::NoBrush);
-    if(nFillWay >= 1)
-    {
-        painter->setOpacity(1-(qreal)nTransparency/100.00);
-        Qt::BrushStyle bs = (Qt::BrushStyle)nFillStyle;
-        //QBrush brush1(fillClr,bs);
-        //brush = brush1;
-        brush.setColor(fillClr);
-        brush.setStyle(bs);
-    }
-    painter->setBrush(brush);
     if(bClose)
         painter->drawChord(rect(),startAngle,spanAngle);
     else
         painter->drawArc(rect(),startAngle,spanAngle);
+
+    if(nFillWay >= 1)
+    {
+        painter->setOpacity(1-(qreal)nTransparency/100.00);
+        if(nFillStyle == Qt::LinearGradientPattern)
+        {
+            QPointF ps1,ps2;
+            switch(nFillDir)
+            {
+                case DIRECT_BOTTOM_TO_TOP:
+                {
+                    ps2 = rect().topLeft();
+                    ps1 = rect().bottomLeft();
+                    break;
+                }
+                case DIRECT_TOP_TO_BOTTOM: //有顶到底
+                {
+                    ps1 = rect().topLeft();
+                    ps2 = rect().bottomLeft();
+                    break;
+                }
+                case DIRECT_LEFT_TO_RIGHT: //由左到右
+                {
+                    ps1 = rect().topLeft();
+                    ps2 = rect().topRight();
+                    break;
+                }
+                case DIRECT_RIGHT_TO_LEFT: //由右到左
+                {
+                    ps1 = rect().topRight();
+                    ps2 = rect().topLeft();
+                    break;
+                }
+                case DIRECT_VER_TO_OUT: //垂直到外
+                {
+                    ps1 = QPointF(rect().center().x(),rect().top());
+                    ps2 = rect().topLeft();
+                    break;
+                }
+                case DIRECT_HORi_TO_OUT: //水平向外
+                {
+                    ps1 = QPointF(rect().left(),rect().center().y());
+                    ps2 = rect().topLeft();
+                    break;
+                }
+                case DIRECT_VER_TO_IN: //垂直向里
+                {
+                    ps2 = QPointF(rect().center().x(),rect().top());
+                    ps1 = rect().topLeft();
+                    break;
+                }
+                case DIRECT_HORI_TO_IN: //垂直向里
+                {
+                    ps2 = QPointF(rect().left(),rect().center().y());
+                    ps1 = rect().topLeft();
+                    break;
+                }
+            }
+            QLinearGradient lgrd(ps1,ps2);
+            lgrd.setColorAt(0.0,fillClr);
+            lgrd.setColorAt(0.5,fillClr.lighter(150));
+            lgrd.setColorAt(1.0,fillClr.lighter(250));
+            lgrd.setSpread(QGradient::ReflectSpread);
+            QBrush brush2(lgrd);
+            brush = brush2;
+        }
+        else if(nFillStyle == Qt::RadialGradientPattern)
+        {
+            QRadialGradient lgrd(rect().center(),qMin(rect().width(),rect().height())/2);
+            lgrd.setColorAt(0.0,fillClr);
+            lgrd.setColorAt(0.5,fillClr.dark(150));
+            lgrd.setColorAt(1.0,fillClr.dark(250));
+            lgrd.setSpread(QGradient::ReflectSpread);
+            QBrush brush2(lgrd);
+            brush = brush2;
+        }
+        else if(nFillStyle == Qt::ConicalGradientPattern)
+        {
+            QConicalGradient lgrd(rect().center(),270);
+            lgrd.setColorAt(0.0,fillClr);
+            lgrd.setColorAt(0.5,fillClr.lighter(150));
+            lgrd.setColorAt(1.0,fillClr.lighter(250));
+            lgrd.setSpread(QGradient::ReflectSpread);
+            QBrush brush2(lgrd);
+            brush = brush2;
+        }
+        else
+        {
+            Qt::BrushStyle bs = (Qt::BrushStyle)nFillStyle;
+            QBrush brush1(fillClr,bs);
+            brush = brush1;
+        }
+        //qreal top = rect().top()*(float)(nFillPercentage/100.00);
+        //drawRectF.setTop(top);
+        painter->setBrush(brush);
+        if(bClose)
+            painter->drawChord(rect(),startAngle,spanAngle);
+        else
+            painter->drawArc(rect(),startAngle,spanAngle);
+
+    }
+    //painter->fillRect(drawRectF,brush);
     painter->restore();
+
+
 
     if(isSelected())
     {
@@ -110,6 +210,7 @@ void HIconArcItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
 
         painter->restore();
     }
+
 }
 
 QPainterPath HIconArcItem::shape() const
@@ -141,9 +242,12 @@ void HIconArcItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
 void HIconArcItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
-    QPointF pt = event->scenePos() - pointStart;
-    //ushort location = pointInRect(event->scenePos());
-    //qDebug()<<"location:"<<location;
+    qreal fRotateAngle = pArcObj->getRotateAngle();
+    QTransform transform;
+    transform.rotate(-fRotateAngle);
+    QPointF pt = transform.map(event->scenePos()) - transform.map(pointStart);
+    transform.rotate(fRotateAngle);
+
     pointStart = event->scenePos();
     bool bShift = false;
     if(event->modifiers() == Qt::ShiftModifier)
@@ -186,9 +290,6 @@ void HIconArcItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 
 void HIconArcItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
-    //bSelected = false;
-
-
     HIconGraphicsItem::mouseReleaseEvent(event);
 }
 
