@@ -168,6 +168,7 @@ void HIconMainWindow::createActions()
     actionGroup->addAction(lineAct);
     actionGroup->addAction(rectAct);
     actionGroup->addAction(ellipseAct);
+    actionGroup->addAction(hexagonAct);
     actionGroup->addAction(arcAct);
     actionGroup->addAction(fanAct);
     actionGroup->addAction(textAct);
@@ -415,6 +416,21 @@ void HIconMainWindow::New(const QString& strIconTypeName,const QString& strTempl
 {
 
     //弹出对话框
+    //按照名字查找一下，如果存在，就不在新建
+    HIconTemplate* pTemplate = pIconMgr->getIconDocument()->findIconTemplateByTemplateName(strTemplateName);
+    if(pTemplate && pTemplate->getSymbol()->getSymolName() == strTemplateName)
+    {
+        QMessageBox::information(NULL,QStringLiteral("提醒"),QStringLiteral("已经存在相同名字的模板文件，请修改名称"),QMessageBox::Ok);
+        return;
+    }
+    //如果当前图符文件有修改且未保存，提示进行保存
+    if(pTemplate)
+    {
+        if(QMessageBox::Ok == QMessageBox::information(NULL,QStringLiteral("提醒"),QStringLiteral("需要保存当前的模板文件吗？"),QMessageBox::Ok|QMessageBox::Cancel))
+        {
+            Save();
+        }
+    }
 
     pIconWidget->delIconWidget();//先删除目前
     pIconMgr->New(strIconTypeName,strTemplateName,nTemplateTypeId);
@@ -433,13 +449,11 @@ void HIconMainWindow::New(const QString& strIconTypeName,const QString& strTempl
 //打开 save falg = true
 void HIconMainWindow::Open(const QString& catalogName,const int& nIconTypeId,const QString& uuid)
 {
-    //获取当前Template 提示是否保存
-    //保存成功后 关闭显示 close Template
-   // if(!pIconMgr->Save())
+    //如果当前图符文件有修改且未保存，提示进行保存
+    if(QMessageBox::Ok == QMessageBox::information(NULL,QStringLiteral("提醒"),QStringLiteral("需要保存当前的模板文件吗？"),QMessageBox::Ok|QMessageBox::Cancel))
     {
-        //保存失败
+        pIconMgr->getIconDocument()->Save();
     }
-
     pIconWidget->delIconWidget();//先删除目前
     pIconMgr->Open(catalogName,nIconTypeId,uuid);
     pIconWidget->setIconMgr(pIconMgr); //设置iconWidget

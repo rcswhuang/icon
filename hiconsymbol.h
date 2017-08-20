@@ -28,6 +28,7 @@ public:
     //删除一个图元元素
     void delObj(HBaseObj* pObj);
 
+    void copyTo(HIconSymbol* isymbol);
     void setSymbolName(const QString& strName);
     QString getSymolName();
 
@@ -58,11 +59,7 @@ public:
     int getCurrentPatternIndex();
     void setCurrentPatternPtr(HIconShowPattern* sp);
     HIconShowPattern* getCurrentPatternPtr();
-
-
-
     HIconTemplate* getIconTemplate()const {return pIconTemplate;}
-    //HIconShowPattern* getIconShowPattern() const {return pShowPatternVector;}
 public:
     //QList<HBaseObj*> pObjList;
     HIconTemplate* pIconTemplate;
@@ -70,18 +67,6 @@ public:
 private:
     QString strSymbolName;
     int usSymbolType;
-    //属性
-/*    double fWidth;
-    double fHeight;
-/*    double fTransparent;//透明度
-    int nFillStyle;//填充风格
-    int nFillCent;//填充比例
-    bool bFill;
-    QColor* pFillColor;
-    QImage* pBackgroundImage;
-    QString strBackgroundPath;*/
-
-//    QVector<HIconShowPattern*> pShowPatternVector;
     int nMaxPattern;
     int nCurPattern;
     HIconShowPattern* pCurPattern;

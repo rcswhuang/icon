@@ -80,6 +80,52 @@ void HIconShowPattern::copyTo(HIconShowPattern* sp)
     sp->nPattern = nPattern;
     sp->strAlias = strAlias;
     sp->pSymbol = pSymbol;
+    for(int i = 0; i < pObjList.size();i++)
+    {
+        HBaseObj* pObj = (HBaseObj*)pObjList[i];
+        if(pObj->getShapeType() == enumLine)
+        {
+            HLineObj* pLineObj = new HLineObj;
+            pObj->copyTo(pLineObj);
+            sp->addObj(pLineObj);
+        }
+        else if(pObj->getShapeType() == enumRectangle)
+        {
+            HLineObj* pLineObj = new HLineObj;
+            pObj->copyTo(pLineObj);
+            sp->addObj(pLineObj);
+        }
+        else if(pObj->getShapeType() == enumEllipse)
+        {
+            HEllipseObj* pEllipseObj = new HEllipseObj;
+            pObj->copyTo(pEllipseObj);
+            sp->addObj(pEllipseObj);
+        }
+        else if(pObj->getShapeType() == enumPolygon)
+        {
+            HPolygonObj* pPolygonObj = new HPolygonObj;
+            pObj->copyTo(pPolygonObj);
+            sp->addObj(pPolygonObj);
+        }
+        else if(pObj->getShapeType() == enumPie)
+        {
+            HPieObj* pPieObj = new HPieObj;
+            pObj->copyTo(pPieObj);
+            sp->addObj(pPieObj);
+        }
+        else if(pObj->getShapeType() == enumArc)
+        {
+            HArcObj* pArcObj = new HArcObj;
+            pObj->copyTo(pArcObj);
+            sp->addObj(pArcObj);
+        }
+        else if(pObj->getShapeType() == enumText)
+        {
+            HTextObj* pTextObj = new HTextObj;
+            pObj->copyTo(pTextObj);
+            sp->addObj(pTextObj);
+        }
+    }
 }
 
 void HIconShowPattern::clear()

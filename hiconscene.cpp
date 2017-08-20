@@ -115,7 +115,23 @@ void HIconScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
         break;
     case enumPolygon:
     {
-
+        if(polygon == 0)
+        {
+            QPolygonF tempF;
+            tempF<<prePoint<<prePoint;
+            polygon = new HIconPolygonItem(tempF);
+            HBaseObj *pObj = pIconMgr->getIconTemplate()->getSymbol()->newObj(enumPolygon);
+            polygon->setItemObj(pObj);
+            pIconMgr->getIconState()->appendObj(pObj);
+            addItem(polygon);
+        }
+        else
+        {
+            QPolygonF tempF = polygon->polygon();
+            tempF.replace(tempF.length()-1,prePoint);
+            tempF.append(prePoint);
+            polygon->setPolygon(tempF);
+        }
     }
         break;
     case enumArc:
@@ -186,7 +202,9 @@ void HIconScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
     }
     else if(drawShape == enumPolygon && polygon != 0)
     {
-        polygon->pointMove = mouseEvent->scenePos();
+        QPolygonF tempF = polygon->polygon();
+        tempF.replace(tempF.length()-1,curPoint);
+        polygon->setPolygon(tempF);
     }
     else if(drawShape == enumArc && arc != 0)
     {
@@ -235,10 +253,6 @@ void HIconScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
         emit itemInserted(ellipse->type());
         ellipse = 0;
     }
-    else if(drawShape == enumPolygon && polygon !=0)
-    {
-        polygon = 0;
-    }
     else if(drawShape == enumArc && arc !=0)
     {
         emit itemInserted(arc->type());
@@ -254,6 +268,11 @@ void HIconScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
         emit itemInserted(text->type());
         text = 0;
     }
+    else if(drawShape == enumPolygon && polygon != 0)
+    {
+        return;
+       //QGraphicsScene::mouseReleaseEvent(mouseEvent);
+    }
     else if(drawShape == enumMulSelection && select != 0)
     {
         //计算选择点
@@ -263,6 +282,7 @@ void HIconScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
         delete select;
         select = 0;
     }
+
 
     //要检查是不是移动过
     if(nSelectMode == enumMove && bLeftShift)
@@ -291,6 +311,16 @@ void HIconScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent)
 
 void HIconScene::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
 {
+
+    DRAWSHAPE drawShape = pIconMgr->getIconState()->getDrawShape();
+    if(drawShape == enumPolygon && polygon != 0)
+    {
+        emit itemInserted(polygon->type());
+        polygon = 0;
+        pIconMgr->getIconState()->setDrawShape(enumSelection);
+        return;
+    }
+
     QList<QGraphicsItem*> itemList = selectedItems();
     if(itemList.size() > 0)
     {
@@ -694,7 +724,7 @@ void HIconScene::prepareMoveItem(QGraphicsSceneMouseEvent *mouseEvent)
     QList<QGraphicsItem*> selectedItemList = selectedItems();
     if(selectedItemList.count() == 0) return;
     QPointF pt = mouseEvent->scenePos();
-    if(abs(pt.x()-prePoint.x()) < 0.0001 & abs(pt.y() - prePoint.y()) < 0.0001)
+    if(abs(pt.x()-prePoint.x()) < 0.0001 && abs(pt.y() - prePoint.y()) < 0.0001)
         return;
     qreal dx = pt.x() - prePoint.x();
     qreal dy = pt.y() - prePoint.y();
@@ -718,7 +748,7 @@ void HIconScene::prepareRezieItem(QGraphicsSceneMouseEvent *mouseEvent)
     QGraphicsItem* item = itemAt(pt,transform);
     if(itemList.indexOf(item) == -1)
         return;
-    if(abs(pt.x()-prePoint.x()) < 0.0001 & abs(pt.y() - prePoint.y()) < 0.0001)
+    if(abs(pt.x()-prePoint.x()) < 0.0001 && abs(pt.y() - prePoint.y()) < 0.0001)
         return;
     newPolygonF.clear();
     getIconGraphicsItemPointList((HIconGraphicsItem*)item,newPolygonF);

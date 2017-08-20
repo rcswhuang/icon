@@ -1,18 +1,33 @@
 ﻿#ifndef HICONPOLYGONITEM_H
 #define HICONPOLYGONITEM_H
 
-#include <QGraphicsPolygonItem>
+#include <QtGlobal>
 #include "hiconapi.h"
-#include "hiconobj.h"
+#include "hicongraphicsitem.h"
+class HBaseObj;
+class HPolygonObj;
+class QObject;
+class QRectF;
+class QPainterPath;
+class QPointF;
+class QPainter;
+class QStyleOptionGraphicsItem;
+class QKeyEvent;
+class QGraphicsSceneMouseEvent;
+class QPolygonF;
 #include <QVector>
 
-class HIconPolygonItem : public QGraphicsPolygonItem
+
+class HIconPolygonItem : public HIconGraphicsItem
 {
 public:
     enum {Type = enumEllipse};
-    HIconPolygonItem(QGraphicsPolygonItem *parent = Q_NULLPTR);
-    HIconPolygonItem(const QPolygonF &polygonF, QGraphicsPolygonItem *parent = Q_NULLPTR);
-
+    HIconPolygonItem(HIconGraphicsItem *parent = Q_NULLPTR);
+    HIconPolygonItem(const QPolygonF &polygonF, HIconGraphicsItem *parent = Q_NULLPTR);
+public:
+    virtual void setPolygon(const QPolygonF & polygon);
+    QPolygonF	polygon() const;
+    void refreshBaseObj();
 public:
     virtual QRectF boundingRect() const;
     virtual bool contains(const QPointF &point) const;
@@ -24,17 +39,21 @@ public:
     virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
-
     virtual void keyPressEvent(QKeyEvent *event);
 
 public:
-    ushort pointInRect(QPointF& point);
+    virtual ushort pointInRect(QPointF& point);
+    virtual void setItemCursor(int position);
+    virtual void setItemObj(HBaseObj*);
+    virtual HBaseObj* getItemObj();
+    virtual void moveItemBy(qreal dx,qreal dy);
+    virtual void resizeItem(const QPolygonF& polygonF);
 
 public:
     HPolygonObj* pPolygonObj;
     ushort rectMode;
     ushort pointLocation;
-    QVector<QPointF> pyVector;
+    QPolygonF pyVector;
     bool bStart;
     QPointF pointMove;
     QPointF pointStart;

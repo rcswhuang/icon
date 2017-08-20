@@ -25,6 +25,16 @@ HIconTemplate::~HIconTemplate()
     }
 }
 
+void HIconTemplate::copyTo(HIconTemplate *temp)
+{
+    temp->nVersion = nVersion;
+    temp->strIconTypeName = strIconTypeName;//图元属性名称 遥测 遥信等
+    temp->nIconTypeId = nIconTypeId;//图元类型 遥测 遥信等
+    temp->setDefaultSize = sDefaultSize;
+    temp->uUid = uUid;
+    pIconSymbol->copyTo(temp->pIconSymbol);
+}
+
 void HIconTemplate::readXml(const QString &strXmlFile)
 {
     QFile file(strXmlFile);

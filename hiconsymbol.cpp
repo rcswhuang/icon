@@ -122,6 +122,8 @@ HBaseObj* HIconSymbol::newObj(QString tagName)
         drawShape = enumPie;
     else if(tagName == "Text")
         drawShape = enumText;
+    else if(tagName == "Polygon")
+        drawShape = enumPolygon;
     return newObj(drawShape);
 }
 
@@ -139,6 +141,10 @@ HBaseObj* HIconSymbol::newObj(int nObjType)
     else if(nObjType == enumEllipse)
     {
         pObj = new HEllipseObj();
+    }
+    else if(nObjType == enumPolygon)
+    {
+        pObj = new HPolygonObj();
     }
     else if(nObjType == enumArc)
     {
@@ -182,6 +188,22 @@ void HIconSymbol::delObj(HBaseObj* pObj)
     if(!pSP)
         return;
     pSP->delObj(pObj);
+}
+
+void HIconSymbol::copyTo(HIconSymbol *isymbol)
+{
+    isymbol->strSymbolName = strSymbolName;
+    isymbol->usSymbolType = usSymbolType;
+    isymbol->nMaxPattern = nMaxPattern;
+    isymbol->nMaxPattern = nCurPattern;
+    pCurPattern->copyTo(isymbol->pCurPattern);
+    for(int i = 0; i < pShowPatternVector.size();i++)
+    {
+        HIconShowPattern* pattern = (HIconShowPattern*)pShowPatternVector[i];
+        HIconShowPattern* newPattern = new HIconShowPattern;
+        pattern->copyTo(newPattern);
+        isymbol->pShowPatternVector.append(newPattern);
+    }
 }
 
 //获取ObjID
@@ -237,10 +259,6 @@ void HIconSymbol::updateShowPattern(QList<HBaseObj*> &list)
         pattern->addObj(pObj,false);
     }
 }
-
-
-
-
 
 
 bool HIconSymbol::PatterIsValid(int nId)

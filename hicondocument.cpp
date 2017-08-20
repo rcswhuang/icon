@@ -1,7 +1,7 @@
 ﻿#include "hicondocument.h"
 #include <QDir>
 #include <QProcessEnvironment>
-
+#include <QMessageBox>
 HIconDocument::HIconDocument(HIconMgr* iconMgr):pIconMgr(iconMgr)
 {
     pCurIconTemplate = NULL;
@@ -110,24 +110,20 @@ void HIconDocument::initIconType()
 
 }
 
-
 HIconTemplate* HIconDocument::getCurrentTemplate()
 {
     return pCurIconTemplate;
 }
 
+//遥信  红绿灯遥信  TEMPLATE_DIGITAL_
 void HIconDocument::New(const QString& strIconTypeName,const QString &strTemplateName,int nTemplateType)
 {
-    //按照名字查找一下，如果存在，就不在新建
-
-    //如果当前图符文件有修改且未保存，提示进行保存
-
     //新建新的文件
     pCurIconTemplate = new HIconTemplate("");
     pCurIconTemplate->setIconTypeName(strIconTypeName);//普通开关
     pCurIconTemplate->setIconTypeId(nTemplateType);//遥信类
     pCurIconTemplate->getSymbol()->setSymbolName(strTemplateName);
-    pIconTemplateList.append(pCurIconTemplate);
+    //pIconTemplateList.append(pCurIconTemplate);
 }
 
 void HIconDocument::Del(const QString &strTemplateName, int nTemplateType, const QString &strUuid)
@@ -150,7 +146,7 @@ void HIconDocument::Open(const QString &strTemplateName, int nTemplateType, cons
 {
     HIconTemplate* pTemplate = findIconTemplateByTypeAndUuid(nTemplateType,strUuid);
     if(pTemplate && pTemplate->getSymbol()->getSymolName() == strTemplateName)
-        pCurIconTemplate = pTemplate;
+        pTemplate->copyTo(pCurIconTemplate);
     else
         pCurIconTemplate = NULL;
 
@@ -162,6 +158,19 @@ bool HIconDocument::Save()
         return false;
     saveIconDoucument();
     return true;
+}
+
+HIconTemplate* HIconDocument::findIconTemplateByTemplateName(const QString& strTemplateName)
+{
+    for(int i = 0; i < pIconTemplateList.size();i++)
+    {
+        HIconTemplate* pIconTemplate = (HIconTemplate*)pIconTemplateList.at(i);
+        if(pIconTemplate && pIconTemplate->getSymbol()->getSymolName() == strTemplateName)
+
+            return pIconTemplate;
+
+    }
+    return NULL;
 }
 
 

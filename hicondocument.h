@@ -12,6 +12,7 @@ class HIconDocument : public QObject
 public:
     HIconDocument(HIconMgr* iconMgr);
 public:
+
     void loadIconDoucument();
     void loadIconTemplateFile(QString strIconsPath);//加载所有的模板文件
     void saveIconDoucument();
@@ -28,6 +29,7 @@ public:
     bool Save();
     HIconTemplate* getCurrentTemplate();
     HIconTemplate* findIconTemplateByTypeAndUuid(int nTemplateType,const QString& strUuid);
+    HIconTemplate* findIconTemplateByTemplateName(const QString& strTemplateName);
 public:
     QList<HIconType*> pIconTypeList;
     HIconTemplate* pCurIconTemplate;

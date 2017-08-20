@@ -4,7 +4,8 @@
  * 撤销、删除类
 */
 #include <QUndoCommand>
-#include <QPolygonF>ß
+#include <QPolygonF>
+
 class HIconMgr;
 class HBaseObj;
 class HIconCommand : public QUndoCommand

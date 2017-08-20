@@ -18,6 +18,8 @@ public:
     void readXml(QDomElement* dom);
     void writeXml(QDomElement *dom);
 
+    void copyTo(HIconTemplate *temp);
+
     void setVersion(int version);
     int getVersion();
 
@@ -34,8 +36,6 @@ public:
     void setUuid(const QUuid &id);
 
     HIconSymbol* getSymbol();
-
-public:
 
 private:
     int nVersion;
