@@ -146,7 +146,17 @@ void HIconDocument::Open(const QString &strTemplateName, int nTemplateType, cons
 {
     HIconTemplate* pTemplate = findIconTemplateByTypeAndUuid(nTemplateType,strUuid);
     if(pTemplate && pTemplate->getSymbol()->getSymolName() == strTemplateName)
+    {
+        //先删除原来的临时模板文件
+        if(!pCurIconTemplate)
+        {
+            delete pCurIconTemplate;
+            pCurIconTemplate = NULL;
+        }
+        //构建一个新的模板文件，然后把当前的模板文件拷贝给它
+        pCurIconTemplate = new HIconTemplate;
         pTemplate->copyTo(pCurIconTemplate);
+    }
     else
         pCurIconTemplate = NULL;
 
@@ -156,6 +166,8 @@ bool HIconDocument::Save()
 {
     if(!pCurIconTemplate)
         return false;
+
+
     saveIconDoucument();
     return true;
 }
