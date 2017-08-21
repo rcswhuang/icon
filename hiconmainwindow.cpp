@@ -7,6 +7,8 @@
 #include <QInputDialog>
 #include <QIntValidator>
 #include <QActionGroup>
+#include <QMessageBox>
+#include <QVariant>
 HIconMainWindow::HIconMainWindow(HIconMgr *parent) : pIconMgr(parent)
 {
     createActions();
@@ -331,7 +333,7 @@ void HIconMainWindow::open()
 
 void HIconMainWindow::save()
 {
-    pIconMgr->Save();
+   // pIconMgr->Save();
 }
 
 void HIconMainWindow::saveAs()
@@ -424,11 +426,12 @@ void HIconMainWindow::New(const QString& strIconTypeName,const QString& strTempl
         return;
     }
     //如果当前图符文件有修改且未保存，提示进行保存
-    if(pTemplate)
+  //  if(pTemplate)
     {
         if(QMessageBox::Ok == QMessageBox::information(NULL,QStringLiteral("提醒"),QStringLiteral("需要保存当前的模板文件吗？"),QMessageBox::Ok|QMessageBox::Cancel))
         {
-            Save();
+
+             Save();
         }
     }
 
@@ -452,7 +455,7 @@ void HIconMainWindow::Open(const QString& catalogName,const int& nIconTypeId,con
     //如果当前图符文件有修改且未保存，提示进行保存
     if(QMessageBox::Ok == QMessageBox::information(NULL,QStringLiteral("提醒"),QStringLiteral("需要保存当前的模板文件吗？"),QMessageBox::Ok|QMessageBox::Cancel))
     {
-        pIconMgr->getIconDocument()->Save();
+        Save();
     }
     pIconWidget->delIconWidget();//先删除目前
     pIconMgr->Open(catalogName,nIconTypeId,uuid);
@@ -463,8 +466,13 @@ void HIconMainWindow::Open(const QString& catalogName,const int& nIconTypeId,con
 
 }
 
-//
+void HIconMainWindow::Save()
+{
 
+    pIconMgr->Save();
+}
+
+//
 void HIconMainWindow::Del(const QString& catalogName,const int& nIconTypeId,const QString& uuid)
 {
     if(!pIconTreeWidget || !pIconWidget || !pIconMgr)

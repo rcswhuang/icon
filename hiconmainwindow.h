@@ -89,6 +89,7 @@ public slots:
     //
     void Del(const QString& catalogName,const int& nIconTypeId,const QString& uuid);
 
+    void Save();
     //撤销
     void undo();
 

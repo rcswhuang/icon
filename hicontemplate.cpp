@@ -25,12 +25,20 @@ HIconTemplate::~HIconTemplate()
     }
 }
 
+void HIconTemplate::clear()
+{
+    if(pIconSymbol)
+    {
+       pIconSymbol->clear();
+    }
+}
+
 void HIconTemplate::copyTo(HIconTemplate *temp)
 {
     temp->nVersion = nVersion;
     temp->strIconTypeName = strIconTypeName;//图元属性名称 遥测 遥信等
     temp->nIconTypeId = nIconTypeId;//图元类型 遥测 遥信等
-    temp->setDefaultSize = sDefaultSize;
+    temp->sDefaultSize = sDefaultSize;
     temp->uUid = uUid;
     pIconSymbol->copyTo(temp->pIconSymbol);
 }

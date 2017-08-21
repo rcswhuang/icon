@@ -37,6 +37,8 @@ public:
 
     HIconSymbol* getSymbol();
 
+    void clear();
+
 private:
     int nVersion;
     QString strIconTypeName;//图元属性名称 遥测 遥信等

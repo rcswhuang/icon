@@ -25,6 +25,20 @@ HIconSymbol::~HIconSymbol()
     pShowPatternVector.clear();
 }
 
+void HIconSymbol::clear()
+{
+    while(!pShowPatternVector.isEmpty())
+    {
+        HIconShowPattern* pattern = (HIconShowPattern*)pShowPatternVector.takeFirst();
+        if(pattern)
+        {
+            delete pattern;
+            pattern = NULL;
+        }
+    }
+    pShowPatternVector.clear();
+}
+
 void HIconSymbol::readXml(QDomElement* dom)
 {
     if(dom->isNull())
@@ -103,8 +117,6 @@ void HIconSymbol::writeXml(QDomElement *dom)
         patternChildDom.setAttribute("PatternID",pattern->nPattern);
         patternDom.appendChild(patternChildDom);
     }
-
-
 }
 
 HBaseObj* HIconSymbol::newObj(QString tagName)
@@ -196,14 +208,15 @@ void HIconSymbol::copyTo(HIconSymbol *isymbol)
     isymbol->usSymbolType = usSymbolType;
     isymbol->nMaxPattern = nMaxPattern;
     isymbol->nMaxPattern = nCurPattern;
-    pCurPattern->copyTo(isymbol->pCurPattern);
+    isymbol->clear();
     for(int i = 0; i < pShowPatternVector.size();i++)
     {
         HIconShowPattern* pattern = (HIconShowPattern*)pShowPatternVector[i];
-        HIconShowPattern* newPattern = new HIconShowPattern;
+        HIconShowPattern* newPattern = new HIconShowPattern(isymbol);
         pattern->copyTo(newPattern);
         isymbol->pShowPatternVector.append(newPattern);
     }
+    isymbol->setCurrentPattern(pCurPattern->nPattern);
 }
 
 //获取ObjID

@@ -80,6 +80,7 @@ void HIconShowPattern::copyTo(HIconShowPattern* sp)
     sp->nPattern = nPattern;
     sp->strAlias = strAlias;
     sp->pSymbol = pSymbol;
+    //sp->clear();
     for(int i = 0; i < pObjList.size();i++)
     {
         HBaseObj* pObj = (HBaseObj*)pObjList[i];
@@ -91,9 +92,9 @@ void HIconShowPattern::copyTo(HIconShowPattern* sp)
         }
         else if(pObj->getShapeType() == enumRectangle)
         {
-            HLineObj* pLineObj = new HLineObj;
-            pObj->copyTo(pLineObj);
-            sp->addObj(pLineObj);
+            HRectObj* pRectObj = new HRectObj;
+            pObj->copyTo(pRectObj);
+            sp->addObj(pRectObj);
         }
         else if(pObj->getShapeType() == enumEllipse)
         {

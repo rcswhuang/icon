@@ -40,7 +40,6 @@ public:
     void setArrowHeight(quint16 height);
     quint16 getArrowHeight();
 
-    void setModify(bool modif)
 private:
     bool bModify;
     quint8 arrowStart;

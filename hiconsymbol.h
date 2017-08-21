@@ -15,6 +15,7 @@ public:
     ~HIconSymbol();
 
 public:
+    void clear();
     void readXml(QDomElement* dom);
     void writeXml(QDomElement *dom);
 
