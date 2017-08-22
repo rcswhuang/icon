@@ -219,6 +219,7 @@ void HIconLineItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     }
     else
     {
+        pLineObj->setModify(true);
         HIconGraphicsItem::mouseMoveEvent(event);
     }
 }
@@ -310,6 +311,7 @@ void HIconLineItem::refreshBaseObj()
 {
     pLineObj->pfHeadPoint = mapToScene(line().p1());
     pLineObj->pfTailPoint =  mapToScene(line().p2());
+    pLineObj->setModify(true);
 }
 
 void HIconLineItem::resizeItem(const QPolygonF& polygonF)

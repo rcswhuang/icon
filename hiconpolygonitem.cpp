@@ -247,7 +247,8 @@ void HIconPolygonItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     if(event->modifiers() == Qt::ShiftModifier)
         bShift = true;
 
-        HIconGraphicsItem::mouseMoveEvent(event);
+    pPolygonObj->setModify(true);
+    HIconGraphicsItem::mouseMoveEvent(event);
 }
 
 
@@ -360,6 +361,7 @@ void HIconPolygonItem::refreshBaseObj()
     QPointF p = mapToScene(polygon().boundingRect().center());
     pPolygonObj->setOX(p.x());
     pPolygonObj->setOY(p.y());
+    pPolygonObj->setModify(true);
 }
 
 void HIconPolygonItem::setItemObj(HBaseObj* pObj)

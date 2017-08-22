@@ -115,6 +115,8 @@ void HBaseObj::readData(QDataStream *data)
         *data>>nsp;
         nPattern.append(nsp);
     }
+    *data>>b;
+    bModify = b;
 
 }
 
@@ -148,13 +150,13 @@ void HBaseObj::writeData(QDataStream *data)
     {
         *data<<(quint8)nPattern[i];
     }
+    *data<<(bool)bModify;
 }
 
 void HBaseObj::readXml(QDomElement* dom)
 {
     if(!dom)
         return;
-
 
     strObjName = dom->attribute("ObjName");
     nObjectId = dom->attribute("ObjId").toUInt();
@@ -253,6 +255,7 @@ void HBaseObj::copyTo(HBaseObj* obj)
     obj->nStackOrder = nStackOrder;
     for(int i = 0;i<nPattern.count();i++)
         obj->nPattern.append(nPattern[i]);
+    obj->bModify = bModify;
 }
 
 void HBaseObj::clone(HBaseObj* ob)

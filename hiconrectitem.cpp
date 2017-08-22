@@ -203,13 +203,6 @@ void HIconRectItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
 
     }
     painter->restore();
-
-
-
-
-
-
-
 }
 
 QPainterPath HIconRectItem::shape() const
@@ -260,8 +253,6 @@ void HIconRectItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     bool bShift = false;
     if(event->modifiers() == Qt::ShiftModifier)
         bShift = true;
-    prepareGeometryChange();
-
     if(pointLocation == 1)
     {
         QRectF rectNew;
@@ -293,7 +284,8 @@ void HIconRectItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     }
     else
     {
-
+        pRectObj->moveBy(pt.x(),pt.y());
+        pRectObj->setModify(true);
         HIconGraphicsItem::mouseMoveEvent(event);
     }
 }
@@ -398,6 +390,7 @@ void HIconRectItem::refreshBaseObj()
     QPointF p = mapToScene(rect().center());
     pRectObj->setOX(p.x());
     pRectObj->setOY(p.y());
+    pRectObj->setModify(true);
 }
 
 void HIconRectItem::setItemCursor(int location)

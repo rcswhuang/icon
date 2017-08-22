@@ -656,6 +656,7 @@ void HPropertyDlg::ok_clicked()
         pTextObj->setTextColorName(strTextColor);
         pTextObj->setTextContent(ui->textEdit->text());
     }
+    pCurObj->setModify(true);
 
     QDialog::accept();
 }

@@ -19,7 +19,6 @@ HIconArcItem::HIconArcItem(HIconGraphicsItem *parent)
 HIconArcItem::HIconArcItem(const QRectF &rectF, HIconGraphicsItem *parent)
     :HIconGraphicsItem(parent),rectF(rectF)
 {
-    //pointLocation = LOCATIONNO;
     setFlag(QGraphicsItem::ItemIsMovable,true);
     setFlag(QGraphicsItem::ItemIsSelectable,true);
     setFlag(QGraphicsItem::ItemSendsGeometryChanges,true);
@@ -283,7 +282,7 @@ void HIconArcItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     }
     else
     {
-
+        pArcObj->setModify(true);
         HIconGraphicsItem::mouseMoveEvent(event);
     }
 }
@@ -331,6 +330,7 @@ void HIconArcItem::keyPressEvent(QKeyEvent *event)
     }
     if(ndx == 0 && ndy == 0)
         return;
+
     QRectF newRect = rect().adjusted(ndx,ndy,ndx,ndy);
     setRect(newRect);
 }
@@ -363,6 +363,7 @@ HBaseObj* HIconArcItem::getItemObj()
 
 void HIconArcItem::moveItemBy(qreal dx, qreal dy)
 {
+    //主要是记录HBaseObj的位置信息，图元移动的信息由mousemoveevent来解决
     QRectF newRectF;
     newRectF = rect().translated(dx,dy);
     setRect(newRectF);
@@ -376,6 +377,7 @@ void HIconArcItem::refreshBaseObj()
     QPointF p = mapToScene(rect().center());
     pArcObj->setOX(p.x());
     pArcObj->setOY(p.y());
+    pArcObj->setModify(true);
 }
 
 void HIconArcItem::resizeItem(const QPolygonF& polygonF)

@@ -232,7 +232,6 @@ void HIconScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
         setItemCursor(mouseEvent);
         QGraphicsScene::mouseMoveEvent(mouseEvent);
     }
-
 }
 
 void HIconScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
@@ -240,31 +239,37 @@ void HIconScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
     DRAWSHAPE drawShape = pIconMgr->getIconState()->getDrawShape();
     if(drawShape == enumLine && line != 0)
     {
+        line->getItemObj()->setModify(true);
         emit itemInserted(line->type());
         line = 0;
     }
     else if(drawShape == enumRectangle && rectangle != 0)
     {
+        rectangle->getItemObj()->setModify(true);
         emit itemInserted(rectangle->type());
         rectangle = 0;        
     }
     else if(drawShape == enumEllipse && ellipse != 0)
     {
+        ellipse->getItemObj()->setModify(true);
         emit itemInserted(ellipse->type());
         ellipse = 0;
     }
     else if(drawShape == enumArc && arc !=0)
     {
+        arc->getItemObj()->setModify(true);
         emit itemInserted(arc->type());
         arc = 0;
     }
     else if(drawShape == enumPie && pie !=0)
     {
+        pie->getItemObj()->setModify(true);
         emit itemInserted(pie->type());
         pie = 0;
     }
     else if(drawShape == enumText && text != 0)
     {
+        text->getItemObj()->setModify(true);
         emit itemInserted(text->type());
         text = 0;
     }
@@ -315,6 +320,7 @@ void HIconScene::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
     DRAWSHAPE drawShape = pIconMgr->getIconState()->getDrawShape();
     if(drawShape == enumPolygon && polygon != 0)
     {
+        polygon->getItemObj()->setModify(true);
         emit itemInserted(polygon->type());
         polygon = 0;
         pIconMgr->getIconState()->setDrawShape(enumSelection);
@@ -500,9 +506,7 @@ void HIconScene::addItemByPatternId(int nPatternId)
         {
             text = 0;
         }
-
     }
-
 }
 
 //删除图元的显示方案

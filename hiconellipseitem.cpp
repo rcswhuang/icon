@@ -18,7 +18,6 @@ HIconEllipseItem::HIconEllipseItem(HIconGraphicsItem *parent)
 HIconEllipseItem::HIconEllipseItem(const QRectF &rectF, HIconGraphicsItem *parent)
     :HIconGraphicsItem(parent),rectF(rectF)
 {
-    //pointLocation = LOCATIONNO;
     setFlag(QGraphicsItem::ItemIsMovable,true);
     setFlag(QGraphicsItem::ItemIsSelectable,true);
     setFlag(QGraphicsItem::ItemSendsGeometryChanges,true);
@@ -277,7 +276,7 @@ void HIconEllipseItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     }
     else
     {
-
+        pEllipseObj->setModify(true);
         HIconGraphicsItem::mouseMoveEvent(event);
     }
 }
@@ -386,6 +385,7 @@ void HIconEllipseItem::refreshBaseObj()
     QPointF p = mapToScene(rect().center());
     pEllipseObj->setOX(p.x());
     pEllipseObj->setOY(p.y());
+    pEllipseObj->setModify(true);
 }
 
 ushort HIconEllipseItem::pointInRect(QPointF& point)

@@ -187,7 +187,7 @@ void HIconPieItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     }
     else
     {
-
+        pPieObj->setModify(true);
         HIconGraphicsItem::mouseMoveEvent(event);
     }
 }
@@ -292,6 +292,7 @@ void HIconPieItem::refreshBaseObj()
     QPointF p = mapToScene(rect().center());
     pPieObj->setOX(p.x());
     pPieObj->setOY(p.y());
+    pPieObj->setModify(true);
 }
 
 void HIconPieItem::setItemCursor(int location)

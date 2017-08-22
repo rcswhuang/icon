@@ -70,7 +70,6 @@ void HIconTemplate::readXml(QDomElement* dom)
 {
     if(!dom)
         return;
-
     strCatalogName = dom->attribute("TypeName");
     nCatalogType = dom->attribute("TypeId").toInt();
     uUid = QUuid(dom->attribute("UUID"));

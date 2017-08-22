@@ -295,7 +295,7 @@ void HIconTextItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     }
     else
     {
-
+        pTextObj->setModify(true);
         HIconGraphicsItem::mouseMoveEvent(event);
     }
 }
@@ -399,6 +399,7 @@ void HIconTextItem::refreshBaseObj()
     QPointF p = mapToScene(rect().center());
     pTextObj->setOX(p.x());
     pTextObj->setOY(p.y());
+    pTextObj->setModify(true);
 }
 
 void HIconTextItem::setItemCursor(int location)

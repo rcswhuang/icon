@@ -139,7 +139,7 @@ public:
     //当前画面的比例缩放
     double curZoomScale();
 
-    virtual bool contains(int nPatternId);
+    bool contains(int nPatternId);
 
     virtual void moveBy(qreal dx,qreal dy);
 
