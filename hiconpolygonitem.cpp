@@ -188,7 +188,7 @@ void HIconPolygonItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *
         int nRect = polygon().size();
         QRectF *pRect = new QRectF[nRect];
 
-        for(int i; i < nRect; i++)
+        for(int i = 0 ; i < nRect; i++)
         {
             pRect[i].setSize(QSizeF(halfpw,halfpw));
             pRect[i].moveCenter(polygon().at(i));

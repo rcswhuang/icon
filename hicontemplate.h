@@ -23,11 +23,11 @@ public:
     void setVersion(int version);
     int getVersion();
 
-    void setIconTypeName(QString name);
-    QString getIconTypeName();
+    void setCatalogName(QString name);
+    QString getCatalogName();
 
-    void setIconTypeId(int type);
-    int getIconTypeId();
+    void setCatalogType(int type);
+    int getCatalogType();
 
     void setDefaultSize(const QSizeF& size);
     QSizeF getDefaultSize();
@@ -39,10 +39,13 @@ public:
 
     void clear();
 
+    void setModify(bool modify);
+    bool getModify();
+
 private:
     int nVersion;
-    QString strIconTypeName;//图元属性名称 遥测 遥信等
-    int nIconTypeId;//图元类型 遥测 遥信等
+    QString strCatalogName;//图元目录名称 遥测 遥信等
+    int nCatalogType;//图元目录类型 遥测 遥信等
     QSizeF sDefaultSize;
     QUuid uUid;
     HIconSymbol* pIconSymbol;

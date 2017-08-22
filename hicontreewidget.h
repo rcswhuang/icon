@@ -60,9 +60,9 @@ public:
 protected:
     void contextMenuEvent(QContextMenuEvent *event);
 signals:
-    void IconNew(const QString& strIconTypeName,const QString& strName,const int& nIconTypeId);
-    void IconDel(const QString& strName,const int& nIconTypeId,const QString& strUuid);
-    void IconOpen(const QString& strName,const int& nIconTypeId,const QString& strUuid);
+    void IconNew(const QString& strTemplateName,const QString& strCatalogName,const int& nCatalogType);
+    void IconDel(const QString& strCatalogName,const int& nCatalogType,const QString& strUuid);
+    void IconOpen(const QString& strCatalogName,const int& nCatalogType,const QString& strUuid);
 public slots:
     void newIcon();
     void deleteIcon();

@@ -33,7 +33,6 @@ void HIconSelectionItem::paint(QPainter *painter, const QStyleOptionGraphicsItem
     QPen pen = QPen(QColor(Qt::green));
     pen.setWidth(1);
     painter->setPen(pen);
-    //QBrush brush();
     painter->drawRect(rect());
     painter->restore();
 

@@ -309,6 +309,7 @@ void HIconMainWindow::createDockWindows()
     browserIconDock->setWidget(pIconTreeWidget);
     addDockWidget(Qt::LeftDockWidgetArea,browserIconDock);
     pIconTreeWidget->init();
+
     connect(pIconTreeWidget,SIGNAL(IconNew(const QString&,const QString&,const int&)),this,SLOT(New(const QString&,const QString&,const int&)));
     connect(pIconTreeWidget,SIGNAL(IconDel(const QString&,const int&,const QString&)),this,SLOT(Del(const QString&,const int&,const QString&)));
     connect(pIconTreeWidget,SIGNAL(IconOpen(const QString&,const int&,const QString&)),this,SLOT(Open(const QString&,const int&,const QString&)));
@@ -410,23 +411,20 @@ void HIconMainWindow::quit()
 
 }
 
-//保存 true 文件 false 库
-//void save();
 
-//新建对象
-void HIconMainWindow::New(const QString& strIconTypeName,const QString& strTemplateName,const int& nTemplateTypeId)//"开关",遥信
+void HIconMainWindow::New(const QString& strTemplateName,const QString& strCatalogName,const int& nCatalogType)
 {
+    if(!pIconMgr && !pIconMgr->getIconTemplate())
+        return;
 
-    //弹出对话框
-    //按照名字查找一下，如果存在，就不在新建
     HIconTemplate* pTemplate = pIconMgr->getIconDocument()->findIconTemplateByTemplateName(strTemplateName);
-    if(pTemplate && pTemplate->getSymbol()->getSymolName() == strTemplateName)
+    if(pTemplate)
     {
         QMessageBox::information(NULL,QStringLiteral("提醒"),QStringLiteral("已经存在相同名字的模板文件，请修改名称"),QMessageBox::Ok);
         return;
     }
-    //如果当前图符文件有修改且未保存，提示进行保存
-  //  if(pTemplate)
+
+    if(pIconMgr->getIconTemplate()->getModify())
     {
         if(QMessageBox::Ok == QMessageBox::information(NULL,QStringLiteral("提醒"),QStringLiteral("需要保存当前的模板文件吗？"),QMessageBox::Ok|QMessageBox::Cancel))
         {
@@ -436,7 +434,7 @@ void HIconMainWindow::New(const QString& strIconTypeName,const QString& strTempl
     }
 
     pIconWidget->delIconWidget();//先删除目前
-    pIconMgr->New(strIconTypeName,strTemplateName,nTemplateTypeId);
+    pIconMgr->New(strTemplateName,strCatalogName,nCatalogType);
     pIconWidget->setIconMgr(pIconMgr);
     pIconWidget->newIconWidget();
     pIconTreeWidget->addIconTreeWigetItem();
@@ -449,20 +447,25 @@ void HIconMainWindow::New(const QString& strIconTypeName,const QString& strTempl
     scaleComboBox->setCurrentText(strScale);
 }
 
-//打开 save falg = true
-void HIconMainWindow::Open(const QString& catalogName,const int& nIconTypeId,const QString& uuid)
+
+void HIconMainWindow::Open(const QString &strTemplateName, int nTemplateType, const QString &strUuid)
 {
-    //如果当前图符文件有修改且未保存，提示进行保存
-    if(QMessageBox::Ok == QMessageBox::information(NULL,QStringLiteral("提醒"),QStringLiteral("需要保存当前的模板文件吗？"),QMessageBox::Ok|QMessageBox::Cancel))
+    if(!pIconMgr && !pIconMgr->getIconTemplate())
+        return;
+    if(pIconMgr->getIconTemplate()->getModify())
     {
-        Save();
+        if(QMessageBox::Ok == QMessageBox::information(NULL,QStringLiteral("提醒"),QStringLiteral("需要保存当前的模板文件吗？"),QMessageBox::Ok|QMessageBox::Cancel))
+        {
+            Save();
+        }
     }
-    pIconWidget->delIconWidget();//先删除目前
-    pIconMgr->Open(catalogName,nIconTypeId,uuid);
-    pIconWidget->setIconMgr(pIconMgr); //设置iconWidget
-    pIconWidget->openIconWidget();//打开新的
+
+    pIconWidget->delIconWidget();
+    pIconMgr->Open(strTemplateName,nTemplateType,strUuid);
+    pIconWidget->setIconMgr(pIconMgr);
+    pIconWidget->openIconWidget();
     pIconPreview->init();
-    //然后获取新的Template
+
 
 }
 
@@ -473,13 +476,13 @@ void HIconMainWindow::Save()
 }
 
 //
-void HIconMainWindow::Del(const QString& catalogName,const int& nIconTypeId,const QString& uuid)
+void HIconMainWindow::Del(const QString &strTemplateName, int nTemplateType, const QString &strUuid)
 {
     if(!pIconTreeWidget || !pIconWidget || !pIconMgr)
         return;
     pIconTreeWidget->delIconTreeWidgetItem();
     pIconWidget->delIconWidget();
-    pIconMgr->Del(catalogName,nIconTypeId,uuid);
+    pIconMgr->Del(strTemplateName,nTemplateType,strUuid);
     pIconPreview->init();
 }
 

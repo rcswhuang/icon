@@ -4,11 +4,21 @@
 #include <QMessageBox>
 HIconDocument::HIconDocument(HIconMgr* iconMgr):pIconMgr(iconMgr)
 {
-    pCurIconTemplate = NULL;
+    pCurIconTemplate = new HIconTemplate("0000");
+}
+
+HIconDocument::~HIconDocument()
+{
+    if(pCurIconTemplate)
+    {
+        delete pCurIconTemplate;
+        pCurIconTemplate = NULL;
+    }
 }
 
 void HIconDocument::loadIconDoucument()
 {
+    return;
     //先找路径，在找文件夹，然后文件夹里面搜索添加完成
     QString iconsPath  = QString(qgetenv("wfsystem_dir"));
 #ifdef WIN32
@@ -87,7 +97,7 @@ void HIconDocument::saveIconTemplateFile(const QString& strIconsPath,const QStri
     {
         HIconTemplate* iconTemplate = pIconTemplateList[i];
         if(!iconTemplate) continue;
-        if(IsIconInFolder(strFolderName,iconTemplate->getIconTypeId()))
+        if(IsIconInFolder(strFolderName,iconTemplate->getCatalogType()))
         {
             QString strFileName = strIconsFolderPath + "/" + iconTemplate->getUuid().toString() + ".xic";
             iconTemplate->writeXml(strFileName);
@@ -116,76 +126,77 @@ HIconTemplate* HIconDocument::getCurrentTemplate()
     return pCurIconTemplate;
 }
 
-//遥信  红绿灯遥信  TEMPLATE_DIGITAL_
-void HIconDocument::New(const QString& strIconTypeName,const QString &strTemplateName,int nTemplateType)
+
+void HIconDocument::New(const QString& strTemplateName,const QString& strCatalogName,const int& nCatalogType)
 {
-    //先删除之前存在的，然后创建新的模板文件
     if(pCurIconTemplate)
     {
-        delete pCurIconTemplate;
-        pCurIconTemplate = NULL;
+        pCurIconTemplate->clear();
     }
-    //新建新的文件
-    pCurIconTemplate = new HIconTemplate("");
-    pCurIconTemplate->setIconTypeName(strIconTypeName);//普通开关
-    pCurIconTemplate->setIconTypeId(nTemplateType);//遥信类
-    pCurIconTemplate->getSymbol()->setSymbolName(strTemplateName);
-    pIconTemplateList.append(pCurIconTemplate);
+
+    HIconTemplate *pTemplate = new HIconTemplate("");
+    pTemplate->setCatalogName(strCatalogName);//普通开关
+    pTemplate->setCatalogType(nCatalogType);//遥信类
+    pTemplate->getSymbol()->setSymbolName(strTemplateName);
+    pTemplate->getSymbol()->newPattern(QStringLiteral("缺省"));
+    pIconTemplateList.append(pTemplate);
+
+    pTemplate->copyTo(pCurIconTemplate);
 }
 
 void HIconDocument::Del(const QString &strTemplateName, int nTemplateType, const QString &strUuid)
 {
+    if(pCurIconTemplate->getCatalogType() == nTemplateType && pCurIconTemplate->getUuid().toString() == strUuid)
+    {
+        pCurIconTemplate->clear();
+    }
+
     for(int i = 0; i < pIconTemplateList.size();i++)
     {
         HIconTemplate* pIconTemplate = (HIconTemplate*)pIconTemplateList.at(i);
         if(!pIconTemplate)
             return;
-        if(pIconTemplate->getIconTypeId() == nTemplateType && pIconTemplate->getUuid().toString() == strUuid)
+        if(pIconTemplate->getCatalogType() == nTemplateType && pIconTemplate->getUuid().toString() == strUuid)
         {
             pIconTemplateList.removeOne(pIconTemplate);
             delete pIconTemplate;
             pIconTemplate = NULL;
         }
     }
-    //删除pCurTemplate
-    if(pCurIconTemplate)
-    {
-        delete pCurIconTemplate;
-        pCurIconTemplate = NULL;
-    }
 }
 
 void HIconDocument::Open(const QString &strTemplateName, int nTemplateType, const QString &strUuid)
 {
-    //先删除原来的临时模板文件
     if(!pCurIconTemplate)
     {
-        delete pCurIconTemplate;
-        pCurIconTemplate = NULL;
+        return;
     }
 
     HIconTemplate* pTemplate = findIconTemplateByTypeAndUuid(nTemplateType,strUuid);
     if(pTemplate && pTemplate->getSymbol()->getSymolName() == strTemplateName)
     {
+        pCurIconTemplate->clear();
         pTemplate->copyTo(pCurIconTemplate);
     }
-    else
-        pCurIconTemplate = NULL;
-
 }
 
 bool HIconDocument::Save()
 {
     if(!pCurIconTemplate)
-        return false;
-    HIconTemplate* pTemplate = findIconTemplateByTypeAndUuid(pCurIconTemplate->getIconTypeId(),pCurIconTemplate->getUuid().toString());
-    if(pTemplate)
     {
-        //把当前的模板文件拷贝给它
-        pCurIconTemplate->copyTo(pTemplate);
+        return false;
     }
 
-    saveIconDoucument();
+    HIconTemplate* pTemplate = findIconTemplateByTypeAndUuid(pCurIconTemplate->getCatalogType(),pCurIconTemplate->getUuid().toString());
+
+    if(pTemplate)
+    {
+        pTemplate->clear();
+        pCurIconTemplate->copyTo(pTemplate);
+        pTemplate->setModify(false);
+    }
+
+    //saveIconDoucument();
     return true;
 }
 
@@ -202,7 +213,6 @@ HIconTemplate* HIconDocument::findIconTemplateByTemplateName(const QString& strT
     return NULL;
 }
 
-
 HIconTemplate* HIconDocument::findIconTemplateByTypeAndUuid(int nTemplateType, const QString &strUuid)
 {
     for(int i = 0; i < pIconTemplateList.size();i++)
@@ -210,7 +220,7 @@ HIconTemplate* HIconDocument::findIconTemplateByTypeAndUuid(int nTemplateType, c
         HIconTemplate* pIconTemplate = (HIconTemplate*)pIconTemplateList.at(i);
         if(!pIconTemplate)
             return NULL;
-        if(pIconTemplate->getIconTypeId() == nTemplateType && pIconTemplate->getUuid().toString() == strUuid)
+        if(pIconTemplate->getCatalogType() == nTemplateType && pIconTemplate->getUuid().toString() == strUuid)
         {
             return pIconTemplate;
         }

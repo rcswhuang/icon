@@ -13,16 +13,7 @@ HIconSymbol::HIconSymbol(QObject* parent):QObject(parent)
 
 HIconSymbol::~HIconSymbol()
 {
-    while(!pShowPatternVector.isEmpty())
-    {
-        HIconShowPattern* pattern = (HIconShowPattern*)pShowPatternVector.takeFirst();
-        if(pattern)
-        {
-            delete pattern;
-            pattern = NULL;
-        }
-    }
-    pShowPatternVector.clear();
+   clear();
 }
 
 void HIconSymbol::clear()
@@ -208,7 +199,6 @@ void HIconSymbol::copyTo(HIconSymbol *isymbol)
     isymbol->usSymbolType = usSymbolType;
     isymbol->nMaxPattern = nMaxPattern;
     isymbol->nMaxPattern = nCurPattern;
-    isymbol->clear();
     for(int i = 0; i < pShowPatternVector.size();i++)
     {
         HIconShowPattern* pattern = (HIconShowPattern*)pShowPatternVector[i];
@@ -216,7 +206,8 @@ void HIconSymbol::copyTo(HIconSymbol *isymbol)
         pattern->copyTo(newPattern);
         isymbol->pShowPatternVector.append(newPattern);
     }
-    isymbol->setCurrentPattern(pCurPattern->nPattern);
+    if(pCurPattern)
+        isymbol->setCurrentPattern(pCurPattern->nPattern);
 }
 
 //获取ObjID
@@ -264,6 +255,37 @@ void HIconSymbol::setIconSymbolHeight(double height)
     //fHeight = height;
 }
 
+
+void HIconSymbol::setModify(bool modify)
+{
+    foreach(HIconShowPattern* pattern,pShowPatternVector)
+    {
+        foreach(HBaseObj* pObj,pattern->pObjList)
+        {
+            if(pObj)
+            {
+                pObj->setModify(modify);
+            }
+        }
+    }
+}
+
+bool HIconSymbol::getModify()
+{
+    foreach(HIconShowPattern* pattern,pShowPatternVector)
+    {
+        foreach(HBaseObj* pObj,pattern->pObjList)
+        {
+            if(pObj && pObj->getModify())
+            {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+
 void HIconSymbol::updateShowPattern(QList<HBaseObj*> &list)
 {
     foreach (HBaseObj* pObj, list) {
@@ -272,7 +294,6 @@ void HIconSymbol::updateShowPattern(QList<HBaseObj*> &list)
         pattern->addObj(pObj,false);
     }
 }
-
 
 bool HIconSymbol::PatterIsValid(int nId)
 {

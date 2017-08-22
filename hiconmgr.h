@@ -25,10 +25,10 @@ public:
     void setShowCenterLine(bool show);
     bool getShowCenterLine();
 public:
-    void New(const QString& strIconTypeName,const QString& strTemplateName,const int& nTemplateTypeId);
-    void Del(const QString& catalogName,const int& nIconTypeId,const QString& uuid);
+    void New(const QString& strTemplateName,const QString& strCatalogName,const int& nCatalogType);
+    void Del(const QString &strTemplateName, int nTemplateType, const QString &strUuid);
     bool Save();
-    void Open(const QString& catalogName,const int& nIconTypeId,const QString& uuid);
+    void Open(const QString &strTemplateName, int nTemplateType, const QString &strUuid);
 private:
     bool bShowGrid;
     bool bShowCenterLine;

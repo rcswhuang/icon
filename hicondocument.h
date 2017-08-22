@@ -11,6 +11,7 @@ class HIconDocument : public QObject
 {
 public:
     HIconDocument(HIconMgr* iconMgr);
+    ~HIconDocument();
 public:
 
     void loadIconDoucument();
@@ -23,9 +24,9 @@ public:
     bool IsIconInFolder(const QString& strFolderName,const quint8& nIconType);
 
 public:
-    void New(const QString& strIconTypeName,const QString& strTemplateName,int nTemplateType);
-    void Del(const QString& strTemplateName,int nTemplateType,const QString& strUuid);
-    void Open(const QString& strTemplateName,int nTemplateType,const QString& strUuid);
+    void New(const QString& strTemplateName,const QString& strCatalogName,const int& nCatalogType);
+    void Del(const QString &strTemplateName, int nTemplateType, const QString &strUuid);
+    void Open(const QString &strTemplateName, int nTemplateType, const QString &strUuid);
     bool Save();
     HIconTemplate* getCurrentTemplate();
     HIconTemplate* findIconTemplateByTypeAndUuid(int nTemplateType,const QString& strUuid);

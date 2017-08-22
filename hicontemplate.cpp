@@ -12,7 +12,7 @@ HIconTemplate::HIconTemplate(const QUuid& uuid,QObject* parent)
     }
     pIconSymbol = new HIconSymbol;
     sDefaultSize = QSizeF(50,50);
-    nIconTypeId = 0;
+    nCatalogType = 0;
     nVersion = 1;
 }
 
@@ -36,8 +36,8 @@ void HIconTemplate::clear()
 void HIconTemplate::copyTo(HIconTemplate *temp)
 {
     temp->nVersion = nVersion;
-    temp->strIconTypeName = strIconTypeName;//图元属性名称 遥测 遥信等
-    temp->nIconTypeId = nIconTypeId;//图元类型 遥测 遥信等
+    temp->strCatalogName = strCatalogName;//图元属性名称 遥测 遥信等
+    temp->nCatalogType = nCatalogType;//图元类型 遥测 遥信等
     temp->sDefaultSize = sDefaultSize;
     temp->uUid = uUid;
     pIconSymbol->copyTo(temp->pIconSymbol);
@@ -71,8 +71,8 @@ void HIconTemplate::readXml(QDomElement* dom)
     if(!dom)
         return;
 
-    strIconTypeName = dom->attribute("TypeName");
-    nIconTypeId = dom->attribute("TypeId").toInt();
+    strCatalogName = dom->attribute("TypeName");
+    nCatalogType = dom->attribute("TypeId").toInt();
     uUid = QUuid(dom->attribute("UUID"));
     double w = dom->attribute("DefaultWidth").toDouble();
     double h = dom->attribute("DefaultHeight").toDouble();
@@ -110,8 +110,8 @@ void HIconTemplate::writeXml(QDomElement *dom)
     if(!dom)
         return;
 
-    dom->setAttribute("TypeName",strIconTypeName);
-    dom->setAttribute("TypeId",nIconTypeId);
+    dom->setAttribute("TypeName",strCatalogName);
+    dom->setAttribute("TypeId",nCatalogType);
     dom->setAttribute("UUID",uUid.toString());
     dom->setAttribute("DefaultWidth",sDefaultSize.width());
     dom->setAttribute("DefaultHeight",sDefaultSize.height());
@@ -135,24 +135,24 @@ int HIconTemplate::getVersion()
     return nVersion;
 }
 
-void HIconTemplate::setIconTypeName(QString name)
+void HIconTemplate::setCatalogName(QString name)
 {
-    strIconTypeName = name;
+    strCatalogName = name;
 }
 
-QString HIconTemplate::getIconTypeName()
+QString HIconTemplate::getCatalogName()
 {
-    return strIconTypeName;
+    return strCatalogName;
 }
 
-void HIconTemplate::setIconTypeId(int type)
+void HIconTemplate::setCatalogType(int type)
 {
-    nIconTypeId = type;
+    nCatalogType = type;
 }
 
-int HIconTemplate::getIconTypeId()
+int HIconTemplate::getCatalogType()
 {
-    return nIconTypeId;
+    return nCatalogType;
 }
 
 void HIconTemplate::setDefaultSize(const QSizeF& size)
@@ -182,5 +182,16 @@ HIconSymbol* HIconTemplate::getSymbol()
     return NULL;
 }
 
+void HIconTemplate::setModify(bool modify)
+{
+    pIconSymbol->setModify(modify);
+}
+
+bool HIconTemplate::getModify()
+{
+    if(!pIconSymbol)
+        return false;
+    return pIconSymbol->getModify();
+}
 
 

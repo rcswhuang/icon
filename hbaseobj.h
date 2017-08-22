@@ -133,6 +133,9 @@ public:
     virtual void setOY(double y);
     virtual double getOY();
 
+    virtual void setModify(bool modify);
+    virtual bool getModify();
+
     //当前画面的比例缩放
     double curZoomScale();
 
@@ -196,6 +199,7 @@ public:
 
     QVector<quint8> nPattern;
 
+    bool bModify;
 protected:
 
 

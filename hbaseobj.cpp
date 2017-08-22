@@ -48,6 +48,7 @@ void HBaseObj::init()
     bDeleted = false;//是否删除
     nStackOrder = 0;
 
+    bModify = false;
     //父图符
     m_pParent = NULL;
 
@@ -500,6 +501,17 @@ bool HBaseObj::isTurn(bool bHorizonTurn)
 {
     return false;
 }
+
+void HBaseObj::setModify(bool modify)
+{
+    bModify = modify;
+}
+
+bool HBaseObj::getModify()
+{
+    return bModify;
+}
+
 
 //设置翻转
 void HBaseObj::setTurn(bool bHorizon,bool bVertical)

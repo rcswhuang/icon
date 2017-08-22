@@ -140,32 +140,31 @@ void HIconTreeWidget::initTemplateChildMenu(QContextMenuEvent *event)
 void HIconTreeWidget::newIcon()
 {
     bool ok;
-    QString strName = QInputDialog::getText(this,QStringLiteral("输入图元的名称"),QStringLiteral("图元名称:"),QLineEdit::Normal,"",&ok);
+    QString strTemplateName = QInputDialog::getText(this,QStringLiteral("输入图元的名称"),QStringLiteral("图元名称:"),QLineEdit::Normal,"",&ok);
     if(!ok) return;
     HIconTreeWidgetItem* item = (HIconTreeWidgetItem*)currentItem();
     if(!item) return;
-    emit IconNew(item->text(0),strName,item->type());
+    emit IconNew(strTemplateName,item->text(0),item->type());
 }
 
 void HIconTreeWidget::openIcon(QTreeWidgetItem* item,int col)
 {
     HIconTreeWidgetItem* pCurItem = dynamic_cast<HIconTreeWidgetItem*> (item);
     if(!pCurItem) return;
-    int nCurType = pCurItem->type();
-    if(nCurType > TEMPLATE_TYPE_NULL && nCurType < TEMPLATE_TYPE_MAX)
+    int nTemplateType = pCurItem->type();
+    if(nTemplateType > TEMPLATE_TYPE_NULL && nTemplateType < TEMPLATE_TYPE_MAX)
     {
         expandIconItem(pCurItem);
     }
-    else if(nCurType == TEMPLATE_TYPE_CHILD)
+    else if(nTemplateType == TEMPLATE_TYPE_CHILD)
     {
-        QString strName = pCurItem->text(col);
-        QString strUuid = pCurItem->getUuid();
-        nCurType = pCurItem->parent()->type();
-        if(strName.isEmpty() || strUuid.isEmpty())
+        QString strTemplateName = pCurItem->text(col);
+        QString strTemplateUuid = pCurItem->getUuid();
+        nTemplateType = pCurItem->parent()->type();
+        if(strTemplateName.isEmpty() || strTemplateUuid.isEmpty())
             return;
-        emit IconOpen(strName,nCurType,strUuid);
+        emit IconOpen(strTemplateName,nTemplateType,strTemplateUuid);
     }
-
 }
 
 void HIconTreeWidget::deleteIcon()
@@ -174,7 +173,7 @@ void HIconTreeWidget::deleteIcon()
         return;
     if(QMessageBox::Ok == QMessageBox::warning(NULL,QStringLiteral("删除图元"),QStringLiteral("确认删除此图元信息?"),QMessageBox::Ok|QMessageBox::Cancel))
     {
-        int nIconTypeId;
+        int nCatalogType;
         HIconTreeWidgetItem* item = (HIconTreeWidgetItem*)currentItem();
         if(!item)
         {
@@ -184,10 +183,10 @@ void HIconTreeWidget::deleteIcon()
         HIconTreeWidgetItem* itemparent = (HIconTreeWidgetItem*)item->parent();
         if(!itemparent)
             return;
-        nIconTypeId = itemparent->type();
-        QString strName = itemparent->text(0);
-        QString strUuid = item->data(0,Qt::UserRole).toString();//item->getUuid()
-        emit IconDel(strName,nIconTypeId,strUuid);
+        nCatalogType = itemparent->type();
+        QString stCatalogrName = itemparent->text(0);
+        QString strTemplateUuid = item->data(0,Qt::UserRole).toString();
+        emit IconDel(stCatalogrName,nCatalogType,strTemplateUuid);
     }
 }
 
@@ -244,7 +243,7 @@ void HIconTreeWidget::initTemplateFile()
     {
         HIconTemplate* pTemplate = (HIconTemplate*)pIconMgr->getIconDocument()->pIconTemplateList[i];
         if(!pTemplate) continue;
-        HIconTreeWidgetItem* treeItem = findIconTreeWigetItem(pTemplate->getIconTypeId());
+        HIconTreeWidgetItem* treeItem = findIconTreeWigetItem(pTemplate->getCatalogType());
         if(!treeItem) continue;
 
         QString strUuid =  pTemplate->getUuid().toString();

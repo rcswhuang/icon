@@ -40,12 +40,11 @@ void HIconWidget::newIconWidget()
     HIconSymbol* pSymbol = (HIconSymbol*)(pIconMgr->getIconTemplate()->getSymbol());
     if(!pSymbol)
         return;
-    QString strName = QStringLiteral("缺省");
-    HIconShowPattern* pattern = (HIconShowPattern*)(pSymbol->newPattern(strName));
+    HIconShowPattern* pattern = pSymbol->getCurrentPatternPtr();//(HIconShowPattern*)(pSymbol->newPattern(strName));
     if(!pattern)
         return;
     pTabBar->show();
-    int index = pTabBar->addTab(strName);
+    int index = pTabBar->addTab(pattern->strName);
     pTabBar->setTabData(index,pSymbol->getCurrentPattern());
     pTabBar->setCurrentIndex(index);
     pIconMgr->getIconFrame()->setShowRuler(true);

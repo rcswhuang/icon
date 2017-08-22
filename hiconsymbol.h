@@ -40,6 +40,9 @@ public:
     int getObjID();
     bool findObjID(int nObjID);
 
+    void setModify(bool modify);
+    bool getModify();
+
     void updateShowPattern(QList<HBaseObj*> &list);
     //图元中多种状态的显示方案
     bool PatterIsValid(int nId);
@@ -60,10 +63,7 @@ public:
     int getCurrentPatternIndex();
     void setCurrentPatternPtr(HIconShowPattern* sp);
     HIconShowPattern* getCurrentPatternPtr();
-    HIconTemplate* getIconTemplate()const {return pIconTemplate;}
 public:
-    //QList<HBaseObj*> pObjList;
-    HIconTemplate* pIconTemplate;
     QVector<HIconShowPattern*> pShowPatternVector;
 private:
     QString strSymbolName;
