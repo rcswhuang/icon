@@ -89,9 +89,9 @@ void HIconMgr::Del(const QString &strTemplateName, int nTemplateType, const QStr
     pIconDocument->Del(strTemplateName,nTemplateType,strUuid);
 }
 
-bool HIconMgr::Save()
+bool HIconMgr::Save(bool savefile)
 {
-    return pIconDocument->Save();
+    return pIconDocument->Save(savefile);
 }
 
 void HIconMgr::Open(const QString &strTemplateName, int nTemplateType, const QString &strUuid)

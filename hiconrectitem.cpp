@@ -232,7 +232,6 @@ int HIconRectItem::type() const
     return enumRectangle;
 }
 
-
 void HIconRectItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     pointStart = event->scenePos();
@@ -285,7 +284,6 @@ void HIconRectItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     else
     {
         pRectObj->moveBy(pt.x(),pt.y());
-        pRectObj->setModify(true);
         HIconGraphicsItem::mouseMoveEvent(event);
     }
 }
@@ -293,8 +291,6 @@ void HIconRectItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 
 void HIconRectItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
-    QPointF pt = event->scenePos();
-
     HIconGraphicsItem::mouseReleaseEvent(event);
 }
 

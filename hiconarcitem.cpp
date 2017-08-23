@@ -180,7 +180,6 @@ void HIconArcItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
             painter->drawArc(rect(),startAngle,spanAngle);
 
     }
-    //painter->fillRect(drawRectF,brush);
     painter->restore();
 
 
@@ -214,7 +213,7 @@ void HIconArcItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
 
 QPainterPath HIconArcItem::shape() const
 {
-    QPainterPath path;// = QGraphicsLineItem::shape();
+    QPainterPath path;
     QRectF rectPath;
     rectPath.setX(rect().x() - 10);
     rectPath.setY(rect().y() - 10);
@@ -235,7 +234,6 @@ void HIconArcItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     pointStart = event->scenePos();
     pointLocation = pointInRect(pointStart);
-    bSelected = true;
     HIconGraphicsItem::mousePressEvent(event);
 }
 
@@ -282,7 +280,7 @@ void HIconArcItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     }
     else
     {
-        pArcObj->setModify(true);
+        pArcObj->moveBy(pt.x(),pt.y());
         HIconGraphicsItem::mouseMoveEvent(event);
     }
 }

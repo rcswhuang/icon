@@ -187,7 +187,7 @@ void HIconPieItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     }
     else
     {
-        pPieObj->setModify(true);
+        pPieObj->moveBy(pt.x(),pt.y());
         HIconGraphicsItem::mouseMoveEvent(event);
     }
 }

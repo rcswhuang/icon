@@ -58,9 +58,10 @@ void HIconMainWindow::createActions()
     saveAct->setShortcuts(QKeySequence::Save);
     connect(saveAct,SIGNAL(triggered(bool)),this,SLOT(save()));
 
-    closeAct = new QAction(QIcon(":/images/close.png"),QStringLiteral("退出(&E)"),this);
-    closeAct->setShortcut(QKeySequence::Quit);
-
+    quitAct = new QAction(QIcon(":/images/close.png"),QStringLiteral("退出(&E)"),this);
+    quitAct->setShortcut(QKeySequence::Quit);
+    connect(quitAct, &QAction::triggered,this,&QWidget::close);
+    // QAction *exitAct = fileMenu->addAction(exitIcon, tr("E&xit"), this, &QWidget::close);
 
     //编辑项
     undoAct = new QAction(QIcon(":/images/undo.png"),QStringLiteral("撤销(&U)"),this);
@@ -225,7 +226,8 @@ void HIconMainWindow::createToolBars()
     fileToolBar->addAction(newAct);
     fileToolBar->addAction(openAct);
     fileToolBar->addAction(saveAct);
-    fileToolBar->addAction(closeAct);
+    fileToolBar->addAction(quitAct);
+
 
     editToolBar = addToolBar(tr("editBar"));
     editToolBar->setIconSize(QSize(32,32));
@@ -270,7 +272,7 @@ void HIconMainWindow::createMenuBars()
     fileMenu->addAction(openAct);
     fileMenu->addAction(saveAct);
     fileMenu->addSeparator();
-    fileMenu->addAction(closeAct);
+    fileMenu->addAction(quitAct);
 
     editMenu = new QMenu(QStringLiteral("编辑(&E)"),this);
     editMenu->addAction(undoAct);
@@ -334,10 +336,38 @@ void HIconMainWindow::open()
 
 void HIconMainWindow::save()
 {
-   // pIconMgr->Save();
+    pIconMgr->Save(true);
 }
 
 void HIconMainWindow::saveAs()
+{
+
+}
+
+//关闭
+bool HIconMainWindow::close()
+{
+    QMessageBox mb(QStringLiteral("警告"),QStringLiteral("退出前需要保存所有图符模板吗？"),
+            QMessageBox::Information,QMessageBox::Yes | QMessageBox::Default,
+            QMessageBox::No,QMessageBox::Cancel | QMessageBox::Escape );
+    mb.setButtonText( QMessageBox::Yes, QStringLiteral("是") );
+    mb.setButtonText( QMessageBox::No, QStringLiteral("否") );
+    mb.setButtonText(QMessageBox::Cancel,QStringLiteral("取消"));
+    switch( mb.exec() ) {
+        case QMessageBox::Yes:
+            Save();
+            return true;
+        case QMessageBox::Cancel:
+            return false;
+    default:
+        break;
+
+    }
+    return true;
+}
+
+//退出
+void HIconMainWindow::quit()
 {
 
 }
@@ -399,19 +429,6 @@ void HIconMainWindow::drawSelection()
     pIconMgr->getIconState()->setDrawShape(enumSelection);
 }
 
-//关闭
-void HIconMainWindow::close()
-{
-
-}
-
-//退出
-void HIconMainWindow::quit()
-{
-
-}
-
-
 void HIconMainWindow::New(const QString& strTemplateName,const QString& strCatalogName,const int& nCatalogType)
 {
     if(!pIconMgr && !pIconMgr->getIconTemplate())
@@ -420,13 +437,13 @@ void HIconMainWindow::New(const QString& strTemplateName,const QString& strCatal
     HIconTemplate* pTemplate = pIconMgr->getIconDocument()->findIconTemplateByTemplateName(strTemplateName);
     if(pTemplate)
     {
-        QMessageBox::information(NULL,QStringLiteral("提醒"),QStringLiteral("已经存在相同名字的模板文件，请修改名称"),QMessageBox::Ok);
+        QMessageBox::information(this,QStringLiteral("提醒"),QStringLiteral("已经存在相同名字的模板文件，请修改名称"),QMessageBox::Ok);
         return;
     }
 
     if(pIconMgr->getIconTemplate()->getModify())
     {
-        if(QMessageBox::Ok == QMessageBox::information(NULL,QStringLiteral("提醒"),QStringLiteral("需要保存当前的模板文件吗？"),QMessageBox::Ok|QMessageBox::Cancel))
+        if(QMessageBox::Ok == QMessageBox::information(NULL,QStringLiteral("提醒"),QStringLiteral("需要保存当前的模板文件吗？"),QMessageBox::Yes|QMessageBox::No))
         {
 
              Save();
@@ -533,6 +550,8 @@ void HIconMainWindow::paste()
 void HIconMainWindow::del()
 {
     if(!pIconMgr || !pIconMgr->getIconFrame())
+        return;
+    if(QMessageBox::Cancel == QMessageBox::information(NULL,QStringLiteral("警告"),QStringLiteral("确认删除该图符吗？"),QMessageBox::Ok|QMessageBox::Cancel))
         return;
     pIconMgr->getIconFrame()->del();
 }
@@ -674,6 +693,16 @@ void HIconMainWindow::about()
 
 void HIconMainWindow::resizeEvent(QResizeEvent *event)
 {
+}
+
+void HIconMainWindow::closeEvent(QCloseEvent *event)
+{
+    if (close()) {
+            Save();
+            event->accept();
+        } else {
+            event->ignore();
+        }
 }
 
 void HIconMainWindow::viewMousePosChanged(const QPoint& pos,const QPointF &logPos)

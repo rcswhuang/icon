@@ -295,7 +295,7 @@ void HIconTextItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     }
     else
     {
-        pTextObj->setModify(true);
+        pTextObj->moveBy(pt.x(),pt.y());
         HIconGraphicsItem::mouseMoveEvent(event);
     }
 }

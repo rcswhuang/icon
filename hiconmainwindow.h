@@ -25,6 +25,7 @@ public:
 
 protected:
     virtual void resizeEvent(QResizeEvent* event);
+    void closeEvent(QCloseEvent *event);
 private:
     HIconMgr* pIconMgr;
     HIconFrame* pIconFrame;
@@ -72,7 +73,7 @@ private slots:
 public slots:
 
     //关闭
-    void close();
+    bool close();
 
     //退出
     void quit();
@@ -89,7 +90,9 @@ public slots:
     //
     void Del(const QString &strTemplateName, int nTemplateType, const QString &strUuid);
 
+
     void Save();
+
     //撤销
     void undo();
 

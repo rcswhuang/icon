@@ -18,7 +18,6 @@ HIconDocument::~HIconDocument()
 
 void HIconDocument::loadIconDoucument()
 {
-    return;
     //先找路径，在找文件夹，然后文件夹里面搜索添加完成
     QString iconsPath  = QString(qgetenv("wfsystem_dir"));
 #ifdef WIN32
@@ -180,7 +179,7 @@ void HIconDocument::Open(const QString &strTemplateName, int nTemplateType, cons
     }
 }
 
-bool HIconDocument::Save()
+bool HIconDocument::Save(bool savefile)
 {
     if(!pCurIconTemplate)
     {
@@ -188,7 +187,6 @@ bool HIconDocument::Save()
     }
 
     HIconTemplate* pTemplate = findIconTemplateByTypeAndUuid(pCurIconTemplate->getCatalogType(),pCurIconTemplate->getUuid().toString());
-
     if(pTemplate)
     {
         pTemplate->clear();
@@ -196,7 +194,8 @@ bool HIconDocument::Save()
         pTemplate->setModify(false);
     }
 
-    //saveIconDoucument();
+    if(savefile)
+        saveIconDoucument();
     return true;
 }
 

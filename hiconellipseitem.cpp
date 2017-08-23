@@ -276,7 +276,7 @@ void HIconEllipseItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     }
     else
     {
-        pEllipseObj->setModify(true);
+        pEllipseObj->moveBy(pt.x(),pt.y());
         HIconGraphicsItem::mouseMoveEvent(event);
     }
 }

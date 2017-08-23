@@ -239,7 +239,7 @@ void HIconPolygonItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
 void HIconPolygonItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
-    //QPointF pt = event->scenePos() - pointStart;
+    QPointF pt = event->scenePos() - pointStart;
     //ushort location = pointInRect(event->scenePos());
     //qDebug()<<"location:"<<location;
     //pointStart = event->scenePos();
@@ -247,7 +247,7 @@ void HIconPolygonItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     if(event->modifiers() == Qt::ShiftModifier)
         bShift = true;
 
-    pPolygonObj->setModify(true);
+    pPolygonObj->moveBy(pt.x(),pt.y());
     HIconGraphicsItem::mouseMoveEvent(event);
 }
 

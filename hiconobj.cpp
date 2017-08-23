@@ -117,6 +117,7 @@ void HLineObj::moveBy(qreal dx, qreal dy)
     pfHeadPoint.setY(pfHeadPoint.y() + dy);
     pfTailPoint.setX(pfTailPoint.x() + dx);
     pfTailPoint.setY(pfTailPoint.y() + dy);
+    bModify = true;
 }
 
 void HLineObj::setArrowStart(quint8 start)
@@ -246,6 +247,7 @@ void HRectObj::moveBy(qreal dx, qreal dy)
 {
     topLeft.setX(topLeft.x() + dx);
     topLeft.setY(topLeft.y() + dy);
+    bModify = true;
 }
 
 ///////////////////////////////////HEllipseObj//////////////////////////////////////////////////
@@ -336,6 +338,7 @@ void HEllipseObj::moveBy(qreal dx, qreal dy)
 {
     topLeft.setX(topLeft.x() + dx);
     topLeft.setY(topLeft.y() + dy);
+    bModify = true;
 }
 ///////////////////////////////////////////////HPolygonObj//////////////////////////////////////
 HPolygonObj::HPolygonObj()
@@ -524,6 +527,7 @@ void HArcObj::moveBy(qreal dx, qreal dy)
 {
     topLeft.setX(topLeft.x() + dx);
     topLeft.setY(topLeft.y() + dy);
+    bModify = true;
 }
 
 ///////////////////////////////////////////////HPieObj//////////////////////////////////////
@@ -647,6 +651,7 @@ void HPieObj::moveBy(qreal dx, qreal dy)
 {
     topLeft.setX(topLeft.x() + dx);
     topLeft.setY(topLeft.y() + dy);
+    bModify = true;
 }
 
 ///////////////////////////////////////////////////////////////////////
@@ -926,4 +931,5 @@ void HTextObj::moveBy(qreal dx, qreal dy)
 {
     topLeft.setX(topLeft.x() + dx);
     topLeft.setY(topLeft.y() + dy);
+    bModify = true;
 }

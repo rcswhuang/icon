@@ -199,27 +199,24 @@ void HIconLineItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
 void HIconLineItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
-    //setCursor(Qt::SizeAllCursor);
-    //shift键
-    //setSelected(false);
-    QPointF sizeF = event->scenePos() - curPointF;
+    QPointF pt = event->scenePos() - curPointF;
     curPointF = event->scenePos();
     if(lineMode == LineSize)
     {
         QLineF lineF;
         if(pointLocation == LOCATIONLEFT)
         {
-           lineF.setPoints(line().p1()+sizeF,line().p2());
+           lineF.setPoints(line().p1()+pt,line().p2());
         }
         else if(pointLocation == LOCATIONRIGHT)
         {
-            lineF.setPoints(line().p1(),line().p2()+sizeF);
+            lineF.setPoints(line().p1(),line().p2()+pt);
         }
         setLine(lineF);
     }
     else
     {
-        pLineObj->setModify(true);
+        pLineObj->moveBy(pt.x(),pt.y());
         HIconGraphicsItem::mouseMoveEvent(event);
     }
 }
