@@ -207,13 +207,12 @@ void HIconRectItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
 
 QPainterPath HIconRectItem::shape() const
 {
-    QPainterPath path;// = QGraphicsLineItem::shape();
+    QPainterPath path;
     QRectF rectPath;
     rectPath.setX(rect().x() - 10);
     rectPath.setY(rect().y() - 10);
     rectPath.setWidth(rect().width() + 20);
     rectPath.setHeight(rect().height() + 20);
-    //setRotation();
     path.addRect(rectPath);
     /*QPainterPathStroker ps;
     ps.setWidth(20);

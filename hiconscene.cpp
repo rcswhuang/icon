@@ -320,8 +320,21 @@ void HIconScene::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
     DRAWSHAPE drawShape = pIconMgr->getIconState()->getDrawShape();
     if(drawShape == enumPolygon && polygon != 0)
     {
-        polygon->getItemObj()->setModify(true);
         emit itemInserted(polygon->type());
+        if(polygon->polygon().size()<=2)
+        {
+            HBaseObj* pObj = polygon->getItemObj();
+            pObj->setDeleted(true);
+            polygon->setVisible(false);
+        }
+        else
+        {
+            QPolygonF tempF = polygon->polygon();
+            tempF.replace(tempF.length()-1,event->scenePos());
+            tempF.append(tempF.at(0));
+            polygon->setPolygon(tempF);
+        }
+        polygon->getItemObj()->setModify(true);
         polygon = 0;
         pIconMgr->getIconState()->setDrawShape(enumSelection);
         return;

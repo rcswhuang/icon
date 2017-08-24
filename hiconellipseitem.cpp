@@ -140,8 +140,6 @@ void HIconEllipseItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *
             lgrd.setSpread(QGradient::ReflectSpread);
             QBrush brush2(lgrd);
             brush = brush2;
-            //painter->setBrush(brush2);
-            //painter->drawRect(rect());
         }
         else if(nFillStyle == Qt::RadialGradientPattern)
         {
@@ -168,10 +166,7 @@ void HIconEllipseItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *
             Qt::BrushStyle bs = (Qt::BrushStyle)nFillStyle;
             QBrush brush1(fillClr,bs);
             brush = brush1;
-            //painter->setBrush(brush);
         }
-       // qreal top = rect().top()*(float)(nFillPercentage/100.00);
-       // drawRectF.setTop(top);
         path.setFillRule(Qt::WindingFill);
         painter->setBrush(brush);
         painter->drawPath(path);
@@ -284,12 +279,6 @@ void HIconEllipseItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 
 void HIconEllipseItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
-    pEllipseObj->topLeft = mapToScene(rect().topLeft());
-    pEllipseObj->rectWidth = rect().width();
-    pEllipseObj->rectHeight = rect().height();
-    QPointF p = mapToScene(rect().center());
-    pEllipseObj->setOX(p.x());
-    pEllipseObj->setOY(p.y());
     HIconGraphicsItem::mouseReleaseEvent(event);
 }
 

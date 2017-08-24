@@ -44,14 +44,21 @@ void HIconPolygonItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *
     Qt::PenCapStyle capStyle = pPolygonObj->getLineCapStyle(); //线条角度
 
     bool bFrameSee = pPolygonObj->getFrameSee();//边框可见
-/*    quint8 nFillWay = pPolygonObj->getFillWay();//填充选择
+    quint8 nFillWay = pPolygonObj->getFillWay();//填充选择
     quint8 nFillStyle = pPolygonObj->getFillStyle(); //填充风格
     quint8 nTransparency = pPolygonObj->getTransparency(); //透明度
     quint8 nFillDir = pPolygonObj->getFillDirection();//填充方向
     QColor fillClr = QColor(pPolygonObj->getFillColorName());//填充颜色
     quint8 nFillPercentage = pPolygonObj->getFillPercentage(); //填充比例
-    */
+    qreal fRotateAngle = pPolygonObj->getRotateAngle();
+
     painter->save();
+    QPointF centerPoint = boundingRect().center();
+    setTransformOriginPoint(centerPoint);
+    QTransform transform;
+    transform.rotate(fRotateAngle);
+    setTransform(transform);
+
     QPen pen = QPen(penClr);
     pen.setStyle(penStyle);
     pen.setWidth(penWidth);
@@ -61,19 +68,21 @@ void HIconPolygonItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *
     else
         painter->setPen(Qt::NoPen);
 
+    QPainterPath path;
+    if(polygon().isClosed())
+    {
+        path.setFillRule(Qt::WindingFill);
+        path.addPolygon(polygon());
+        painter->drawPath(path);
+    }
+    else
+    {
+        path.moveTo(polygon().at(0));
+        for(int i = 1; i < polygon().size();i++)
+            path.lineTo(polygon().at(i));
+        painter->drawPath(path);
+    }
 
-    //QPolygonF tempPloygonF = polygon();
-    //tempPloygonF.replace(tempPloygonF.last(),pointMove);
-
-    painter->drawPolygon(polygon());
-   // if(bStart)
-     //   painter->drawLine(mapToScene(QPointF(0,0)),mapToScene(QPointF(100,100)));
-    //else
-    //    painter->drawLines(pyVector);
-    //painter->drawPolygon(pyf);
-    //需要判断nFillStyle 如果是linear的模式 就要考虑填充方向了
-    //
-    /*
     QBrush brush;
     if(nFillWay >= 1)
     {
@@ -172,10 +181,13 @@ void HIconPolygonItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *
        // qreal top = rect().top()*(float)(nFillPercentage/100.00);
        // drawRectF.setTop(top);
     }
-    path.setFillRule(Qt::WindingFill);*/
-    //painter->drawPath(path);
+    if(polygon().isClosed())
+    {
+        painter->setBrush(brush);
+        path.setFillRule(Qt::WindingFill);
+        painter->drawPath(path);
+    }
     painter->restore();
-    //
 
     if(isSelected())
     {
@@ -184,10 +196,8 @@ void HIconPolygonItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *
         pen1.setWidth(1);
         painter->setPen(pen1);
         qreal halfpw = 14.00;
-
         int nRect = polygon().size();
         QRectF *pRect = new QRectF[nRect];
-
         for(int i = 0 ; i < nRect; i++)
         {
             pRect[i].setSize(QSizeF(halfpw,halfpw));
@@ -199,7 +209,6 @@ void HIconPolygonItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *
             delete[] pRect;
             pRect = NULL;
         }
-
         painter->restore();
     }
 }
@@ -207,21 +216,21 @@ void HIconPolygonItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *
 QPainterPath HIconPolygonItem::shape() const
 {
     QPainterPath path;
-    QPainterPathStroker ps;
-    ps.setWidth(150);
-
-    path.addPolygon(polygon());
-    QPainterPath path1;
-    QTransform transform;
-    path1.addPolygon(ps.createStroke(path).toFillPolygon(transform));
-    return path1;
+    QRectF rectPath;
+    //不是最好的方法 但现在只能用这个
+    QRectF polyRect = polygon().boundingRect();
+    rectPath.setX(polyRect.x() - 10);
+    rectPath.setY(polyRect.y() - 10);
+    rectPath.setWidth(polyRect.width() + 20);
+    rectPath.setHeight(polyRect.height() + 20);
+    path.addRect(rectPath);
+    return path;
 }
 
 int HIconPolygonItem::type() const
 {
     return enumPolygon;
 }
-
 
 void HIconPolygonItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
@@ -231,18 +240,12 @@ void HIconPolygonItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 
 void HIconPolygonItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-   // pyVector.append(event->scenePos());
-    //pointLocation = pointInRect(event->scenePos());
-    bStart = true;
     HIconGraphicsItem::mousePressEvent(event);
 }
 
 void HIconPolygonItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
     QPointF pt = event->scenePos() - pointStart;
-    //ushort location = pointInRect(event->scenePos());
-    //qDebug()<<"location:"<<location;
-    //pointStart = event->scenePos();
     bool bShift = false;
     if(event->modifiers() == Qt::ShiftModifier)
         bShift = true;
@@ -254,7 +257,6 @@ void HIconPolygonItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 
 void HIconPolygonItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
-    bStart = false;
     HIconGraphicsItem::mouseReleaseEvent(event);
 }
 
@@ -303,38 +305,37 @@ ushort HIconPolygonItem::pointInRect(QPointF& point)
     QPointF a = point;
     int b = 0;
     int c = 0;
-  /*  qreal halfpw = 14.00;
-    QRectF rect1,rect2,rect3,rect4;
-    rect1.setSize(QSizeF(halfpw,halfpw));
-    rect1.moveCenter(mapToScene(rect().topLeft()));
-    rect2.setSize(QSizeF(halfpw,halfpw));
-    rect2.moveCenter(mapToScene(rect().topRight()));
-    rect3.setSize(QSizeF(halfpw,halfpw));
-    rect3.moveCenter(mapToScene(rect().bottomLeft()));
-    rect4.setSize(QSizeF(halfpw,halfpw));
-    rect4.moveCenter(mapToScene(rect().bottomRight()));
+    qreal halfpw = 14.00;
+    int nRect = polygon().size();
+    QRectF *pRect = new QRectF[nRect];
+    for(int i = 0 ; i < nRect; i++)
+    {
+        pRect[i].setSize(QSizeF(halfpw,halfpw));
+        pRect[i].moveCenter(polygon().at(i));
+    }
 
     ushort location = 0;
-    if(rect1.contains(point))
-        location = 1;
-    else if(rect2.contains(point))
-        location = 2;
-    else if(rect3.contains(point))
-        location = 3;
-    else if(rect4.contains(point))
-        location = 4;
-    else
-        location = 0;
-    return location;*/
-    return 0;
+    for(int j = 0;j < nRect;j++)
+    {
+        if(pRect[j].contains(point))
+        {
+            location = j;
+            break;
+        }
+    }
+
+    if(pRect)
+    {
+        delete[] pRect;
+        pRect = NULL;
+    }
+    return location;
 }
 
 void HIconPolygonItem::setItemCursor(int location)
 {
-    if(location == 1 || location == 4)
+    if(location != 0)
         setCursor(QCursor(Qt::SizeFDiagCursor));
-    else if(location == 2 || location == 3)
-        setCursor(QCursor(Qt::SizeBDiagCursor));
     else
         setCursor(QCursor(Qt::ArrowCursor));
 }
@@ -361,6 +362,8 @@ void HIconPolygonItem::refreshBaseObj()
     QPointF p = mapToScene(polygon().boundingRect().center());
     pPolygonObj->setOX(p.x());
     pPolygonObj->setOY(p.y());
+    pPolygonObj->width = polygon().boundingRect().width();
+    pPolygonObj->height = polygon().boundingRect().height();
     pPolygonObj->setModify(true);
 }
 

@@ -54,8 +54,6 @@ public:
     ushort rectMode;
     ushort pointLocation;
     QPolygonF pyVector;
-    bool bStart;
-    QPointF pointMove;
     QPointF pointStart;
 };
 

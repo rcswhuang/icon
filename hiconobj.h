@@ -137,6 +137,8 @@ public:
 
 public:
    QVector<QPointF> pylist;
+   qreal width;
+   qreal height;
 };
 
 class HArcObj : public HBaseObj
