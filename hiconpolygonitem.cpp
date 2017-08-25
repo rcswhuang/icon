@@ -240,18 +240,41 @@ void HIconPolygonItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 
 void HIconPolygonItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
+    pointStart = event->scenePos();
+    pointLocation = pointInRect(pointStart);
     HIconGraphicsItem::mousePressEvent(event);
 }
 
 void HIconPolygonItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
-    QPointF pt = event->scenePos() - pointStart;
-    bool bShift = false;
-    if(event->modifiers() == Qt::ShiftModifier)
-        bShift = true;
+    qreal fRotateAngle = pPolygonObj->getRotateAngle();
+    QTransform transform;
+    transform.rotate(-fRotateAngle);
+    QPointF pointEnd = transform.map(event->scenePos());
+    QPointF pt = pointEnd - transform.map(pointStart);
+    transform.rotate(fRotateAngle);
+    pointStart = event->scenePos();
 
-    pPolygonObj->moveBy(pt.x(),pt.y());
-    HIconGraphicsItem::mouseMoveEvent(event);
+    if(pointLocation != 0)
+    {
+        int nRect = polygon().size();
+        if(pointLocation > nRect)
+            return;
+        QPolygonF newPolygonF = polygon();
+        if(pointLocation==1 || pointLocation==nRect)
+        {
+            newPolygonF.replace(0,pointEnd);
+            newPolygonF.replace(nRect-1,pointEnd);
+        }
+        else
+            newPolygonF.replace(pointLocation-1,pointEnd);
+        setPolygon(newPolygonF);
+    }
+    else
+    {
+        pPolygonObj->moveBy(pt.x(),pt.y());
+        HIconGraphicsItem::mouseMoveEvent(event);
+    }
 }
 
 
@@ -298,6 +321,7 @@ void HIconPolygonItem::keyPressEvent(QKeyEvent *event)
     }
     if(ndx == 0 && ndy == 0)
         return;
+    moveItemBy(ndx,ndy);
 }
 
 ushort HIconPolygonItem::pointInRect(QPointF& point)
@@ -319,7 +343,7 @@ ushort HIconPolygonItem::pointInRect(QPointF& point)
     {
         if(pRect[j].contains(point))
         {
-            location = j;
+            location = j+1;
             break;
         }
     }
@@ -342,7 +366,7 @@ void HIconPolygonItem::setItemCursor(int location)
 
 void HIconPolygonItem::setPolygon(const QPolygonF & polygon)
 {
-    if(pyVector == polygon) return;
+    if(pyVector == polygon || polygon.size() == 0) return;
     prepareGeometryChange();
     pyVector = polygon;
     refreshBaseObj();
@@ -381,10 +405,19 @@ HBaseObj* HIconPolygonItem::getItemObj()
 
 void HIconPolygonItem::moveItemBy(qreal dx,qreal dy)
 {
-
+    QPolygonF newPolygonF;// = polygon();
+    foreach(QPointF pt,polygon())
+    {
+        pt.setX(pt.x()+dx);
+        pt.setY(pt.y()+dy);
+        newPolygonF<<pt;
+    }
+    setPolygon(newPolygonF);
 }
 
 void HIconPolygonItem::resizeItem(const QPolygonF& polygonF)
 {
-
+    if(polygonF.size() > polygon().size())
+        return;
+    setPolygon(polygonF);
 }

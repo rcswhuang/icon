@@ -384,8 +384,11 @@ DRAWSHAPE HPolygonObj::getShapeType()
 
 void HPolygonObj::moveBy(qreal dx, qreal dy)
 {
-    //topLeft.setX(topLeft.x() + dx);
-    //topLeft.setY(topLeft.y() + dy);
+   foreach(QPointF pt,pylist)
+   {
+       pt.setX(pt.x()+dx);
+       pt.setY(pt.y()+dy);
+   }
 }
 
 ///////////////////////////////////////////////HArcObj//////////////////////////////////////

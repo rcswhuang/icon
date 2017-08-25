@@ -55,9 +55,9 @@ void HIconRectItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
     quint8 nFillPercentage = pRectObj->getFillPercentage(); //填充比例
     qreal fRotateAngle = pRectObj->getRotateAngle();
 
-    painter->save();
     QPointF centerPoint = boundingRect().center();
-    setTransformOriginPoint(centerPoint);
+    setTransformOriginPoint(mapToScene(centerPoint));
+    painter->save();
     QTransform transform;
     transform.rotate(fRotateAngle);
     setTransform(transform);
@@ -255,6 +255,7 @@ void HIconRectItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     {
         QRectF rectNew;
         rectNew.setTopLeft(QPointF(rect().left() + deltaX,rect().top() + deltaY));
+        //rectNew.setTopLeft(transform.map(event->scenePos()));
         rectNew.setBottomRight(rect().bottomRight());
         setRect(rectNew.normalized());
 

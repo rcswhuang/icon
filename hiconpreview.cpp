@@ -225,6 +225,14 @@ void HIconPreview::drawIcon(QPainter *p)
             QPointF pt = QPointF(pRectObj->topLeft.x()*deltaX,pRectObj->topLeft.y()*deltaY);
             p->drawRect(QRectF(pt,QSizeF(pRectObj->rectWidth*deltaX,pRectObj->rectHeight*deltaY)));
         }
+        else if(shapeType == enumPolygon)
+        {
+            HPolygonObj* pPolyObj = (HPolygonObj*)pObj;
+            QPolygonF pyTempList;
+            foreach(QPointF pt,pPolyObj->pylist)
+                pyTempList<<QPointF(pt.x()*deltaX,pt.y()*deltaY);
+            p->drawPolygon(pyTempList);
+        }
         else if(shapeType == enumArc)
         {
             HArcObj* pArcObj = (HArcObj*)pObj;

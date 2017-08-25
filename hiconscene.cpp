@@ -131,6 +131,7 @@ void HIconScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
             tempF.replace(tempF.length()-1,prePoint);
             tempF.append(prePoint);
             polygon->setPolygon(tempF);
+            addNewIconCommand(polygon->getItemObj());
         }
     }
         break;
@@ -804,16 +805,19 @@ void HIconScene::getIconGraphicsItemPointList(HIconGraphicsItem* item,QList<QPol
         QRectF rectF = pItem->rect();
         pf<<rectF.topLeft()<<rectF.topRight()<<rectF.bottomLeft()<<rectF.bottomRight();
     }
+    else if(nDrawShape == enumPolygon)
+    {
+        HIconPolygonItem* pItem = (HIconPolygonItem*)item;
+        pf = pItem->polygon();
+    }
     else if(nDrawShape == enumArc)
     {
-        //HRectObj*pRObj = (HRectObj*)pObj;
         HIconArcItem* pItem = (HIconArcItem*)item;
         QRectF rectF = pItem->rect();
         pf<<rectF.topLeft()<<rectF.topRight()<<rectF.bottomLeft()<<rectF.bottomRight();
     }
     else if(nDrawShape == enumPie)
     {
-        //HRectObj*pRObj = (HRectObj*)pObj;
         HIconPieItem* pItem = (HIconPieItem*)item;
         QRectF rectF = pItem->rect();
         pf<<rectF.topLeft()<<rectF.topRight()<<rectF.bottomLeft()<<rectF.bottomRight();
