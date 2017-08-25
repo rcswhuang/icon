@@ -277,7 +277,6 @@ void HIconScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
     else if(drawShape == enumPolygon && polygon != 0)
     {
         return;
-       //QGraphicsScene::mouseReleaseEvent(mouseEvent);
     }
     else if(drawShape == enumMulSelection && select != 0)
     {
@@ -317,7 +316,6 @@ void HIconScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent)
 
 void HIconScene::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
 {
-
     DRAWSHAPE drawShape = pIconMgr->getIconState()->getDrawShape();
     if(drawShape == enumPolygon && polygon != 0)
     {
@@ -331,7 +329,7 @@ void HIconScene::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
         else
         {
             QPolygonF tempF = polygon->polygon();
-            tempF.replace(tempF.length()-1,event->scenePos());
+            tempF.replace(tempF.size()-1,event->scenePos());
             tempF.append(tempF.at(0));
             polygon->setPolygon(tempF);
         }

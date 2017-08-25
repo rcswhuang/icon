@@ -27,6 +27,7 @@ HIconMainWindow::HIconMainWindow(HIconMgr *parent) : pIconMgr(parent)
     setWindowState(Qt::WindowMaximized);
 
     init();
+    setUnifiedTitleAndToolBarOnMac(true);
 }
 
 HIconMainWindow::~HIconMainWindow()
