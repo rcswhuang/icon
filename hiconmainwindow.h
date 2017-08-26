@@ -111,6 +111,12 @@ public slots:
     //删除
     void del();
 
+    //合适宽度
+    void fitWidth();
+
+    //合适高度
+    void fitHeight();
+
     //对齐方式--左对齐
     void alignLeft();
 

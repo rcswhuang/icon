@@ -148,8 +148,6 @@ void HIconPolygonItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *
             lgrd.setSpread(QGradient::ReflectSpread);
             QBrush brush2(lgrd);
             brush = brush2;
-            //painter->setBrush(brush2);
-            //painter->drawRect(rect());
         }
         else if(nFillStyle == Qt::RadialGradientPattern)
         {
@@ -176,7 +174,6 @@ void HIconPolygonItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *
             Qt::BrushStyle bs = (Qt::BrushStyle)nFillStyle;
             QBrush brush1(fillClr,bs);
             brush = brush1;
-            //painter->setBrush(brush);
         }
        // qreal top = rect().top()*(float)(nFillPercentage/100.00);
        // drawRectF.setTop(top);

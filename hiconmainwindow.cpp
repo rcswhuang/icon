@@ -23,7 +23,7 @@ HIconMainWindow::HIconMainWindow(HIconMgr *parent) : pIconMgr(parent)
 
     //pIconDocument = new HIconDocument;
     statusBar()->showMessage("Reday");
-    resize(800,600);
+    //resize(800,600);
     setWindowState(Qt::WindowMaximized);
 
     init();
@@ -103,7 +103,9 @@ void HIconMainWindow::createActions()
 
     //缩放项
     fitWidthAct = new QAction(QIcon(":/images/zoom_fit_width.png"), QStringLiteral("合适宽度"), this);
+    connect(fitWidthAct,SIGNAL(triggered(bool)),this,SLOT(fitWidth()));
     fitHeightAct = new QAction(QIcon(":/images/zoom_fit_height.png"), QStringLiteral("合适高度"), this);
+    connect(fitHeightAct,SIGNAL(triggered(bool)),this,SLOT(fitHeight()));
     zoomInAct = new QAction(QIcon(":/images/zoom_in.png"), QStringLiteral("放大"), this);
     zoomInAct->setCheckable(true);
     zoomOutAct = new QAction(QIcon(":/images/zoom_out.png"), QStringLiteral("缩小"), this);
@@ -555,6 +557,29 @@ void HIconMainWindow::del()
     if(QMessageBox::Cancel == QMessageBox::information(NULL,QStringLiteral("警告"),QStringLiteral("确认删除该图符吗？"),QMessageBox::Ok|QMessageBox::Cancel))
         return;
     pIconMgr->getIconFrame()->del();
+}
+
+//合适宽度
+void HIconMainWindow::fitWidth()
+{
+    if(!pIconMgr || !pIconMgr->getIconFrame())
+        return;
+
+    if(!pIconMgr || !pIconMgr->getIconFrame())
+        return;
+    double oldscale = pIconMgr->getIconFrame()->scale();
+    pIconMgr->getIconFrame()->fitWidth();
+    double newscale = pIconMgr->getIconFrame()->scale();
+    double deltascale = newscale/oldscale;
+    pIconMgr->getIconFrame()->view()->scale(deltascale,deltascale);
+    QString strScale = QString("%1%").arg(newscale*100);
+    scaleComboBox->lineEdit()->setText(strScale);
+}
+
+//合适高度
+void HIconMainWindow::fitHeight()
+{
+
 }
 
 //对齐方式--左对齐

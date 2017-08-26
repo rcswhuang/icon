@@ -4,6 +4,7 @@
 #include <QDataStream>
 #include <QProcessEnvironment>
 #include <QDir>
+#include <QScrollBar>
 #include "hiconscene.h"
 #include "hiconobjitem.h"
 #include "hiconmgr.h"
@@ -74,6 +75,17 @@ void HIconFrame::cursorChanged(const QCursor& cursor)
 
 void HIconFrame::fitWidth()
 {
+    if(!pIconMgr)
+        return;
+    int nScrollWidth = 0;
+    if(m_pView->verticalScrollBar())
+        nScrollWidth = m_pView->verticalScrollBar()->width();
+    double frameWidth = width()-nScrollWidth-m_nVRulerWidth-5;
+    double screenWidth = getLogicRect().width();
+    double ratio = frameWidth/screenWidth;
+    if(ratio<0 || qFuzzyCompare(ratio,1))
+        return;
+    scaleChangedTo(ratio*m_fScale);
 
 }
 
