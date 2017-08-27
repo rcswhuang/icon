@@ -117,6 +117,15 @@ public slots:
     //合适高度
     void fitHeight();
 
+    //放大
+    void zoomIn();
+
+    //缩小
+    void zoomOut();
+
+    //原始大小
+    //void normalSize();
+
     //对齐方式--左对齐
     void alignLeft();
 

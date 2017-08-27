@@ -9,6 +9,7 @@
 #include <QActionGroup>
 #include <QMessageBox>
 #include <QVariant>
+#include <qmath.h>
 HIconMainWindow::HIconMainWindow(HIconMgr *parent) : pIconMgr(parent)
 {
     createActions();
@@ -107,11 +108,14 @@ void HIconMainWindow::createActions()
     fitHeightAct = new QAction(QIcon(":/images/zoom_fit_height.png"), QStringLiteral("合适高度"), this);
     connect(fitHeightAct,SIGNAL(triggered(bool)),this,SLOT(fitHeight()));
     zoomInAct = new QAction(QIcon(":/images/zoom_in.png"), QStringLiteral("放大"), this);
-    zoomInAct->setCheckable(true);
+    //zoomInAct->setCheckable(true);
+    connect(zoomInAct,SIGNAL(triggered(bool)),this,SLOT(zoomIn()));
     zoomOutAct = new QAction(QIcon(":/images/zoom_out.png"), QStringLiteral("缩小"), this);
-    zoomOutAct->setCheckable(true);
+    //zoomOutAct->setCheckable(true);
+    connect(zoomOutAct,SIGNAL(triggered(bool)),this,SLOT(zoomOut()));
     zoomOriAct = new QAction(QIcon(":/images/zoom_original.png"), QStringLiteral("自由缩放"), this);
-    zoomOriAct->setCheckable(true);
+    //zoomOriAct->setCheckable(true);
+
     scaleComboBox = new QComboBox(this);
     QIntValidator *validator = new QIntValidator(10,500);
     scaleComboBox->setValidator(validator);
@@ -565,8 +569,6 @@ void HIconMainWindow::fitWidth()
     if(!pIconMgr || !pIconMgr->getIconFrame())
         return;
 
-    if(!pIconMgr || !pIconMgr->getIconFrame())
-        return;
     double oldscale = pIconMgr->getIconFrame()->scale();
     pIconMgr->getIconFrame()->fitWidth();
     double newscale = pIconMgr->getIconFrame()->scale();
@@ -582,14 +584,44 @@ void HIconMainWindow::fitHeight()
     if(!pIconMgr || !pIconMgr->getIconFrame())
         return;
 
-    if(!pIconMgr || !pIconMgr->getIconFrame())
-        return;
     double oldscale = pIconMgr->getIconFrame()->scale();
     pIconMgr->getIconFrame()->fitHeight();
     double newscale = pIconMgr->getIconFrame()->scale();
     double deltascale = newscale/oldscale;
     pIconMgr->getIconFrame()->view()->scale(deltascale,deltascale);
     QString strScale = QString("%1%").arg(newscale*100);
+    scaleComboBox->lineEdit()->setText(strScale);
+}
+
+void HIconMainWindow::zoomIn()
+{
+    if(!pIconMgr || !pIconMgr->getIconFrame())
+        return;
+
+    double deltascale = 1.25;
+    double oldscale = pIconMgr->getIconFrame()->scale();
+    if(oldscale>12)
+        return;
+    double newscale = qFloor(deltascale*oldscale*100);
+    pIconMgr->getIconFrame()->scaleChangedTo(newscale/100);
+    pIconMgr->getIconFrame()->view()->scale(deltascale,deltascale);
+    QString strScale = QString("%1%").arg(newscale);
+    scaleComboBox->lineEdit()->setText(strScale);
+}
+
+void HIconMainWindow::zoomOut()
+{
+    if(!pIconMgr || !pIconMgr->getIconFrame())
+        return;
+
+    double deltascale = 0.8;
+    double oldscale = pIconMgr->getIconFrame()->scale();
+    if(oldscale<0.1)
+        return;
+    double newscale = qFloor(deltascale*oldscale*100);
+    pIconMgr->getIconFrame()->scaleChangedTo(newscale/100);
+    pIconMgr->getIconFrame()->view()->scale(deltascale,deltascale);
+    QString strScale = QString("%1%").arg(newscale);
     scaleComboBox->lineEdit()->setText(strScale);
 }
 
@@ -765,7 +797,7 @@ void HIconMainWindow::scaleChanged(QString strScale)
     double deltascale = newscale/oldscale;
     pIconMgr->getIconFrame()->view()->scale(deltascale,deltascale);
     strScale = QString("%1%").arg(pIconMgr->getIconFrame()->scale()*100);
-    scaleComboBox->setCurrentText(strScale);
+    scaleComboBox->lineEdit()->setText(strScale);
 }
 
 void HIconMainWindow::scaleChanged()

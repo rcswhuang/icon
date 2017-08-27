@@ -73,6 +73,7 @@ enum DRAWSHAPE
     enumEllipse,
     enumArc,
     enumPolygon,
+    enumPolyline,
     enumCircle,
     enumPie,
     enumText

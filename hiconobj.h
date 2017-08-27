@@ -23,7 +23,6 @@ public:
     virtual void clone(HBaseObj* obj);
 
     virtual DRAWSHAPE getShapeType();
-
     virtual void moveBy(qreal dx,qreal dy);
 
 public:
@@ -74,7 +73,6 @@ public:
     virtual void clone(HBaseObj* obj);
 
     virtual DRAWSHAPE getShapeType();
-
     virtual void moveBy(qreal dx,qreal dy);
 public:
     QPointF topLeft;
@@ -105,7 +103,6 @@ public:
     virtual void clone(HBaseObj* obj);
 
     virtual DRAWSHAPE getShapeType();
-
     virtual void moveBy(qreal dx,qreal dy);
 
 public:
@@ -115,7 +112,7 @@ public:
     double rectHeight;
 };
 
-
+//多边形
 class HPolygonObj : public HBaseObj
 {
 public:
@@ -131,8 +128,30 @@ public:
     virtual void clone(HBaseObj* obj);
 
     virtual DRAWSHAPE getShapeType();
+    virtual void moveBy(qreal dx,qreal dy);
 
+public:
+   QVector<QPointF> pylist;
+   qreal width;
+   qreal height;
+};
 
+//折线
+class HPolylineObj : public HBaseObj
+{
+public:
+    HPolylineObj();
+    virtual ~HPolylineObj();
+    //xml文件读写
+    virtual void readXml(QDomElement* data);
+    virtual void writeXml(QDomElement* data);
+
+    virtual QString TagName();
+    //拷贝克隆
+    virtual void copyTo(HBaseObj* obj);
+    virtual void clone(HBaseObj* obj);
+
+    virtual DRAWSHAPE getShapeType();
     virtual void moveBy(qreal dx,qreal dy);
 
 public:
@@ -163,7 +182,6 @@ public:
     virtual void clone(HBaseObj* obj);
 
     virtual DRAWSHAPE getShapeType();
-
     virtual void moveBy(qreal dx,qreal dy);
 
 public:
@@ -204,7 +222,6 @@ public:
     virtual void clone(HBaseObj* obj);
 
     virtual DRAWSHAPE getShapeType();
-
     virtual void moveBy(qreal dx,qreal dy);
 
 public:
