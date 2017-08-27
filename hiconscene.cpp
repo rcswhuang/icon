@@ -124,6 +124,7 @@ void HIconScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
             polygon->setItemObj(pObj);
             pIconMgr->getIconState()->appendObj(pObj);
             addItem(polygon);
+            addNewIconCommand(polygon->getItemObj());
         }
         else
         {
@@ -131,7 +132,7 @@ void HIconScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
             tempF.replace(tempF.length()-1,prePoint);
             tempF.append(prePoint);
             polygon->setPolygon(tempF);
-            addNewIconCommand(polygon->getItemObj());
+            //addNewIconCommand(polygon->getItemObj());
         }
     }
         break;

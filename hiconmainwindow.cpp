@@ -579,7 +579,18 @@ void HIconMainWindow::fitWidth()
 //合适高度
 void HIconMainWindow::fitHeight()
 {
+    if(!pIconMgr || !pIconMgr->getIconFrame())
+        return;
 
+    if(!pIconMgr || !pIconMgr->getIconFrame())
+        return;
+    double oldscale = pIconMgr->getIconFrame()->scale();
+    pIconMgr->getIconFrame()->fitHeight();
+    double newscale = pIconMgr->getIconFrame()->scale();
+    double deltascale = newscale/oldscale;
+    pIconMgr->getIconFrame()->view()->scale(deltascale,deltascale);
+    QString strScale = QString("%1%").arg(newscale*100);
+    scaleComboBox->lineEdit()->setText(strScale);
 }
 
 //对齐方式--左对齐

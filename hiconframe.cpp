@@ -80,18 +80,30 @@ void HIconFrame::fitWidth()
     int nScrollWidth = 0;
     if(m_pView->verticalScrollBar())
         nScrollWidth = m_pView->verticalScrollBar()->width();
+    double wd = width();
     double frameWidth = width()-nScrollWidth-m_nVRulerWidth-5;
     double screenWidth = getLogicRect().width();
     double ratio = frameWidth/screenWidth;
     if(ratio<0 || qFuzzyCompare(ratio,1))
         return;
-    scaleChangedTo(ratio*m_fScale);
+    scaleChangedTo(ratio);
 
 }
 
 void HIconFrame::fitHeight()
 {
+    if(!pIconMgr)
+        return;
+    int nScrollHeight = 0;
+    if(m_pView->horizontalScrollBar())
+        nScrollHeight = m_pView->horizontalScrollBar()->height();
 
+    double frameHeight = height()-nScrollHeight-m_nHRulerHeight-5;
+    double screenHeight = getLogicRect().height();
+    double ratio = frameHeight/screenHeight;
+    if(ratio<0 || qFuzzyCompare(ratio,1))
+        return;
+    scaleChangedTo(ratio);
 }
 
 void HIconFrame::cut()
