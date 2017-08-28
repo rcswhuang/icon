@@ -217,6 +217,7 @@ private:
     QToolBar *editToolBar;
     QToolBar *zoomToolBar;
     QToolBar *drawToolBar;
+    QToolBar *shapeToolBar;
     QToolBar *otherBar;
 
     //文件单元

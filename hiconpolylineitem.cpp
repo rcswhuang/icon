@@ -1,7 +1,7 @@
-#include "hiconpolylineitem.h"
-
+﻿#include "hiconpolylineitem.h"
+/*
 HIconPolylineItem::HIconPolylineItem()
 {
 
 }
-
+*/

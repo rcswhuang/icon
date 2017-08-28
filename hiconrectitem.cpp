@@ -55,14 +55,17 @@ void HIconRectItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
     quint8 nFillPercentage = pRectObj->getFillPercentage(); //填充比例
     qreal fRotateAngle = pRectObj->getRotateAngle();
 
+
     QPointF centerPoint = boundingRect().center();
-    setTransformOriginPoint(mapToScene(centerPoint));
-    painter->save();
+    //setTransformOriginPoint(centerPoint);
+
     QTransform transform;
-    transform.rotate(fRotateAngle);
+    transform.translate(centerPoint.x(),centerPoint.y());
+    transform.rotate(fRotateAngle,Qt::ZAxis);
+    transform.translate(-centerPoint.x(),-centerPoint.y());
     setTransform(transform);
-
-
+    //setRotation(fRotateAngle);
+    painter->save();
     QPen pen = QPen(penClr);
     pen.setStyle(penStyle);
     pen.setWidth(penWidth);
@@ -241,10 +244,15 @@ void HIconRectItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
 void HIconRectItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
     qreal fRotateAngle = pRectObj->getRotateAngle();
+    QPointF centerPoint = boundingRect().center();
     QTransform transform;
+    transform.translate(centerPoint.x(),centerPoint.y());
     transform.rotate(-fRotateAngle);
     QPointF pt = transform.map(event->scenePos()) - transform.map(pointStart);
     transform.rotate(fRotateAngle);
+    transform.translate(-centerPoint.x(),-centerPoint.y());
+
+
     qreal deltaX =pt.x();
     qreal deltaY = pt.y();
     pointStart = event->scenePos();

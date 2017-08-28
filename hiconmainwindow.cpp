@@ -127,12 +127,39 @@ void HIconMainWindow::createActions()
     connect(scaleComboBox,SIGNAL(currentIndexChanged(QString)),this,SLOT(scaleChanged(QString)));
     connect(scaleComboBox->lineEdit(),SIGNAL(editingFinished()),this,SLOT(scaleChanged()));
 
-    toTopAct = new QAction(QIcon(":/images/move_forward.png"),QStringLiteral("置顶"),this);
+    toTopAct = new QAction(QIcon(":/images/shape_move_front.png"),QStringLiteral("置顶"),this);
     connect(toTopAct,SIGNAL(triggered(bool)),this,SLOT(bringToTop()));
 
-    toBottomAct = new QAction(QIcon(":/images/move_backward.png"),QStringLiteral("置底"),this);
+    toBottomAct = new QAction(QIcon(":/images/shape_move_back.png"),QStringLiteral("置底"),this);
     connect(toBottomAct,SIGNAL(triggered(bool)),this,SLOT(bringToBottom()));
 
+
+    alignLeftAct = new QAction(QIcon(":/images/shape_align_left.png"),QStringLiteral("左对齐"),this);
+    connect(alignLeftAct,SIGNAL(triggered(bool)),this,SLOT(alignLeft()));
+    alignVCenterAct = new QAction(QIcon(":/images/shape_align_middle.png"),QStringLiteral("纵向居中对齐"),this);
+    connect(alignVCenterAct,SIGNAL(triggered(bool)),this,SLOT(alignVCenter()));
+    alignRightAct = new QAction(QIcon(":/images/shape_align_right.png"),QStringLiteral("右对齐"),this);
+    connect(alignRightAct,SIGNAL(triggered(bool)),this,SLOT(alignRight()));
+
+    alignTopAct = new QAction(QIcon(":/images/shape_align_top.png"),QStringLiteral("上对齐"),this);
+    connect(alignTopAct,SIGNAL(triggered(bool)),this,SLOT(alignTop()));
+    alignHCenterAct = new QAction(QIcon(":/images/shape_align_center.png"),QStringLiteral("横向居中对齐"),this);
+    connect(alignHCenterAct,SIGNAL(triggered(bool)),this,SLOT(alignHCenter()));
+    alignBottomAct = new QAction(QIcon(":/images/shape_align_bottom.png"),QStringLiteral("下对齐"),this);;
+    connect(alignBottomAct,SIGNAL(triggered(bool)),this,SLOT(alignBottom()));
+
+    //同等单元
+   /* QAction *equlHSpaceAct;
+    QAction *equlVSpaceAct;
+    QAction *equlWidthAct;
+    QAction *equlHeightAct;
+    QAction *equlSizeAct;
+*/
+    //组合单元
+    groupObjAct = new QAction(QIcon(":/images/group.png"),QStringLiteral("组合"),this);;
+    connect(groupObjAct,SIGNAL(triggered(bool)),this,SLOT(groupObj()));
+    ungroupObjAct = new QAction(QIcon(":/images/ungroup.png"),QStringLiteral("解除组合"),this);;
+    connect(ungroupObjAct,SIGNAL(triggered(bool)),this,SLOT(ungroupObj()));;
 
 
     //绘制项
@@ -247,8 +274,6 @@ void HIconMainWindow::createToolBars()
 
     zoomToolBar = addToolBar(tr("zoomBar"));
     zoomToolBar->setIconSize(QSize(32,32));
-    zoomToolBar->addAction(toTopAct);
-    zoomToolBar->addAction(toBottomAct);
     zoomToolBar->addAction(fitWidthAct);
     zoomToolBar->addAction(fitHeightAct);
     zoomToolBar->addAction(zoomInAct);
@@ -257,6 +282,7 @@ void HIconMainWindow::createToolBars()
     zoomToolBar->addWidget(scaleComboBox);
 
     drawToolBar = addToolBar(tr("drawToolBar"));
+    drawToolBar->setIconSize(QSize(32,32));
     drawToolBar->addAction(lineAct);
     //drawToolBar->addAction(circleAct);
     drawToolBar->addAction(rectAct);
@@ -265,6 +291,23 @@ void HIconMainWindow::createToolBars()
     drawToolBar->addAction(arcAct);
     drawToolBar->addAction(fanAct);
     drawToolBar->addAction(textAct);
+
+    shapeToolBar = new QToolBar(tr("shapeToolBar"),this);
+    shapeToolBar->setIconSize(QSize(32,32));
+    shapeToolBar->addAction(groupObjAct);
+    shapeToolBar->addAction(ungroupObjAct);
+    shapeToolBar->addAction(alignLeftAct);
+    shapeToolBar->addAction(alignVCenterAct);
+    shapeToolBar->addAction(alignRightAct);
+    shapeToolBar->addAction(alignTopAct);
+    shapeToolBar->addAction(alignHCenterAct);
+    shapeToolBar->addAction(alignBottomAct);
+    shapeToolBar->addAction(toTopAct);
+    shapeToolBar->addAction(toBottomAct);
+    addToolBar(Qt::BottomToolBarArea,shapeToolBar);
+
+
+
 
     otherBar = addToolBar(tr("other"));
     otherBar->addAction(selectAct);
