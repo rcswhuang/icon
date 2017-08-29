@@ -323,9 +323,6 @@ void HIconPolygonItem::keyPressEvent(QKeyEvent *event)
 
 ushort HIconPolygonItem::pointInRect(QPointF& point)
 {
-    QPointF a = point;
-    int b = 0;
-    int c = 0;
     qreal halfpw = 14.00;
     int nRect = polygon().size();
     QRectF *pRect = new QRectF[nRect];

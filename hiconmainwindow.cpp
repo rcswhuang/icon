@@ -136,6 +136,7 @@ void HIconMainWindow::createActions()
 
     alignLeftAct = new QAction(QIcon(":/images/shape_align_left.png"),QStringLiteral("左对齐"),this);
     connect(alignLeftAct,SIGNAL(triggered(bool)),this,SLOT(alignLeft()));
+    alignLeftAct->setEnabled(false);
     alignVCenterAct = new QAction(QIcon(":/images/shape_align_middle.png"),QStringLiteral("纵向居中对齐"),this);
     connect(alignVCenterAct,SIGNAL(triggered(bool)),this,SLOT(alignVCenter()));
     alignRightAct = new QAction(QIcon(":/images/shape_align_right.png"),QStringLiteral("右对齐"),this);

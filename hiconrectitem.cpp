@@ -57,12 +57,13 @@ void HIconRectItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
 
 
     QPointF centerPoint = boundingRect().center();
-    //setTransformOriginPoint(centerPoint);
+    //qDebug()<<centerPoint.x()<<centerPoint.y();
+    setTransformOriginPoint(centerPoint);
 
     QTransform transform;
-    transform.translate(centerPoint.x(),centerPoint.y());
+    //transform.translate(centerPoint.x(),centerPoint.y());
     transform.rotate(fRotateAngle,Qt::ZAxis);
-    transform.translate(-centerPoint.x(),-centerPoint.y());
+    //transform.translate(-centerPoint.x(),-centerPoint.y());
     setTransform(transform);
     //setRotation(fRotateAngle);
     painter->save();
@@ -244,13 +245,13 @@ void HIconRectItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
 void HIconRectItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
     qreal fRotateAngle = pRectObj->getRotateAngle();
-    QPointF centerPoint = boundingRect().center();
+ //   QPointF centerPoint = boundingRect().center();
     QTransform transform;
-    transform.translate(centerPoint.x(),centerPoint.y());
+    //transform.translate(centerPoint.x(),centerPoint.y());
     transform.rotate(-fRotateAngle);
     QPointF pt = transform.map(event->scenePos()) - transform.map(pointStart);
     transform.rotate(fRotateAngle);
-    transform.translate(-centerPoint.x(),-centerPoint.y());
+    //transform.translate(-centerPoint.x(),-centerPoint.y());
 
 
     qreal deltaX =pt.x();

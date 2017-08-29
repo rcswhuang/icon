@@ -15,7 +15,7 @@ class QStyleOptionGraphicsItem;
 class QKeyEvent;
 class QGraphicsSceneMouseEvent;
 
-/*
+
 class HIconPolylineItem : public HIconGraphicsItem
 {
 public:
@@ -54,5 +54,5 @@ public:
     QPolygonF pyVector;
     QPointF pointStart;
 };
-*/
+
 #endif // HICONPOLYLINEITEM_H
