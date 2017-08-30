@@ -112,6 +112,37 @@ public:
     double rectHeight;
 };
 
+//圆形
+class HCircleObj : public HBaseObj
+{
+public:
+    HCircleObj();
+    virtual ~HCircleObj();
+
+    //二进制读写
+    virtual void readData(QDataStream* data);
+    virtual void writeData(QDataStream* data);
+
+
+    //xml文件读写
+    virtual void readXml(QDomElement* data);
+    virtual void writeXml(QDomElement* data);
+
+    virtual QString TagName();
+    //拷贝克隆
+    virtual void copyTo(HBaseObj* obj);
+    virtual void clone(HBaseObj* obj);
+
+    virtual DRAWSHAPE getShapeType();
+    virtual void moveBy(qreal dx,qreal dy);
+
+public:
+    QPointF topLeft;
+    //QPointF rectTop;
+    double rectWidth;
+    double rectHeight;
+};
+
 //多边形
 class HPolygonObj : public HBaseObj
 {

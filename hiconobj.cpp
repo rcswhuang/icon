@@ -340,6 +340,99 @@ void HEllipseObj::moveBy(qreal dx, qreal dy)
     topLeft.setY(topLeft.y() + dy);
     bModify = true;
 }
+
+///////////////////////////////////HCircleObj//////////////////////////////////////////////////
+HCircleObj::HCircleObj()
+{
+    rectHeight = 0;
+    rectWidth = 0;
+}
+
+HCircleObj::~HCircleObj()
+{
+
+}
+
+//二进制读写
+void HCircleObj::readData(QDataStream* data)
+{
+    if(!data) return;
+    HBaseObj::readData(data);
+    qreal qr;
+    *data>>qr;
+    topLeft.setX(qr);
+    *data>>qr;
+    topLeft.setY(qr);
+    *data>>qr;
+    rectWidth = qr;
+    *data>>qr;
+    rectHeight = qr;
+}
+
+void HCircleObj::writeData(QDataStream* data)
+{
+    if(!data) return;
+    HBaseObj::writeData(data);
+    *data<<(qreal)topLeft.x();
+    *data<<(qreal)topLeft.y();
+    *data<<(double)rectWidth;
+    *data<<(double)rectHeight;
+}
+
+void HCircleObj::readXml(QDomElement* dom)
+{
+    if(!dom) return;
+    HBaseObj::readXml(dom);
+    topLeft.setX(dom->attribute("topLeftx").toDouble());
+    topLeft.setY(dom->attribute("topLefty").toDouble());
+    rectWidth = dom->attribute("rectWidth").toInt();
+    rectHeight = dom->attribute("rectHeight").toInt();
+}
+
+void HCircleObj::writeXml(QDomElement* dom)
+{
+    if(!dom)return;
+    HBaseObj::writeXml(dom);
+    dom->setAttribute("topLeftx",topLeft.x());
+    dom->setAttribute("topLefty",topLeft.y());
+    dom->setAttribute("rectWidth",rectWidth);
+    dom->setAttribute("rectHeight",rectHeight);
+}
+
+QString HCircleObj::TagName()
+{
+    return "Circle";
+}
+
+//拷贝克隆
+void HCircleObj::copyTo(HBaseObj* obj)
+{
+    HEllipseObj* ob = (HEllipseObj*)obj;
+    ob->topLeft = topLeft;
+    ob->rectWidth = rectWidth;
+    ob->rectHeight = rectHeight;
+}
+
+void HCircleObj::clone(HBaseObj *obj)
+{
+    if(!obj) return;
+    HBaseObj::clone(obj);
+    copyTo(obj);
+}
+
+DRAWSHAPE HCircleObj::getShapeType()
+{
+    return enumCircle;
+}
+
+void HCircleObj::moveBy(qreal dx, qreal dy)
+{
+    topLeft.setX(topLeft.x() + dx);
+    topLeft.setY(topLeft.y() + dy);
+    bModify = true;
+}
+
+
 ///////////////////////////////////////////////HPolygonObj//////////////////////////////////////
 HPolygonObj::HPolygonObj()
 {
@@ -390,6 +483,58 @@ void HPolygonObj::moveBy(qreal dx, qreal dy)
        pt.setY(pt.y()+dy);
    }
 }
+
+///////////////////////////////////////////////HPolylineObj//////////////////////////////////////
+HPolylineObj::HPolylineObj()
+{
+    pylist.clear();
+}
+
+HPolylineObj::~HPolylineObj()
+{
+
+}
+
+void HPolylineObj::readXml(QDomElement* data)
+{
+
+}
+
+void HPolylineObj::writeXml(QDomElement* data)
+{
+
+}
+
+QString HPolylineObj::TagName()
+{
+    return "Polyline";
+}
+
+//拷贝克隆
+void HPolylineObj::copyTo(HBaseObj* obj)
+{
+    HBaseObj::copyTo(obj);
+}
+
+void HPolylineObj::clone(HBaseObj *obj)
+{
+
+}
+
+DRAWSHAPE HPolylineObj::getShapeType()
+{
+    return enumPolyline;
+}
+
+void HPolylineObj::moveBy(qreal dx, qreal dy)
+{
+   foreach(QPointF pt,pylist)
+   {
+       pt.setX(pt.x()+dx);
+       pt.setY(pt.y()+dy);
+   }
+}
+
 
 ///////////////////////////////////////////////HArcObj//////////////////////////////////////
 HArcObj::HArcObj()
