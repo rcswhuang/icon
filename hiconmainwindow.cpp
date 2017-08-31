@@ -206,6 +206,7 @@ void HIconMainWindow::createActions()
     actionGroup->addAction(lineAct);
     actionGroup->addAction(rectAct);
     actionGroup->addAction(ellipseAct);
+    actionGroup->addAction(circleAct);
     actionGroup->addAction(hexagonAct);
     actionGroup->addAction(arcAct);
     actionGroup->addAction(fanAct);
@@ -285,9 +286,9 @@ void HIconMainWindow::createToolBars()
     drawToolBar = addToolBar(tr("drawToolBar"));
     drawToolBar->setIconSize(QSize(32,32));
     drawToolBar->addAction(lineAct);
-    //drawToolBar->addAction(circleAct);
     drawToolBar->addAction(rectAct);
     drawToolBar->addAction(ellipseAct);
+    drawToolBar->addAction(circleAct);
     drawToolBar->addAction(hexagonAct);
     drawToolBar->addAction(arcAct);
     drawToolBar->addAction(fanAct);
@@ -452,7 +453,7 @@ void HIconMainWindow::drawRectangle()
 
 void HIconMainWindow::drawCircle()
 {
-
+    pIconMgr->getIconState()->setDrawShape(enumCircle);
 }
 
 void HIconMainWindow::drawHexagon()

@@ -5,7 +5,7 @@
 #include "hiconapi.h"
 #include "hicongraphicsitem.h"
 class HBaseObj;
-class HEllipseObj;
+class HCircleObj;
 class QObject;
 class QRectF;
 class QPainterPath;
@@ -45,7 +45,7 @@ public:
     virtual void resizeItem(const QPolygonF& polygonF);
 public:
     QRectF rectF;
-    HEllipseObj* pEllipseObj;
+    HCircleObj* pCircleObj;
     ushort rectMode;
     ushort pointLocation;
     QPointF pointStart;

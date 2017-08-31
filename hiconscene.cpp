@@ -4,6 +4,7 @@
 #include "hiconlineitem.h"
 #include "hiconrectitem.h"
 #include "hiconellipseitem.h"
+#include "hiconcircleitem.h"
 #include "hiconpolygonitem.h"
 #include "hiconarcitem.h"
 #include "hiconpieitem.h"
@@ -23,6 +24,7 @@ HIconScene::HIconScene(HIconMgr* iconMgr)
     line = 0;
     rectangle = 0;
     ellipse = 0;
+    circle = 0;
     polygon = 0;
     arc = 0;
     pie = 0;
@@ -110,6 +112,17 @@ void HIconScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
         ellipse->setItemObj(pObj);
         pIconMgr->getIconState()->appendObj(pObj);
         addItem(ellipse);
+        addNewIconCommand(pObj);
+    }
+        break;
+    case enumCircle:
+    {
+        QRectF tempF = QRectF(prePoint,prePoint).normalized();
+        circle = new HIconCircleItem(tempF);
+        HBaseObj *pObj = pIconMgr->getIconTemplate()->getSymbol()->newObj(enumCircle);
+        circle->setItemObj(pObj);
+        pIconMgr->getIconState()->appendObj(pObj);
+        addItem(circle);
         addNewIconCommand(pObj);
     }
         break;
@@ -202,6 +215,13 @@ void HIconScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
         QRectF newRect = QRectF(prePoint,curPoint).normalized();
         ellipse->setRect(newRect);
     }
+    else if(drawShape == enumCircle && circle != 0)
+    {
+        qreal dx = qAbs(curPoint.x() - prePoint.x());
+        qreal dy = qAbs(curPoint.y() - prePoint.x());
+        QRectF newRect = QRectF(prePoint,QSize(qMin(dx,dy),qMin(dx,dy)));
+        circle->setRect(newRect);
+    }
     else if(drawShape == enumPolygon && polygon != 0)
     {
         QPolygonF tempF = polygon->polygon();
@@ -256,6 +276,12 @@ void HIconScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
         ellipse->getItemObj()->setModify(true);
         emit itemInserted(ellipse->type());
         ellipse = 0;
+    }
+    else if(drawShape == enumCircle && circle != 0)
+    {
+        circle->getItemObj()->setModify(true);
+        emit itemInserted(circle->type());
+        circle = 0;
     }
     else if(drawShape == enumArc && arc !=0)
     {

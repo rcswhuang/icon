@@ -73,7 +73,7 @@ void HPropertyDlg::initTab()
         ui->groupBox_8->hide();
         ui->groupBox_8->hide();
     }
-    else if(drawShape == enumRectangle || drawShape == enumEllipse || drawShape == enumPolygon)
+    else if(drawShape == enumRectangle || drawShape == enumEllipse ||drawShape == enumCircle || drawShape == enumPolyline || drawShape == enumPolygon)
     {
         ui->propertyTab->removeTab(0);//文字
         ui->groupBox_2->hide();
@@ -149,10 +149,30 @@ void HPropertyDlg::initBaseTab()
         ui->xCoord_width->setValue(pObj->rectWidth);
         ui->yCoord_height->setValue(pObj->rectHeight);
     }
+    else if(pCurObj->getShapeType() == DRAWSHAPE::enumCircle)
+    {
+        ui->objType->setText(QStringLiteral("圆"));
+        HCircleObj* pObj = (HCircleObj*)pCurObj;
+        ui->x_rotate->setValue(pObj->getRotateAngle());
+        ui->xCoord->setValue(pObj->getOX());
+        ui->yCoord->setValue(pObj->getOY());
+        ui->xCoord_width->setValue(pObj->rectWidth);
+        ui->yCoord_height->setValue(pObj->rectHeight);
+    }
     else if(pCurObj->getShapeType() == DRAWSHAPE::enumPolygon)
     {
         ui->objType->setText(QStringLiteral("多边形"));
         HPolygonObj* pObj = (HPolygonObj*)pCurObj;
+        ui->x_rotate->setValue(pObj->getRotateAngle());
+        ui->xCoord->setValue(pObj->getOX());
+        ui->yCoord->setValue(pObj->getOY());
+        ui->xCoord_width->setValue(pObj->width);
+        ui->yCoord_height->setValue(pObj->height);
+    }
+    else if(pCurObj->getShapeType() == DRAWSHAPE::enumPolyline)
+    {
+        ui->objType->setText(QStringLiteral("折线"));
+        HPolylineObj* pObj = (HPolylineObj*)pCurObj;
         ui->x_rotate->setValue(pObj->getRotateAngle());
         ui->xCoord->setValue(pObj->getOX());
         ui->yCoord->setValue(pObj->getOY());
