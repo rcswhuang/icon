@@ -22,7 +22,7 @@ HIconCircleItem::HIconCircleItem(const QRectF &rectF, HIconGraphicsItem *parent)
     setFlag(QGraphicsItem::ItemIsSelectable,true);
     setFlag(QGraphicsItem::ItemSendsGeometryChanges,true);
     setFlag(QGraphicsItem::ItemIsFocusable,true);
-    pEllipseObj = NULL;
+    pCircleObj = NULL;
 }
 
 QRectF HIconCircleItem::boundingRect() const
@@ -40,19 +40,19 @@ void HIconCircleItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *o
     QRectF mainRectF = rect();
     QRectF drawRectF = mainRectF;
 
-    QColor penClr = QColor(pEllipseObj->getLineColorName()); //线条颜色
-    int penWidth = pEllipseObj->getLineWidth();//线条宽度
-    Qt::PenStyle penStyle = pEllipseObj->getLineStyle(); //线条形状
-    Qt::PenCapStyle capStyle = pEllipseObj->getLineCapStyle(); //线条角度
+    QColor penClr = QColor(pCircleObj->getLineColorName()); //线条颜色
+    int penWidth = pCircleObj->getLineWidth();//线条宽度
+    Qt::PenStyle penStyle = pCircleObj->getLineStyle(); //线条形状
+    Qt::PenCapStyle capStyle = pCircleObj->getLineCapStyle(); //线条角度
 
-    bool bFrameSee = pEllipseObj->getFrameSee();//边框可见
-    quint8 nFillWay = pEllipseObj->getFillWay();//填充选择
-    quint8 nFillStyle = pEllipseObj->getFillStyle(); //填充风格
-    quint8 nTransparency = pEllipseObj->getTransparency(); //透明度
-    quint8 nFillDir = pEllipseObj->getFillDirection();//填充方向
-    QColor fillClr = QColor(pEllipseObj->getFillColorName());//填充颜色
+    bool bFrameSee = pCircleObj->getFrameSee();//边框可见
+    quint8 nFillWay = pCircleObj->getFillWay();//填充选择
+    quint8 nFillStyle = pCircleObj->getFillStyle(); //填充风格
+    quint8 nTransparency = pCircleObj->getTransparency(); //透明度
+    quint8 nFillDir = pCircleObj->getFillDirection();//填充方向
+    QColor fillClr = QColor(pCircleObj->getFillColorName());//填充颜色
     //quint8 nFillPercentage = pEllipseObj->getFillPercentage(); //填充比例
-    qreal fRotateAngle = pEllipseObj->getRotateAngle();
+    qreal fRotateAngle = pCircleObj->getRotateAngle();
     painter->save();
     QPointF centerPoint = boundingRect().center();
     setTransformOriginPoint(centerPoint);
@@ -230,7 +230,7 @@ void HIconCircleItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
 void HIconCircleItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
 
-    qreal fRotateAngle = pEllipseObj->getRotateAngle();
+    qreal fRotateAngle = pCircleObj->getRotateAngle();
     QTransform transform;
     transform.rotate(-fRotateAngle);
     QPointF pt = transform.map(event->scenePos()) - transform.map(pointStart);
@@ -271,7 +271,7 @@ void HIconCircleItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     }
     else
     {
-        pEllipseObj->moveBy(pt.x(),pt.y());
+        pCircleObj->moveBy(pt.x(),pt.y());
         HIconGraphicsItem::mouseMoveEvent(event);
     }
 }
@@ -340,13 +340,13 @@ QRectF HIconCircleItem::rect()const
 
 void HIconCircleItem::setItemObj(HBaseObj *pObj)
 {
-    pEllipseObj = (HEllipseObj*)pObj;
+    pCircleObj = (HCircleObj*)pObj;
 }
 
 HBaseObj* HIconCircleItem::getItemObj()
 {
-    if(pEllipseObj)
-        return pEllipseObj;
+    if(pCircleObj)
+        return pCircleObj;
     return NULL;
 }
 
@@ -368,13 +368,13 @@ void HIconCircleItem::resizeItem(const QPolygonF& polygonF)
 
 void HIconCircleItem::refreshBaseObj()
 {
-    pEllipseObj->topLeft = mapToScene(rect().topLeft());
-    pEllipseObj->rectWidth = rect().width();
-    pEllipseObj->rectHeight = rect().height();
+    pCircleObj->topLeft = mapToScene(rect().topLeft());
+    pCircleObj->rectWidth = rect().width();
+    pCircleObj->rectHeight = rect().height();
     QPointF p = mapToScene(rect().center());
-    pEllipseObj->setOX(p.x());
-    pEllipseObj->setOY(p.y());
-    pEllipseObj->setModify(true);
+    pCircleObj->setOX(p.x());
+    pCircleObj->setOY(p.y());
+    pCircleObj->setModify(true);
 }
 
 ushort HIconCircleItem::pointInRect(QPointF& point)

@@ -48,7 +48,7 @@ public:
     virtual void resizeItem(const QPolygonF& polygonF);
 
 public:
-    HPolylineObj* pPolyglineObj;
+    HPolylineObj* pPolylineObj;
     ushort rectMode;
     ushort pointLocation;
     QPolygonF pyVector;

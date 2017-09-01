@@ -11,7 +11,7 @@
 #include <QPainter>
 
 HIconPolylineItem::HIconPolylineItem(HIconGraphicsItem *parent)
-    :HIconPolylineItem(parent)
+    :HIconGraphicsItem(parent)
 {
 
 }
@@ -23,7 +23,7 @@ HIconPolylineItem::HIconPolylineItem(const QPolygonF &polygonF, HIconGraphicsIte
     setFlag(QGraphicsItem::ItemIsSelectable,true);
     setFlag(QGraphicsItem::ItemSendsGeometryChanges,true);
     setFlag(QGraphicsItem::ItemIsFocusable,true);
-    pPolygonObj = new HPolygonObj();
+    pPolylineObj = new HPolylineObj();
 }
 
 QRectF HIconPolylineItem::boundingRect() const
@@ -38,19 +38,19 @@ bool HIconPolylineItem::contains(const QPointF &point) const
 
 void HIconPolylineItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    QColor penClr = QColor(pPolygonObj->getLineColorName()); //线条颜色
-    int penWidth = pPolygonObj->getLineWidth();//线条宽度
-    Qt::PenStyle penStyle = pPolygonObj->getLineStyle(); //线条形状
-    Qt::PenCapStyle capStyle = pPolygonObj->getLineCapStyle(); //线条角度
+    QColor penClr = QColor(pPolylineObj->getLineColorName()); //线条颜色
+    int penWidth = pPolylineObj->getLineWidth();//线条宽度
+    Qt::PenStyle penStyle = pPolylineObj->getLineStyle(); //线条形状
+    Qt::PenCapStyle capStyle = pPolylineObj->getLineCapStyle(); //线条角度
 
-    bool bFrameSee = pPolygonObj->getFrameSee();//边框可见
-    quint8 nFillWay = pPolygonObj->getFillWay();//填充选择
-    quint8 nFillStyle = pPolygonObj->getFillStyle(); //填充风格
-    quint8 nTransparency = pPolygonObj->getTransparency(); //透明度
-    quint8 nFillDir = pPolygonObj->getFillDirection();//填充方向
-    QColor fillClr = QColor(pPolygonObj->getFillColorName());//填充颜色
-    quint8 nFillPercentage = pPolygonObj->getFillPercentage(); //填充比例
-    qreal fRotateAngle = pPolygonObj->getRotateAngle();
+    bool bFrameSee = pPolylineObj->getFrameSee();//边框可见
+    quint8 nFillWay = pPolylineObj->getFillWay();//填充选择
+    quint8 nFillStyle = pPolylineObj->getFillStyle(); //填充风格
+    quint8 nTransparency = pPolylineObj->getTransparency(); //透明度
+    quint8 nFillDir = pPolylineObj->getFillDirection();//填充方向
+    QColor fillClr = QColor(pPolylineObj->getFillColorName());//填充颜色
+    quint8 nFillPercentage = pPolylineObj->getFillPercentage(); //填充比例
+    qreal fRotateAngle = pPolylineObj->getRotateAngle();
 
     painter->save();
     QPointF centerPoint = boundingRect().center();
@@ -244,7 +244,7 @@ void HIconPolylineItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
 void HIconPolylineItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
-    qreal fRotateAngle = pPolygonObj->getRotateAngle();
+    qreal fRotateAngle = pPolylineObj->getRotateAngle();
     QTransform transform;
     transform.rotate(-fRotateAngle);
     QPointF pointEnd = transform.map(event->scenePos());
@@ -269,7 +269,7 @@ void HIconPolylineItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     }
     else
     {
-        pPolyglineObj->moveBy(pt.x(),pt.y());
+        pPolylineObj->moveBy(pt.x(),pt.y());
         HIconGraphicsItem::mouseMoveEvent(event);
     }
 }
@@ -374,26 +374,26 @@ QPolygonF HIconPolylineItem::polygon() const
 
 void HIconPolylineItem::refreshBaseObj()
 {
-    pPolyglineObj->pylist.clear();
+    pPolylineObj->pylist.clear();
     foreach(QPointF pt,pyVector)
-        pPolyglineObj->pylist.append(mapToScene(pt));
+        pPolylineObj->pylist.append(mapToScene(pt));
     QPointF p = mapToScene(polygon().boundingRect().center());
-    pPolyglineObj->setOX(p.x());
-    pPolyglineObj->setOY(p.y());
-    pPolyglineObj->width = polygon().boundingRect().width();
-    pPolyglineObj->height = polygon().boundingRect().height();
-    pPolyglineObj->setModify(true);
+    pPolylineObj->setOX(p.x());
+    pPolylineObj->setOY(p.y());
+    pPolylineObj->width = polygon().boundingRect().width();
+    pPolylineObj->height = polygon().boundingRect().height();
+    pPolylineObj->setModify(true);
 }
 
 void HIconPolylineItem::setItemObj(HBaseObj* pObj)
 {
-    pPolyglineObj = (HPolylineObj*)pObj;
+    pPolylineObj = (HPolylineObj*)pObj;
 }
 
 HBaseObj* HIconPolylineItem::getItemObj()
 {
-    if(pPolyglineObj)
-        return pPolyglineObj;
+    if(pPolylineObj)
+        return pPolylineObj;
     return NULL;
 }
 
