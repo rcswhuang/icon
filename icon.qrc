@@ -40,5 +40,6 @@
         <file>images/shape_align_top.png</file>
         <file>images/shape_move_back.png</file>
         <file>images/shape_move_front.png</file>
+        <file>images/polyline.png</file>
     </qresource>
 </RCC>

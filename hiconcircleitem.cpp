@@ -240,32 +240,32 @@ void HIconCircleItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     bool bShift = false;
     if(event->modifiers() == Qt::ShiftModifier)
         bShift = true;
-
+    double delta = qMax(pt.x(),pt.y());
     if(pointLocation == 1)
     {
         QRectF rectNew;
-        rectNew.setTopLeft(QPointF(rect().left() + pt.x(),rect().top() + pt.y()));
+        rectNew.setTopLeft(QPointF(rect().left() + delta,rect().top() + delta));
         rectNew.setBottomRight(rect().bottomRight());
         setRect(rectNew.normalized());
     }
     else if(pointLocation == 2)
     {
         QRectF rectNew;
-        rectNew.setTopRight(QPointF(rect().right() + pt.x(),rect().top() + pt.y()));
+        rectNew.setTopRight(QPointF(rect().right() + delta,rect().top() + delta));
         rectNew.setBottomLeft(rect().bottomLeft());
         setRect(rectNew.normalized());
     }
     else if(pointLocation == 3)
     {
         QRectF rectNew;
-        rectNew.setBottomLeft(QPointF(rect().left() + pt.x(),rect().bottom() + pt.y()));
+        rectNew.setBottomLeft(QPointF(rect().left() + delta,rect().bottom() + delta));
         rectNew.setTopRight(rect().topRight());
         setRect(rectNew.normalized());
     }
     else if(pointLocation == 4)
     {
         QRectF rectNew;
-        rectNew.setBottomRight(QPointF(rect().right() + pt.x(),rect().bottom() + pt.y()));
+        rectNew.setBottomRight(QPointF(rect().right() + delta,rect().bottom() + delta));
         rectNew.setTopLeft(rect().topLeft());
         setRect(rectNew.normalized());
     }

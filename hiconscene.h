@@ -9,6 +9,7 @@ class HIconRectItem;
 class HIconEllipseItem;
 class HIconCircleItem;
 class HIconPolygonItem;
+class HIconPolylineItem;
 class HIconArcItem;
 class HIconPieItem;
 class HIconTextItem;
@@ -69,6 +70,7 @@ private:
     HIconEllipseItem* ellipse;
     HIconCircleItem* circle;
     HIconPolygonItem* polygon;
+    HIconPolylineItem* polyline;
     HIconArcItem* arc;
     HIconPieItem* pie;
     HIconTextItem* text;

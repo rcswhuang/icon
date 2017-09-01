@@ -14,7 +14,7 @@ HIconShowPattern::~HIconShowPattern()
 void HIconShowPattern::readXml(QDomElement* dom)
 {
     if(!dom) return;
-
+    //实际上没有
     QDomElement objEle = dom->namedItem("ShowPatterns").toElement();
     //构建下面的元素对象
     QDomNode n = objEle.firstChild();
@@ -101,6 +101,21 @@ void HIconShowPattern::copyTo(HIconShowPattern* sp)
             HEllipseObj* pEllipseObj = new HEllipseObj;
             pObj->copyTo(pEllipseObj);
             sp->addObj(pEllipseObj);
+        }
+        else if(pObj->getShapeType() == enumCircle)
+        {
+            HCircleObj* pCircleObj = new HCircleObj;
+            pObj->copyTo(pCircleObj);
+            sp->addObj(pCircleObj);
+        }
+        else if(pObj->getShapeType() == enumPolyline)
+        {
+            //HEllipseObj* pEllipseObj = new HEllipseObj;
+            //pObj->copyTo(pEllipseObj);
+            //sp->addObj(pEllipseObj);
+            HPolylineObj* pPolylineObj = new HPolylineObj;
+            pObj->copyTo(pPolylineObj);
+            sp->addObj(pPolylineObj);
         }
         else if(pObj->getShapeType() == enumPolygon)
         {

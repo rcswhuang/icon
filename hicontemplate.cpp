@@ -115,7 +115,6 @@ void HIconTemplate::writeXml(QDomElement *dom)
     dom->setAttribute("DefaultWidth",sDefaultSize.width());
     dom->setAttribute("DefaultHeight",sDefaultSize.height());
 
-
     QDomElement symbolDom = dom->ownerDocument().createElement("IconSymbol");
     dom->appendChild(symbolDom);
     if(pIconSymbol)

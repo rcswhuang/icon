@@ -245,13 +245,10 @@ void HIconRectItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
 void HIconRectItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
     qreal fRotateAngle = pRectObj->getRotateAngle();
- //   QPointF centerPoint = boundingRect().center();
     QTransform transform;
-    //transform.translate(centerPoint.x(),centerPoint.y());
     transform.rotate(-fRotateAngle);
     QPointF pt = transform.map(event->scenePos()) - transform.map(pointStart);
     transform.rotate(fRotateAngle);
-    //transform.translate(-centerPoint.x(),-centerPoint.y());
 
 
     qreal deltaX =pt.x();
@@ -264,7 +261,6 @@ void HIconRectItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     {
         QRectF rectNew;
         rectNew.setTopLeft(QPointF(rect().left() + deltaX,rect().top() + deltaY));
-        //rectNew.setTopLeft(transform.map(event->scenePos()));
         rectNew.setBottomRight(rect().bottomRight());
         setRect(rectNew.normalized());
 

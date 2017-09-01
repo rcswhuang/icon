@@ -121,6 +121,8 @@ HBaseObj* HIconSymbol::newObj(QString tagName)
         drawShape = enumEllipse;
     else if(tagName == "Circle")
         drawShape = enumCircle;
+    else if(tagName == "Polyline")
+        drawShape = enumPolyline;
     else if(tagName == "Arc")
         drawShape = enumArc;
     else if(tagName == "Pie")
@@ -154,6 +156,10 @@ HBaseObj* HIconSymbol::newObj(int nObjType)
     else if(nObjType == enumPolygon)
     {
         pObj = new HPolygonObj();
+    }
+    else if(nObjType == enumPolyline)
+    {
+        pObj = new HPolylineObj();
     }
     else if(nObjType == enumArc)
     {

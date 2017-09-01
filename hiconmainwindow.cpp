@@ -185,6 +185,10 @@ void HIconMainWindow::createActions()
     hexagonAct->setCheckable(true);
     connect(hexagonAct,SIGNAL(triggered()),this,SLOT(drawHexagon()));
 
+    polylineAct = new QAction(QIcon(":/images/polyline.png"),tr("&Polyline"),this);
+    polylineAct->setCheckable(true);
+    connect(polylineAct,SIGNAL(triggered()),this,SLOT(drawPolyline()));
+
     arcAct = new QAction(QIcon(":/images/arc.png"), tr("Arc"), this);
     arcAct->setCheckable(true);
     connect(arcAct,SIGNAL(triggered()),this,SLOT(drawArc()));
@@ -204,6 +208,7 @@ void HIconMainWindow::createActions()
 
     QActionGroup * actionGroup = new QActionGroup(this);
     actionGroup->addAction(lineAct);
+    actionGroup->addAction(polylineAct);
     actionGroup->addAction(rectAct);
     actionGroup->addAction(ellipseAct);
     actionGroup->addAction(circleAct);
@@ -286,6 +291,7 @@ void HIconMainWindow::createToolBars()
     drawToolBar = addToolBar(tr("drawToolBar"));
     drawToolBar->setIconSize(QSize(32,32));
     drawToolBar->addAction(lineAct);
+    drawToolBar->addAction(polylineAct);
     drawToolBar->addAction(rectAct);
     drawToolBar->addAction(ellipseAct);
     drawToolBar->addAction(circleAct);
@@ -342,8 +348,10 @@ void HIconMainWindow::createMenuBars()
 
     toolMenu = new QMenu(QStringLiteral("绘制(&W)"),this);
     toolMenu->addAction(lineAct);
+    toolMenu->addAction(polylineAct);
     toolMenu->addAction(rectAct);
     toolMenu->addAction(ellipseAct);
+    toolMenu->addAction(hexagonAct);
     toolMenu->addAction(arcAct);
     toolMenu->addAction(fanAct);
     toolMenu->addAction(textAct);
@@ -439,6 +447,11 @@ void HIconMainWindow::showCenterLine()
 void HIconMainWindow::drawLine()
 {
     pIconMgr->getIconState()->setDrawShape(enumLine);
+}
+
+void HIconMainWindow::drawPolyline()
+{
+    pIconMgr->getIconState()->setDrawShape(enumPolyline);
 }
 
 void HIconMainWindow::drawEllipse()

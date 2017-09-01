@@ -53,6 +53,7 @@ private slots:
     void drawArc();
     void drawCircle();
     void drawHexagon();
+    void drawPolyline();
     void drawFan();
     void drawText();
     void drawSelection();
@@ -294,6 +295,7 @@ private:
     QAction* arcAct;
     QAction* circleAct;
     QAction* hexagonAct;
+    QAction* polylineAct;
     QAction* fanAct;
     QAction* textAct;
 

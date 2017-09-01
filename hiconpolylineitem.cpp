@@ -69,19 +69,11 @@ void HIconPolylineItem::paint(QPainter *painter, const QStyleOptionGraphicsItem 
         painter->setPen(Qt::NoPen);
 
     QPainterPath path;
-    if(polygon().isClosed())
-    {
-        path.setFillRule(Qt::WindingFill);
-        path.addPolygon(polygon());
-        painter->drawPath(path);
-    }
-    else
-    {
-        path.moveTo(polygon().at(0));
-        for(int i = 1; i < polygon().size();i++)
-            path.lineTo(polygon().at(i));
-        painter->drawPath(path);
-    }
+    path.moveTo(polygon().at(0));
+    for(int i = 1; i < polygon().size();i++)
+        path.lineTo(polygon().at(i));
+    painter->drawPath(path);
+
 
     QBrush brush;
     if(nFillWay >= 1)
@@ -178,12 +170,6 @@ void HIconPolylineItem::paint(QPainter *painter, const QStyleOptionGraphicsItem 
        // qreal top = rect().top()*(float)(nFillPercentage/100.00);
        // drawRectF.setTop(top);
     }
-    if(polygon().isClosed())
-    {
-        painter->setBrush(brush);
-        path.setFillRule(Qt::WindingFill);
-        painter->drawPath(path);
-    }
     painter->restore();
 
     if(isSelected())
@@ -258,13 +244,7 @@ void HIconPolylineItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
         if(pointLocation > nRect)
             return;
         QPolygonF newPolygonF = polygon();
-        if(pointLocation==1 || pointLocation==nRect)
-        {
-            newPolygonF.replace(0,pointEnd);
-            newPolygonF.replace(nRect-1,pointEnd);
-        }
-        else
-            newPolygonF.replace(pointLocation-1,pointEnd);
+        newPolygonF.replace(pointLocation-1,pointEnd);
         setPolygon(newPolygonF);
     }
     else

@@ -6,6 +6,7 @@
 #include "hiconellipseitem.h"
 #include "hiconcircleitem.h"
 #include "hiconpolygonitem.h"
+#include "hiconpolylineitem.h"
 #include "hiconarcitem.h"
 #include "hiconpieitem.h"
 #include "hiconstate.h"
@@ -149,6 +150,29 @@ void HIconScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
         }
     }
         break;
+    case enumPolyline:
+    {
+        if(polyline == 0)
+        {
+            QPolygonF tempF;
+            tempF<<prePoint<<prePoint;
+            polyline = new HIconPolylineItem(tempF);
+            HBaseObj *pObj = pIconMgr->getIconTemplate()->getSymbol()->newObj(enumPolyline);
+            polyline->setItemObj(pObj);
+            pIconMgr->getIconState()->appendObj(pObj);
+            addItem(polyline);
+            addNewIconCommand(polyline->getItemObj());
+        }
+        else
+        {
+            QPolygonF tempF = polyline->polygon();
+            tempF.replace(tempF.length()-1,prePoint);
+            tempF.append(prePoint);
+            polyline->setPolygon(tempF);
+            //addNewIconCommand(polygon->getItemObj());
+        }
+    }
+        break;
     case enumArc:
     {
         QRectF tempF = QRectF(prePoint,prePoint).normalized();
@@ -228,6 +252,12 @@ void HIconScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
         tempF.replace(tempF.length()-1,curPoint);
         polygon->setPolygon(tempF);
     }
+    else if(drawShape == enumPolyline && polyline != 0)
+    {
+        QPolygonF tempF = polyline->polygon();
+        tempF.replace(tempF.length()-1,curPoint);
+        polyline->setPolygon(tempF);
+    }
     else if(drawShape == enumArc && arc != 0)
     {
         QRectF newRect = QRectF(prePoint,curPoint).normalized();
@@ -305,6 +335,10 @@ void HIconScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
     {
         return;
     }
+    else if(drawShape == enumPolyline && polyline !=0)
+    {
+        return;
+    }
     else if(drawShape == enumMulSelection && select != 0)
     {
         //计算选择点
@@ -362,6 +396,27 @@ void HIconScene::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
         }
         polygon->getItemObj()->setModify(true);
         polygon = 0;
+        pIconMgr->getIconState()->setDrawShape(enumSelection);
+        return;
+    }
+    else if(drawShape == enumPolyline && polyline != 0)
+    {
+        emit itemInserted(polyline->type());
+        if(polyline->polygon().size()<=2)
+        {
+            HBaseObj* pObj = polyline->getItemObj();
+            pObj->setDeleted(true);
+            polyline->setVisible(false);
+        }
+        else
+        {
+            QPolygonF tempF = polyline->polygon();
+            tempF.replace(tempF.size()-1,event->scenePos());
+            //tempF.append(tempF.at(0));
+            polyline->setPolygon(tempF);
+        }
+        polyline->getItemObj()->setModify(true);
+        polyline = 0;
         pIconMgr->getIconState()->setDrawShape(enumSelection);
         return;
     }
@@ -495,6 +550,17 @@ void HIconScene::addItemByPatternId(int nPatternId)
             ellipse->setItemObj(pObj);
             addItem(ellipse);
         }
+        else if(drawShape == enumCircle)
+        {
+            HCircleObj* pObj1 = (HCircleObj*)pObj;
+            circle = new HIconCircleItem(QRectF(QPointF(pObj1->topLeft),QSizeF(pObj1->rectWidth,pObj1->rectHeight)));
+            circle->setItemObj(pObj);
+            addItem(circle);
+        }
+        else if(drawShape == enumPolyline)
+        {
+
+        }
         else if(drawShape == enumArc)
         {
             HArcObj* pObj1 = (HArcObj*)pObj;
@@ -528,6 +594,14 @@ void HIconScene::addItemByPatternId(int nPatternId)
         else if(drawShape == enumEllipse && ellipse != 0)
         {
             ellipse = 0;
+        }
+        else if(drawShape == enumCircle && circle != 0)
+        {
+            circle = 0;
+        }
+        else if(drawShape == enumPolyline && polyline != 0)
+        {
+            polyline = 0;
         }
         else if(drawShape == enumPolygon && polygon !=0)
         {
@@ -640,6 +714,14 @@ HIconGraphicsItem* HIconScene::addItemByIconObj(int nPattern,HBaseObj* pObj)
         ellipse->setItemObj(pObj1);
         addItem(ellipse);
     }
+    else if(drawShape == enumCircle)
+    {
+
+    }
+    else if(drawShape == enumPolyline)
+    {
+
+    }
     else if(drawShape == enumArc)
     {
         HArcObj* pObj1 = (HArcObj*)pObj;
@@ -677,6 +759,16 @@ HIconGraphicsItem* HIconScene::addItemByIconObj(int nPattern,HBaseObj* pObj)
     {
         item = ellipse;
         ellipse = 0;
+    }
+    else if(drawShape == enumCircle && circle != 0)
+    {
+        item = circle;
+        circle = 0;
+    }
+    else if(drawShape == enumPolyline && polyline !=0 )
+    {
+        item = polyline;
+        polyline = 0;
     }
     else if(drawShape == enumPolygon && polygon !=0)
     {
@@ -818,17 +910,23 @@ void HIconScene::getIconGraphicsItemPointList(HIconGraphicsItem* item,QList<QPol
     }
     else if(nDrawShape == enumRectangle)
     {
-        //HRectObj*pRObj = (HRectObj*)pObj;
         HIconRectItem* pItem = (HIconRectItem*)item;
         QRectF rectF = pItem->rect();
         pf<<rectF.topLeft()<<rectF.topRight()<<rectF.bottomLeft()<<rectF.bottomRight();
     }
     else if(nDrawShape == enumEllipse)
     {
-        //HRectObj*pRObj = (HRectObj*)pObj;
         HIconEllipseItem* pItem = (HIconEllipseItem*)item;
         QRectF rectF = pItem->rect();
         pf<<rectF.topLeft()<<rectF.topRight()<<rectF.bottomLeft()<<rectF.bottomRight();
+    }
+    else if(nDrawShape == enumCircle)
+    {
+
+    }
+    else if(nDrawShape == enumPolyline)
+    {
+
     }
     else if(nDrawShape == enumPolygon)
     {
