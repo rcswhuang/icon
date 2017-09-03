@@ -252,6 +252,7 @@ void HBaseObj::copyTo(HBaseObj* obj)
     obj->bHorizonTurn = bHorizonTurn;
     obj->bVerticalTurn = bVerticalTurn;
     obj->bVisible = bVisible;
+    obj->bDeleted = bDeleted;
     obj->nStackOrder = nStackOrder;
     for(int i = 0;i<nPattern.count();i++)
         obj->nPattern.append(nPattern[i]);

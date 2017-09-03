@@ -557,9 +557,19 @@ void HIconScene::addItemByPatternId(int nPatternId)
             circle->setItemObj(pObj);
             addItem(circle);
         }
+        else if(drawShape == enumPolygon)
+        {
+            HPolygonObj* pObj1 = (HPolygonObj*)pObj;
+            polygon = new HIconPolygonItem(pObj1->pylist);
+            polygon->setItemObj(pObj);
+            addItem(polygon);
+        }
         else if(drawShape == enumPolyline)
         {
-
+            HPolylineObj* pObj1 = (HPolylineObj*)pObj;
+            polyline = new HIconPolylineItem(pObj1->pylist);
+            polyline->setItemObj(pObj);
+            addItem(polyline);
         }
         else if(drawShape == enumArc)
         {

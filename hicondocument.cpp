@@ -91,7 +91,6 @@ void HIconDocument::saveIconTemplateFile(const QString& strIconsPath,const QStri
     if(!dirIconsFilePath.exists())
         return;
     QString strIconsFolderPath = strIconsPath + "/" + strFolderName;
-    //可以先删除该文件夹的所有文件
     for(int i = 0; i < pIconTemplateList.count();i++)
     {
         HIconTemplate* iconTemplate = pIconTemplateList[i];
@@ -99,7 +98,13 @@ void HIconDocument::saveIconTemplateFile(const QString& strIconsPath,const QStri
         if(IsIconInFolder(strFolderName,iconTemplate->getCatalogType()))
         {
             QString strFileName = strIconsFolderPath + "/" + iconTemplate->getUuid().toString() + ".xic";
+            //如果有文件存在 就删除
+            if(QFile::exists(strFileName))
+            {
+                QFile::remove(strFileName);
+            }
             iconTemplate->writeXml(strFileName);
+
         }
     }
 }

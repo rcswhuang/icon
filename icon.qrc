@@ -4,9 +4,6 @@
         <file>images/open.png</file>
         <file>images/paste.png</file>
         <file>images/save.png</file>
-        <file>images/arc.png</file>
-        <file>images/ellipse.png</file>
-        <file>images/line.png</file>
         <file>images/copy.png</file>
         <file>images/cut.png</file>
         <file>images/select.png</file>
@@ -23,11 +20,6 @@
         <file>images/tree.png</file>
         <file>images/apply.png</file>
         <file>images/no.png</file>
-        <file>images/hexagon.png</file>
-        <file>images/circle.png</file>
-        <file>images/rectangle.png</file>
-        <file>images/fan.png</file>
-        <file>images/text.png</file>
         <file>images/redo.png</file>
         <file>images/del.png</file>
         <file>images/group.png</file>
@@ -40,6 +32,14 @@
         <file>images/shape_align_top.png</file>
         <file>images/shape_move_back.png</file>
         <file>images/shape_move_front.png</file>
+        <file>images/line.png</file>
+        <file>images/ellipse.png</file>
+        <file>images/arc.png</file>
+        <file>images/circle.png</file>
+        <file>images/pie.png</file>
+        <file>images/polygon.png</file>
+        <file>images/text.png</file>
+        <file>images/rectangle.png</file>
         <file>images/polyline.png</file>
     </qresource>
 </RCC>

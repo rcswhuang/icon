@@ -149,9 +149,14 @@ class HPolygonObj : public HBaseObj
 public:
     HPolygonObj();
     virtual ~HPolygonObj();
+
+    //二进制读写
+    virtual void readData(QDataStream* data);
+    virtual void writeData(QDataStream* data);
+
     //xml文件读写
-    virtual void readXml(QDomElement* data);
-    virtual void writeXml(QDomElement* data);
+    virtual void readXml(QDomElement* dom);
+    virtual void writeXml(QDomElement* dom);
 
     virtual QString TagName();
     //拷贝克隆
@@ -173,9 +178,14 @@ class HPolylineObj : public HBaseObj
 public:
     HPolylineObj();
     virtual ~HPolylineObj();
+
+    //二进制读写
+    virtual void readData(QDataStream* data);
+    virtual void writeData(QDataStream* data);
+
     //xml文件读写
-    virtual void readXml(QDomElement* data);
-    virtual void writeXml(QDomElement* data);
+    virtual void readXml(QDomElement* dom);
+    virtual void writeXml(QDomElement* dom);
 
     virtual QString TagName();
     //拷贝克隆

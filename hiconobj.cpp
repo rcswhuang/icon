@@ -407,7 +407,7 @@ QString HCircleObj::TagName()
 //拷贝克隆
 void HCircleObj::copyTo(HBaseObj* obj)
 {
-    HEllipseObj* ob = (HEllipseObj*)obj;
+    HCircleObj* ob = (HCircleObj*)obj;
     ob->topLeft = topLeft;
     ob->rectWidth = rectWidth;
     ob->rectHeight = rectHeight;
@@ -444,14 +444,66 @@ HPolygonObj::~HPolygonObj()
 
 }
 
-void HPolygonObj::readXml(QDomElement* data)
+void HPolygonObj::readData(QDataStream* data)
 {
-
+    if(!data) return;
+    HBaseObj::readData(data);
+    quint8 n = pylist.count();
+    *data>>n;
+    qreal delta = 0.0;
+    for(int i = 0; i < n;i++)
+    {
+        QPointF pt;
+        *data>>delta;
+        pt.setX(delta);
+        *data>>delta;
+        pt.setY(delta);
+        pylist.append(pt);
+    }
 }
 
-void HPolygonObj::writeXml(QDomElement* data)
+void HPolygonObj::writeData(QDataStream* data)
 {
+    if(!data) return;
+    HBaseObj::writeData(data);
+    *data<<(quint8)pylist.count();
+    qreal delta = 0.0;
+    for(int i = 0; i < pylist.count();i++)
+    {
+        QPointF pt = pylist.at(i);
+        delta = pt.x();
+        *data<<delta;
+        delta = pt.y();
+        *data<<delta;
+    }
+}
 
+void HPolygonObj::readXml(QDomElement* dom)
+{
+    if(!dom) return;
+    HBaseObj::readXml(dom);
+    for(QDomNode n = dom->firstChild(); !n.isNull(); n = n.nextSibling())
+    {
+        QDomElement pointDom = n.toElement();
+        QPointF pt;
+        pt.setX(pointDom.attribute("PosX").toDouble());
+        pt.setY(pointDom.attribute("PosY").toDouble());
+        pylist.append(pt);
+    }
+}
+
+void HPolygonObj::writeXml(QDomElement* dom)
+{
+    if(!dom)return;
+    HBaseObj::writeXml(dom);
+    for(int i = 0; i < pylist.count();i++)
+    {
+        QDomElement Pointdom = dom->ownerDocument().createElement("Point");
+        dom->appendChild(Pointdom);
+        QPointF pt = pylist.at(i);
+        Pointdom.setAttribute("PosX",pt.x());
+        Pointdom.setAttribute("PosY",pt.y());
+    }
 }
 
 QString HPolygonObj::TagName()
@@ -462,12 +514,19 @@ QString HPolygonObj::TagName()
 //拷贝克隆
 void HPolygonObj::copyTo(HBaseObj* obj)
 {
-    HBaseObj::copyTo(obj);
+    HPolygonObj* ob = (HPolygonObj*)obj;
+    ob->pylist.clear();
+    for(int i = 0;i<pylist.count();i++)
+    {
+        ob->pylist.append(pylist.at(i));
+    }
 }
 
 void HPolygonObj::clone(HBaseObj *obj)
 {
-
+    if(!obj) return;
+    HBaseObj::clone(obj);
+    copyTo(obj);
 }
 
 DRAWSHAPE HPolygonObj::getShapeType()
@@ -495,14 +554,66 @@ HPolylineObj::~HPolylineObj()
 
 }
 
-void HPolylineObj::readXml(QDomElement* data)
+void HPolylineObj::readData(QDataStream* data)
 {
-
+    if(!data) return;
+    HBaseObj::readData(data);
+    quint8 n = pylist.count();
+    *data>>n;
+    qreal delta = 0.0;
+    for(int i = 0; i < n;i++)
+    {
+        QPointF pt;
+        *data>>delta;
+        pt.setX(delta);
+        *data>>delta;
+        pt.setY(delta);
+        pylist.append(pt);
+    }
 }
 
-void HPolylineObj::writeXml(QDomElement* data)
+void HPolylineObj::writeData(QDataStream* data)
 {
+    if(!data) return;
+    HBaseObj::writeData(data);
+    *data<<(quint8)pylist.count();
+    qreal delta = 0.0;
+    for(int i = 0; i < pylist.count();i++)
+    {
+        QPointF pt = pylist.at(i);
+        delta = pt.x();
+        *data<<delta;
+        delta = pt.y();
+        *data<<delta;
+    }
+}
 
+void HPolylineObj::readXml(QDomElement* dom)
+{
+    if(!dom) return;
+    HBaseObj::readXml(dom);
+    for(QDomNode n = dom->firstChild(); !n.isNull(); n = n.nextSibling())
+    {
+        QDomElement pointDom = n.toElement();
+        QPointF pt;
+        pt.setX(pointDom.attribute("PosX").toDouble());
+        pt.setY(pointDom.attribute("PosY").toDouble());
+        pylist.append(pt);
+    }
+}
+
+void HPolylineObj::writeXml(QDomElement* dom)
+{
+    if(!dom)return;
+    HBaseObj::writeXml(dom);
+    for(int i = 0; i < pylist.count();i++)
+    {
+        QDomElement Pointdom = dom->ownerDocument().createElement("Point");
+        dom->appendChild(Pointdom);
+        QPointF pt = pylist.at(i);
+        Pointdom.setAttribute("PosX",pt.x());
+        Pointdom.setAttribute("PosY",pt.y());
+    }
 }
 
 QString HPolylineObj::TagName()
@@ -513,12 +624,19 @@ QString HPolylineObj::TagName()
 //拷贝克隆
 void HPolylineObj::copyTo(HBaseObj* obj)
 {
-    HBaseObj::copyTo(obj);
+    HPolylineObj* ob = (HPolylineObj*)obj;
+    ob->pylist.clear();
+    for(int i = 0;i<pylist.count();i++)
+    {
+        ob->pylist.append(pylist.at(i));
+    }
 }
 
 void HPolylineObj::clone(HBaseObj *obj)
 {
-
+    if(!obj) return;
+    HBaseObj::clone(obj);
+    copyTo(obj);
 }
 
 DRAWSHAPE HPolylineObj::getShapeType()

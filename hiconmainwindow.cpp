@@ -164,40 +164,39 @@ void HIconMainWindow::createActions()
 
 
     //绘制项
-    lineAct = new QAction(QIcon(":/images/line.png"), tr("L&ine"), this);
-
+    lineAct = new QAction(QIcon(":/images/line.png"), QStringLiteral("直线"), this);
     lineAct->setCheckable(true);
     connect(lineAct,SIGNAL(triggered()),this,SLOT(drawLine()));
 
-    rectAct = new QAction(QIcon(":/images/rectangle.png"), tr("Rectangle"), this);
+    rectAct = new QAction(QIcon(":/images/rectangle.png"), QStringLiteral("矩形"), this);
     rectAct->setCheckable(true);
     connect(rectAct,SIGNAL(triggered()),this,SLOT(drawRectangle()));
 
-    ellipseAct = new QAction(QIcon(":/images/ellipse.png"), tr("L&ine"), this);
+    ellipseAct = new QAction(QIcon(":/images/ellipse.png"), QStringLiteral("椭圆"), this);
     ellipseAct->setCheckable(true);
     connect(ellipseAct,SIGNAL(triggered()),this,SLOT(drawEllipse()));
 
-    circleAct = new QAction(QIcon(":/images/circle.png"),tr("&Circle"),this);
+    circleAct = new QAction(QIcon(":/images/circle.png"),QStringLiteral("圆"),this);
     circleAct->setCheckable(true);
     connect(circleAct,SIGNAL(triggered()),this,SLOT(drawCircle()));
 
-    hexagonAct = new QAction(QIcon(":/images/hexagon.png"),tr("&Hexagon"),this);
+    hexagonAct = new QAction(QIcon(":/images/polygon.png"),QStringLiteral("多边形"),this);
     hexagonAct->setCheckable(true);
     connect(hexagonAct,SIGNAL(triggered()),this,SLOT(drawHexagon()));
 
-    polylineAct = new QAction(QIcon(":/images/polyline.png"),tr("&Polyline"),this);
+    polylineAct = new QAction(QIcon(":/images/polyline.png"),QStringLiteral("折线"),this);
     polylineAct->setCheckable(true);
     connect(polylineAct,SIGNAL(triggered()),this,SLOT(drawPolyline()));
 
-    arcAct = new QAction(QIcon(":/images/arc.png"), tr("Arc"), this);
+    arcAct = new QAction(QIcon(":/images/arc.png"), QStringLiteral("弧线"), this);
     arcAct->setCheckable(true);
     connect(arcAct,SIGNAL(triggered()),this,SLOT(drawArc()));
 
-    fanAct = new QAction(QIcon(":/images/fan.png"),tr("&Fan"),this);
+    fanAct = new QAction(QIcon(":/images/pie.png"),QStringLiteral("饼型"),this);
     fanAct->setCheckable(true);
     connect(fanAct,SIGNAL(triggered()),this,SLOT(drawFan()));
 
-    textAct = new QAction(QIcon(":/images/text.png"),tr("&Text"),this);
+    textAct = new QAction(QIcon(":/images/text.png"),QStringLiteral("文字"),this);
     textAct->setCheckable(true);
     connect(textAct,SIGNAL(triggered()),this,SLOT(drawText()));
 

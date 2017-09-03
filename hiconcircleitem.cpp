@@ -361,7 +361,6 @@ void HIconCircleItem::resizeItem(const QPolygonF& polygonF)
 {
     if(polygonF.size() != 2)
         return;
-    //topleft bottomright
     QRectF newRectF(polygonF.at(0),polygonF.at(1));
     setRect(newRectF);
 }
