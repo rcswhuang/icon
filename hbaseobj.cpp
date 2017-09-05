@@ -105,6 +105,8 @@ void HBaseObj::readData(QDataStream *data)
     bVerticalTurn = b;
     *data>>n8;
     bVisible = n8;
+    *data>>b;
+    bDeleted = b;
     quint64 n64;
     *data>>n64;
     nStackOrder = n64;
@@ -262,7 +264,7 @@ void HBaseObj::copyTo(HBaseObj* obj)
 void HBaseObj::clone(HBaseObj* ob)
 {
     if(!ob) return;
-    copyTo(ob);
+    HBaseObj::copyTo(ob);
 }
 
 //设置属性值 By Name

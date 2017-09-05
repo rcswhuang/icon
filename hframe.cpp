@@ -172,8 +172,14 @@ void HFrame::drawHRuler()
     //m_vHRuler
     m_vHRuler = QPixmap(width()-m_nVRulerWidth,m_nHRulerHeight);
     m_vHRuler.fill();
-    //QPainter painter(&m_vHRuler);
-    //painter.save();
+    QPainter painter(&m_vHRuler);
+    painter.save();
+    if(m_pView)
+    {
+        QRectF rectF = m_pView->sceneRect();
+        QPointF ptLeft = m_pView->mapToScene(rectF.topLeft());
+    }
+    painter.restore();
 }
 
 //绘制垂直标尺
@@ -188,7 +194,7 @@ void HFrame::drawBox()
     m_vBox = QPixmap(m_nVRulerWidth,m_nHRulerHeight);
     m_vBox.fill();
     QPainter painter(&m_vBox);
-    //painter.save();
+    painter.save();
     painter.setPen(Qt::DashLine);
     painter.drawLine(m_nVRulerWidth/2-1,0,m_nVRulerWidth/2-1,m_nHRulerHeight);
     painter.drawLine(0,m_nHRulerHeight/2-1,m_nVRulerWidth,m_nHRulerHeight/2-1);
@@ -200,8 +206,7 @@ void HFrame::drawBox()
     painter.setPen(Qt::darkGray);
     painter.drawLine(0,m_nHRulerHeight-1,m_nVRulerWidth,m_nHRulerHeight-1);
     painter.drawLine(m_nVRulerWidth-1,0,m_nVRulerWidth-1,m_nHRulerHeight);
-
-    //painter.restore();
+    painter.restore();
 
 }
 
