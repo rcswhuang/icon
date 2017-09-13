@@ -1,5 +1,5 @@
 ﻿#include "hframe.h"
-
+#include <QScrollBar>
 /*
  * HFrame的坐标是主要在QMainWindow里面的中心区域，不包含左边框，上边菜单等状态的位置，最左边就是(0,0)
  * HGraphicsView的逻辑坐标则是包含在
@@ -149,7 +149,7 @@ void HFrame::paintEvent(QPaintEvent* painterEvent)
         QPainter painter(this);
         painter.setBackground(QBrush(Qt::white));
         if(!m_vHRuler.isNull())
-            painter.drawPixmap(m_nVRulerWidth,0,width()-m_nVRulerWidth,m_nHRulerHeight,m_vHRuler);
+            painter.drawPixmap(m_nVRulerWidth,0,m_vHRuler.width(),m_vHRuler.height(),m_vHRuler);
         if(!m_vBox.isNull())
             painter.drawPixmap(0,0,m_nVRulerWidth,m_nHRulerHeight,m_vBox);
     }
@@ -170,16 +170,71 @@ void HFrame::resizeEvent(QResizeEvent* event)
 void HFrame::drawHRuler()
 {
     //m_vHRuler
-    m_vHRuler = QPixmap(width()-m_nVRulerWidth,m_nHRulerHeight);
+    QRectF rectF = m_pView->sceneRect();
+    QPointF startPoint = m_pView->mapToScene(m_pView->viewport()->rect().topLeft());
+    startPoint.setX(qMax(startPoint.x(),rectF.topLeft().x()));
+    if(m_pView->horizontalScrollBar()->value() == 0)
+        startPoint.setX(rectF.topLeft().x());
+
+    QPointF endPoint = m_pView->mapToScene(m_pView->viewport()->rect().topRight());
+    endPoint.setX(qMin(endPoint.x(),rectF.topRight().x()));
+    if(m_pView->verticalScrollBar()->value() == 0)
+        endPoint.setX(rectF.topRight().x());
+
+    QFont f;
+    f.setPointSize(8);
+    QFontMetrics fontMetrics(f);
+    int maxFontWidth = fontMetrics.width(QString::number((int)rectF.topRight().x()));
+    int textMargin = 8;
+    int devWidth = m_pView->width();
+    m_vHRuler = QPixmap(devWidth+maxFontWidth,m_nHRulerHeight);
     m_vHRuler.fill();
     QPainter painter(&m_vHRuler);
+    painter.translate(1,1);
+    painter.setFont(f);
     painter.save();
-    if(m_pView)
-    {
-        QRectF rectF = m_pView->sceneRect();
-        QPointF ptLeft = m_pView->mapToScene(rectF.topLeft());
-    }
+
+    QPen pen(Qt::red);
+    pen.setWidth(5);
+    painter.setPen(pen);
+    painter.drawLine(QPoint(0,m_nHRulerHeight),QPoint(m_pView->viewport()->width(),m_nHRulerHeight));
     painter.restore();
+    int logSpan = 1;
+    int devSpan = logSpan*m_fScale;
+    bool flag = true;
+    while(devSpan<5){
+        if(flag){
+            logSpan *= 5;
+        }
+        else{
+            logSpan *= 2;
+        }
+        devSpan = logSpan*m_fScale;
+        flag = !flag;
+    }
+    QPointF logPoint = startPoint;
+    QPoint devPoint = m_pView->mapFromScene(logPoint);
+    painter.drawLine(QPoint(devPoint.x(),0),QPoint(devPoint.x(),m_nHRulerHeight));
+    painter.drawText(devPoint.x()+1,textMargin,QString::number((int)logPoint.x()));
+    logPoint.setX((int)logPoint.x()/logSpan*logSpan+logSpan);
+    while(logPoint.x()<endPoint.x()+logSpan){
+        devPoint = m_pView->mapFromScene(logPoint);
+        if((int)logPoint.x()%(10*logSpan)==0){
+            painter.drawLine(QPoint(devPoint.x(),0),QPoint(devPoint.x(),m_nHRulerHeight));
+            painter.drawText(devPoint.x()+1,textMargin,QString::number((int)logPoint.x()));
+        }
+        else if((int)logPoint.x()%(5*logSpan)==0){
+            painter.drawLine(QPoint(devPoint.x(),m_nHRulerHeight/2),QPoint(devPoint.x(),m_nHRulerHeight));
+            painter.drawText(devPoint.x()+1,textMargin,QString::number((int)logPoint.x()));
+        }
+        else{
+            painter.drawLine(QPoint(devPoint.x(),m_nHRulerHeight*3/4),QPoint(devPoint.x(),m_nHRulerHeight));
+        }
+        logPoint.setX(logPoint.x()+logSpan);
+    }
+    devPoint = m_pView->mapFromScene(endPoint);
+    painter.drawLine(QPoint(devPoint.x(),0),QPoint(devPoint.x(),m_nHRulerHeight));
+    painter.drawText(devPoint.x()+1,textMargin,QString::number((int)logPoint.x()));
 }
 
 //绘制垂直标尺
