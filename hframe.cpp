@@ -134,6 +134,7 @@ bool HFrame::eventFilter(QObject* obj,QEvent* event)
             return false;
         case QEvent::Resize:
             drawHRuler();
+            drawVRuler();
             update();
             return false;
         }
@@ -150,6 +151,8 @@ void HFrame::paintEvent(QPaintEvent* painterEvent)
         painter.setBackground(QBrush(Qt::white));
         if(!m_vHRuler.isNull())
             painter.drawPixmap(m_nVRulerWidth,0,m_vHRuler.width(),m_vHRuler.height(),m_vHRuler);
+        if(!m_vVRuler.isNull())
+            painter.drawPixmap(0,m_nHRulerHeight,m_vVRuler.width(),m_vVRuler.height(),m_vVRuler);
         if(!m_vBox.isNull())
             painter.drawPixmap(0,0,m_nVRulerWidth,m_nHRulerHeight,m_vBox);
     }
@@ -178,7 +181,7 @@ void HFrame::drawHRuler()
 
     QPointF endPoint = m_pView->mapToScene(m_pView->viewport()->rect().topRight());
     endPoint.setX(qMin(endPoint.x(),rectF.topRight().x()));
-    if(m_pView->verticalScrollBar()->value() == 0)
+    if(m_pView->horizontalScrollBar()->value() ==  m_pView->horizontalScrollBar()->maximum())
         endPoint.setX(rectF.topRight().x());
 
     QFont f;
@@ -240,7 +243,73 @@ void HFrame::drawHRuler()
 //绘制垂直标尺
 void HFrame::drawVRuler()
 {
+    //m_vVRuler
+    QRectF rectF = m_pView->sceneRect();
+    QPointF startPoint = m_pView->mapToScene(m_pView->viewport()->rect().topLeft());
+    startPoint.setY(qMax(startPoint.y(),rectF.topLeft().y()));
+    if(m_pView->verticalScrollBar()->value() == 0)
+        startPoint.setY(rectF.topLeft().y());
 
+    QPointF endPoint = m_pView->mapToScene(m_pView->viewport()->rect().bottomLeft());
+    endPoint.setY(qMin(endPoint.y(),rectF.bottomLeft().y()));
+    if(m_pView->verticalScrollBar()->value() == m_pView->verticalScrollBar()->maximum())
+        endPoint.setY(rectF.bottomLeft().y());
+
+    QFont f;
+    f.setPointSize(8);
+    QFontMetrics fontMetrics(f);
+    int maxFontHeight = fontMetrics.height();
+    int textMargin = 1;
+    int devWidth = m_pView->height();
+    m_vVRuler = QPixmap(m_nVRulerWidth,devWidth+maxFontHeight);
+    m_vVRuler.fill();
+    QPainter painter(&m_vVRuler);
+    painter.translate(1,1);
+    painter.setFont(f);
+    painter.save();
+
+    QPen pen(Qt::red);
+    pen.setWidth(5);
+    painter.setPen(pen);
+    painter.drawLine(QPoint(m_nVRulerWidth,0),QPoint(m_nVRulerWidth,m_pView->viewport()->height()));
+    painter.restore();
+    int logSpan = 1;
+    int devSpan = logSpan*m_fScale;
+    bool flag = true;
+    while(devSpan<5){
+        if(flag){
+            logSpan *= 5;
+        }
+        else{
+            logSpan *= 2;
+        }
+        devSpan = logSpan*m_fScale;
+        flag = !flag;
+    }
+    QPointF logPoint = startPoint;
+    QPoint devPoint = m_pView->mapFromScene(logPoint);
+    painter.drawLine(QPoint(0,devPoint.y()),QPoint(m_nVRulerWidth,devPoint.y()));
+    painter.drawText(textMargin,devPoint.y()+maxFontHeight,QString::number((int)logPoint.y()));
+    logPoint.setY((int)logPoint.y()/logSpan*logSpan+logSpan);
+    while(logPoint.y()<endPoint.y()){
+        devPoint = m_pView->mapFromScene(logPoint);
+        if((int)logPoint.y()%(10*logSpan)==0){
+            painter.drawLine(QPoint(0,devPoint.y()),QPoint(m_nVRulerWidth,devPoint.y()));
+            painter.drawText(textMargin,devPoint.y()+maxFontHeight,QString::number((int)logPoint.y()));
+        }
+        else if((int)logPoint.y()%(5*logSpan)==0){
+            painter.drawLine(QPoint(m_nHRulerHeight/2,devPoint.y()),QPoint(m_nVRulerWidth,devPoint.y()));
+            painter.drawText(textMargin,devPoint.y()+maxFontHeight,QString::number((int)logPoint.y()));
+        }
+        else{
+            painter.drawLine(QPoint(m_nHRulerHeight*3/4,devPoint.y()),QPoint(m_nVRulerWidth,devPoint.y()));
+            //painter.drawLine(QPoint(devPoint.x(),m_nHRulerHeight*3/4),QPoint(devPoint.x(),m_nHRulerHeight));
+        }
+        logPoint.setY(logPoint.y()+logSpan);
+    }
+    devPoint = m_pView->mapFromScene(endPoint);
+    painter.drawLine(QPoint(0,devPoint.y()),QPoint(m_nVRulerWidth,devPoint.y()));
+    painter.drawText(textMargin,devPoint.y()+maxFontHeight,QString::number((int)logPoint.y()));
 }
 
 //绘制左上角
