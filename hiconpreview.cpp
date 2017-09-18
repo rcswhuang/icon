@@ -237,7 +237,7 @@ void HIconPreview::drawIcon(QPainter *p)
             QPolygonF pyTempList;
             foreach(QPointF pt,pPolylineObj->pylist)
                 pyTempList<<QPointF(pt.x()*deltaX,pt.y()*deltaY);
-            p->drawPolygon(pyTempList);
+            //p->drawPolygon(pyTempList);
         }
         else if(shapeType == enumPolygon)
         {
