@@ -726,11 +726,24 @@ HIconGraphicsItem* HIconScene::addItemByIconObj(int nPattern,HBaseObj* pObj)
     }
     else if(drawShape == enumCircle)
     {
-
+        HCircleObj* pObj1 = (HCircleObj*)pObj;
+        circle = new HIconCircleItem(QRectF(QPointF(pObj1->topLeft),QSizeF(pObj1->rectWidth,pObj1->rectHeight)));
+        circle->setItemObj(pObj1);
+        addItem(circle);
+    }
+    else if(drawShape == enumPolygon)
+    {
+        HPolygonObj* pObj1 = (HPolygonObj*)pObj;
+        polygon = new HIconPolygonItem(pObj1->pylist);
+        polygon->setItemObj(pObj1);
+        addItem(polygon);
     }
     else if(drawShape == enumPolyline)
     {
-
+        HPolylineObj* pObj1 = (HPolylineObj*)pObj;
+        polyline = new HIconPolylineItem(pObj1->pylist);
+        polyline->setItemObj(pObj1);
+        addItem(polyline);
     }
     else if(drawShape == enumArc)
     {
@@ -782,7 +795,7 @@ HIconGraphicsItem* HIconScene::addItemByIconObj(int nPattern,HBaseObj* pObj)
     }
     else if(drawShape == enumPolygon && polygon !=0)
     {
-        //item = polygon;
+        item = polygon;
         polygon = 0;
     }
     else if(drawShape == enumArc && arc !=0)
@@ -932,11 +945,14 @@ void HIconScene::getIconGraphicsItemPointList(HIconGraphicsItem* item,QList<QPol
     }
     else if(nDrawShape == enumCircle)
     {
-
+        HIconCircleItem* pItem = (HIconCircleItem*)item;
+        QRectF rectF = pItem->rect();
+        pf<<rectF.topLeft()<<rectF.topRight()<<rectF.bottomLeft()<<rectF.bottomRight();
     }
     else if(nDrawShape == enumPolyline)
     {
-
+        HIconPolylineItem* pItem = (HIconPolylineItem*)item;
+        pf = pItem->polygon();
     }
     else if(nDrawShape == enumPolygon)
     {
@@ -957,7 +973,6 @@ void HIconScene::getIconGraphicsItemPointList(HIconGraphicsItem* item,QList<QPol
     }
     else if(nDrawShape == enumText)
     {
-        //HRectObj*pRObj = (HRectObj*)pObj;
         HIconTextItem* pItem = (HIconTextItem*)item;
         QRectF rectF = pItem->rect();
         pf<<rectF.topLeft()<<rectF.topRight()<<rectF.bottomLeft()<<rectF.bottomRight();

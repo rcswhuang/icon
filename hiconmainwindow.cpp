@@ -298,7 +298,7 @@ void HIconMainWindow::createToolBars()
     drawToolBar->addAction(arcAct);
     drawToolBar->addAction(fanAct);
     drawToolBar->addAction(textAct);
-
+/*
     shapeToolBar = new QToolBar(tr("shapeToolBar"),this);
     shapeToolBar->setIconSize(QSize(32,32));
     shapeToolBar->addAction(groupObjAct);
@@ -312,7 +312,7 @@ void HIconMainWindow::createToolBars()
     shapeToolBar->addAction(toTopAct);
     shapeToolBar->addAction(toBottomAct);
     addToolBar(Qt::BottomToolBarArea,shapeToolBar);
-
+*/
 
 
 
