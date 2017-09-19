@@ -8,7 +8,6 @@ HEADERS       = \
     hicontreewidget.h \
     hiconsymbol.h \
     hbaseobj.h \
-    hicontype.h \
     hicontemplate.h \
     hicondocument.h \
     #hdrawtool.h \
@@ -44,7 +43,6 @@ SOURCES       = main.cpp \
     hicontreewidget.cpp \
     hiconsymbol.cpp \
     hbaseobj.cpp \
-    hicontype.cpp \
     hicontemplate.cpp \
     hicondocument.cpp \
     #hdrawtool.cpp \

@@ -2,7 +2,6 @@
 #define HICONDOCUMENT_H
 
 #include <QObject>
-#include "hicontype.h"
 #include "hiconapi.h"
 #include "hicontemplate.h"
 #include "hiconmgr.h"
@@ -32,7 +31,6 @@ public:
     HIconTemplate* findIconTemplateByTypeAndUuid(int nTemplateType,const QString& strUuid);
     HIconTemplate* findIconTemplateByTemplateName(const QString& strTemplateName);
 public:
-    QList<HIconType*> pIconTypeList;
     HIconTemplate* pCurIconTemplate;
     HIconMgr* pIconMgr;
     QList<HIconTemplate*> pIconTemplateList;

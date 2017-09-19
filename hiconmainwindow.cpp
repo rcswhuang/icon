@@ -43,6 +43,10 @@ void HIconMainWindow::init()
     connect(pIconFrame->iconScene(),SIGNAL(itemInserted(int)),this,SLOT(itemInserted(int)));
     showGridAct->setChecked(pIconMgr->getShowGrid());
     showCLineAct->setChecked(pIconMgr->getShowCenterLine());
+    //改用函数来实现
+    pIconMgr->getIconFrame()->scaleChangedTo(0.6);
+    QString strScale = QString("%1%").arg(pIconMgr->getIconFrame()->scale()*100);
+    scaleComboBox->setCurrentText(strScale);
 }
 
 void HIconMainWindow::createActions()
@@ -124,7 +128,7 @@ void HIconMainWindow::createActions()
     scaleComboBox->addItem(tr("70%"),0.7);
     scaleComboBox->addItem(tr("100%"),1);
     scaleComboBox->addItem(tr("150%"),1.5);
-    connect(scaleComboBox,SIGNAL(currentIndexChanged(QString)),this,SLOT(scaleChanged(QString)));
+  //  connect(scaleComboBox,SIGNAL(currentIndexChanged(QString)),this,SLOT(scaleChanged(QString)));
     connect(scaleComboBox->lineEdit(),SIGNAL(editingFinished()),this,SLOT(scaleChanged()));
 
     toTopAct = new QAction(QIcon(":/images/shape_move_front.png"),QStringLiteral("置顶"),this);
@@ -522,10 +526,7 @@ void HIconMainWindow::New(const QString& strTemplateName,const QString& strCatal
     pIconPreview->init();
 
 
-    //改用函数来实现
-    pIconMgr->getIconFrame()->scaleChangedTo(0.6);
-    QString strScale = QString("%1%").arg(pIconMgr->getIconFrame()->scale()*100);
-    scaleComboBox->setCurrentText(strScale);
+
 }
 
 
@@ -849,12 +850,11 @@ void HIconMainWindow::scaleChanged(QString strScale)
     double newscale = strScale.toDouble(&bOk)/100;
     if(!bOk)
         return;
-    double oldscale = pIconMgr->getIconFrame()->scale();
     pIconMgr->getIconFrame()->scaleChangedTo(newscale);
-    double deltascale = newscale/oldscale;
-    pIconMgr->getIconFrame()->view()->scale(deltascale,deltascale);
     strScale = QString("%1%").arg(pIconMgr->getIconFrame()->scale()*100);
+    scaleComboBox->blockSignals(true);
     scaleComboBox->lineEdit()->setText(strScale);
+    scaleComboBox->blockSignals(false);
 }
 
 void HIconMainWindow::scaleChanged()
@@ -868,7 +868,6 @@ void HIconMainWindow::scaleChanged()
 
 void HIconMainWindow::itemInserted(int type)
 {
-
     selectAct->setChecked(true);
 }
 

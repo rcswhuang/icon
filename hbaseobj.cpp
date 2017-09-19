@@ -4,6 +4,7 @@
 HBaseObj::HBaseObj(QObject *parent) : QObject(parent)
 {
     init();
+
 }
 
 HBaseObj::~HBaseObj()

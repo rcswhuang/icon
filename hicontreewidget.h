@@ -32,8 +32,8 @@ class HIconMgr;
 class HIconTreeWidgetItem : public QTreeWidgetItem
 {
 public:
-    HIconTreeWidgetItem(HIconTreeWidget* parent = 0,int type = QTreeWidgetItem::UserType);
-    HIconTreeWidgetItem(HIconTreeWidgetItem* parent = 0,int type = QTreeWidgetItem::UserType);
+    HIconTreeWidgetItem(HIconTreeWidget* parent,int type = QTreeWidgetItem::UserType);
+    HIconTreeWidgetItem(HIconTreeWidgetItem* parent,int type = QTreeWidgetItem::UserType);
     void setUuid(QString uuid);
     QString getUuid();
 private:

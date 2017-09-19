@@ -39,7 +39,7 @@ void HIconScene::drawBackground(QPainter *painter, const QRectF &rect)
     painter->save();
     QColor bgclr = QColor(pIconMgr->getBackgroundColor());
     painter->fillRect(finalRect,bgclr);
-    painter->restore();
+
 
     bool bShowGrid = pIconMgr->getShowGrid();
     if(bShowGrid)
@@ -49,6 +49,8 @@ void HIconScene::drawBackground(QPainter *painter, const QRectF &rect)
             for(qreal y=finalRect.top();y<finalRect.bottom()+25;y+=25)
                 painter->drawPoint(x,y);
     }
+
+    painter->restore();
 }
 
 

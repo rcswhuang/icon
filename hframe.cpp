@@ -19,6 +19,8 @@ HFrame::HFrame(QWidget* parent, Qt::WindowFlags f):QFrame(parent,f)
     m_pView->scale(m_fScale,m_fScale);
     m_pView->viewport()->setMouseTracking(true);
     m_pView->viewport()->installEventFilter(this);
+    connect(m_pView->horizontalScrollBar(),SIGNAL(valueChanged(int)),this,SLOT(onHScrollBarChanged(int)));
+    connect(m_pView->verticalScrollBar(),SIGNAL(valueChanged(int)),this,SLOT(onVScrollBarChanded(int)));
     drawBox();
 
 }
@@ -92,13 +94,22 @@ double HFrame::scale()
 //缩放到
 void HFrame::scaleChangedTo(double scale)
 {
-    m_fScale = scale;
+    double ratio = scale/m_fScale;
+    scaleChanged(ratio);
+
 }
 
 //缩放比例
 void HFrame::scaleChanged(double ratio)
 {
+    if(ratio<0 || qFuzzyCompare(ratio,1))
+        return;
 
+    m_fScale *= ratio;
+    m_pView->scale(ratio,ratio);
+    drawHRuler();
+    drawVRuler();
+    update();
 }
 
 //移动中心点到view中间
@@ -110,13 +121,18 @@ void HFrame::centerOn(const QPointF& pos)
 //水平滚动条改变
 void HFrame::onHScrollBarChanged(int value)
 {
+    drawHRuler();
+    QRect rect(m_nVRulerWidth,0,m_vHRuler.width(),m_vHRuler.height());
+    update(rect);
 
 }
 
 //垂直滚动条改变
 void HFrame::onVScrollBarChanded(int value)
 {
-
+    drawVRuler();
+    QRect rect(0,m_nHRulerHeight,m_vVRuler.width(),m_vVRuler.height());
+    update(rect);
 }
 
 //对象事件过滤
@@ -237,7 +253,7 @@ void HFrame::drawHRuler()
     }
     devPoint = m_pView->mapFromScene(endPoint);
     painter.drawLine(QPoint(devPoint.x(),0),QPoint(devPoint.x(),m_nHRulerHeight));
-    painter.drawText(devPoint.x()+1,textMargin,QString::number((int)logPoint.x()));
+    painter.drawText(devPoint.x()+1,textMargin,QString::number((int)endPoint.x()));
 }
 
 //绘制垂直标尺
@@ -309,7 +325,7 @@ void HFrame::drawVRuler()
     }
     devPoint = m_pView->mapFromScene(endPoint);
     painter.drawLine(QPoint(0,devPoint.y()),QPoint(m_nVRulerWidth,devPoint.y()));
-    painter.drawText(textMargin,devPoint.y()+maxFontHeight,QString::number((int)logPoint.y()));
+    painter.drawText(textMargin,devPoint.y()+maxFontHeight,QString::number((int)endPoint.y()));
 }
 
 //绘制左上角

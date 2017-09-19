@@ -300,8 +300,6 @@ HIconGraphicsItem* HIconFrame::getIconGraphicsItemByObj(HBaseObj *pObj)
     {
         HIconGraphicsItem* item = qgraphicsitem_cast<HIconGraphicsItem*>(item1);
         if(!item) continue;
-        int a = pObj->getShapeType();
-        int b = item->type();
         if(pObj->getShapeType() != item->type()) continue;
         HBaseObj* obj = item->getItemObj();
         if(obj->getObjID() == pObj->getObjID())

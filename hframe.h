@@ -50,7 +50,7 @@ public:
     //移动中心点到view中间
     void centerOn(const QPointF& pos);
 
-protected slots:
+public slots:
     //水平滚动条改变
     virtual void onHScrollBarChanged(int value);
 
