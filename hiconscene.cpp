@@ -35,7 +35,7 @@ HIconScene::HIconScene(HIconMgr* iconMgr)
 void HIconScene::drawBackground(QPainter *painter, const QRectF &rect)
 {
     QRectF rectLogic = pIconMgr->getIconFrame()->getLogicRect();
-    QRectF finalRect = rect.intersected(rectLogic);
+    QRectF finalRect = rectLogic;//rect.intersected(rectLogic);
     painter->save();
     QColor bgclr = QColor(pIconMgr->getBackgroundColor());
     painter->fillRect(finalRect,bgclr);

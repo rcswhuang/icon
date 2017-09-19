@@ -78,7 +78,10 @@ void HIconPreview::onRefreshChanged()
     p.setPen(QPen(Qt::DotLine));
     p.drawRect(pixRect);
     p.restore();
-    drawIcon(&p);
+    //pIconMgr->getIconFrame()->view()->render(&p);
+    pIconMgr->getIconFrame()->iconScene()->render(&p,pIconMgr->getIconFrame()->getLogicRect(),pixRect);
+
+    //drawIcon(&p);
     ui->widget->update();//重绘操作
 }
 
