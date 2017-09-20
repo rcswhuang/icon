@@ -27,6 +27,7 @@ HIconScene::HIconScene(HIconMgr* iconMgr)
     ellipse = 0;
     circle = 0;
     polygon = 0;
+    polyline = 0;
     arc = 0;
     pie = 0;
     text = 0;
@@ -49,7 +50,6 @@ void HIconScene::drawBackground(QPainter *painter, const QRectF &rect)
             for(qreal y=finalRect.top();y<finalRect.bottom()+25;y+=25)
                 painter->drawPoint(x,y);
     }
-
     painter->restore();
 }
 
@@ -701,8 +701,7 @@ void HIconScene::calcSelectedItem(const QRectF &rectF)
 HIconGraphicsItem* HIconScene::addItemByIconObj(int nPattern,HBaseObj* pObj)
 {
     if(!pObj) return NULL;
-    pObj->nPattern.clear();
-    pObj->nPattern.append(nPattern);
+    pObj->nPattern = (quint8)nPattern;
     quint8 drawShape = pObj->getShapeType();
     HIconGraphicsItem* item = NULL;
     if(drawShape == enumLine)

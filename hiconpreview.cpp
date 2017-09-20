@@ -79,9 +79,9 @@ void HIconPreview::onRefreshChanged()
     p.drawRect(pixRect);
     p.restore();
     //pIconMgr->getIconFrame()->view()->render(&p);
-    pIconMgr->getIconFrame()->iconScene()->render(&p,pIconMgr->getIconFrame()->getLogicRect(),pixRect);
+    //pIconMgr->getIconFrame()->iconScene()->render(&p,pIconMgr->getIconFrame()->getLogicRect(),pixRect);
 
-    //drawIcon(&p);
+    drawIcon(&p);
     ui->widget->update();//重绘操作
 }
 

@@ -111,13 +111,15 @@ void HBaseObj::readData(QDataStream *data)
     quint64 n64;
     *data>>n64;
     nStackOrder = n64;
-    *data>>n8;//showpattern num
+    /**data>>n8;//showpattern num
     for(int i = 0; i < n8;i++)
     {
         quint8 nsp;
         *data>>nsp;
         nPattern.append(nsp);
-    }
+    }*/
+    *data>>n8;
+    nPattern = n8;
     *data>>b;
     bModify = b;
 
@@ -148,11 +150,7 @@ void HBaseObj::writeData(QDataStream *data)
     *data<<(bool)bVerticalTurn;
     *data<<(quint8)bVisible;
     *data<<(quint64)nStackOrder;
-    *data<<(quint8)nPattern.count();
-    for(int i = 0; i < nPattern.count();i++)
-    {
-        *data<<(quint8)nPattern[i];
-    }
+    *data<<(quint8)nPattern;
     *data<<(bool)bModify;
 }
 
@@ -184,14 +182,15 @@ void HBaseObj::readXml(QDomElement* dom)
     bVerticalTurn = dom->attribute("VerticalTurn").toInt();
     bVisible = dom->attribute("Visible").toInt();
     nStackOrder = dom->attribute("StackOrder").toInt();
-    QStringList patternList = dom->attribute("ShowPattern").split(",",QString::SkipEmptyParts);
+    nPattern = dom->attribute("nPattern").toUInt();
+  /*  QStringList patternList = dom->attribute("ShowPattern").split(",",QString::SkipEmptyParts);
     nPattern.clear();
     for(int i = 0; i<patternList.size();i++)
     {
         int sp = patternList.at(i).toInt();
         if(sp<0)continue;
         nPattern.append(sp);
-    }
+    }*/
 }
 
 void HBaseObj::writeXml(QDomElement* dom)
@@ -220,10 +219,11 @@ void HBaseObj::writeXml(QDomElement* dom)
     dom->setAttribute("VerticalTurn",bVerticalTurn);
     dom->setAttribute("Visible",bVisible);
     dom->setAttribute("StackOrder",nStackOrder);
-    QStringList patternList;
+    dom->setAttribute("nPattern",nPattern);
+   /* QStringList patternList;
     for(int i = 0; i < nPattern.size();i++)
         patternList<<QString::number(nPattern.at(i));
-    dom->setAttribute("ShowPattern",patternList.join(","));
+    dom->setAttribute("ShowPattern",patternList.join(","));*/
 
 }
 
@@ -257,8 +257,7 @@ void HBaseObj::copyTo(HBaseObj* obj)
     obj->bVisible = bVisible;
     obj->bDeleted = bDeleted;
     obj->nStackOrder = nStackOrder;
-    for(int i = 0;i<nPattern.count();i++)
-        obj->nPattern.append(nPattern[i]);
+    obj->nPattern = nPattern;
     obj->bModify = bModify;
 }
 
@@ -561,7 +560,7 @@ void HBaseObj::setStackOrder(qint64 nStack)
 
 bool HBaseObj::contains(int nPatternId)
 {
-    return nPattern.contains(nPatternId);
+    return nPattern == nPatternId;
 }
 
 void HBaseObj::moveBy(qreal dx, qreal dy)

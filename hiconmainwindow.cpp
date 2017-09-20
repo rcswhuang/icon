@@ -128,7 +128,7 @@ void HIconMainWindow::createActions()
     scaleComboBox->addItem(tr("70%"),0.7);
     scaleComboBox->addItem(tr("100%"),1);
     scaleComboBox->addItem(tr("150%"),1.5);
-  //  connect(scaleComboBox,SIGNAL(currentIndexChanged(QString)),this,SLOT(scaleChanged(QString)));
+    connect(scaleComboBox,SIGNAL(currentIndexChanged(QString)),this,SLOT(scaleChanged(QString)));
     connect(scaleComboBox->lineEdit(),SIGNAL(editingFinished()),this,SLOT(scaleChanged()));
 
     toTopAct = new QAction(QIcon(":/images/shape_move_front.png"),QStringLiteral("置顶"),this);

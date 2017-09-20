@@ -59,7 +59,7 @@ void HIconShowPattern::addObj(HBaseObj* pObj,bool badd)
     if(!pObj)
         return;
     if(badd)
-        pObj->nPattern.append(nPattern);
+        pObj->nPattern = nPattern;
     pObjList.append(pObj);
 }
 

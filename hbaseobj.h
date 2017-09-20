@@ -197,7 +197,7 @@ public:
 
     qint64 nStackOrder;
 
-    QVector<quint8> nPattern;
+    quint8 nPattern;
 
     bool bModify;
 protected:

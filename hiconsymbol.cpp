@@ -210,7 +210,7 @@ void HIconSymbol::copyTo(HIconSymbol *isymbol)
     isymbol->strSymbolName = strSymbolName;
     isymbol->usSymbolType = usSymbolType;
     isymbol->nMaxPattern = nMaxPattern;
-    isymbol->nMaxPattern = nCurPattern;
+    isymbol->nCurPattern = nCurPattern;
     for(int i = 0; i < pShowPatternVector.size();i++)
     {
         HIconShowPattern* pattern = (HIconShowPattern*)pShowPatternVector[i];
@@ -301,7 +301,7 @@ bool HIconSymbol::getModify()
 void HIconSymbol::updateShowPattern(QList<HBaseObj*> &list)
 {
     foreach (HBaseObj* pObj, list) {
-        HIconShowPattern* pattern = findPatternById(pObj->nPattern.at(0));
+        HIconShowPattern* pattern = findPatternById(pObj->nPattern);
         if(!pattern) continue;
         pattern->addObj(pObj,false);
     }
