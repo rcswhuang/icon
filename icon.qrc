@@ -41,5 +41,6 @@
         <file>images/text.png</file>
         <file>images/rectangle.png</file>
         <file>images/polyline.png</file>
+        <file>images/about.png</file>
     </qresource>
 </RCC>

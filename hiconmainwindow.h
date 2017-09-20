@@ -212,6 +212,7 @@ private:
     QMenu *editMenu;
     QMenu *viewMenu;
     QMenu *toolMenu;
+    QMenu* helpMenu;
 
 
     QToolBar *fileToolBar;
@@ -304,6 +305,9 @@ private:
     QAction *cascadeAct;
     QAction *nextAct;
     QAction *previousAct;
+
+    //关于
+    QAction* aboutAct;
 
 };
 

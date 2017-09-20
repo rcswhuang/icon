@@ -10,6 +10,7 @@
 #include <QMessageBox>
 #include <QVariant>
 #include <qmath.h>
+#include "habout.h"
 HIconMainWindow::HIconMainWindow(HIconMgr *parent) : pIconMgr(parent)
 {
     createActions();
@@ -54,8 +55,8 @@ void HIconMainWindow::createActions()
 
     setIconSize(QSize(32,32));
     //文件项
-    newAct = new QAction(QIcon(":/images/new.png"), QStringLiteral("新建(&N)"), this);
-    newAct->setShortcuts(QKeySequence::New);
+    //newAct = new QAction(QIcon(":/images/new.png"), QStringLiteral("新建(&N)"), this);
+    //newAct->setShortcuts(QKeySequence::New);
 
     openAct = new QAction(QIcon(":/images/open.png"), QStringLiteral("打开(&O)"), this);
     openAct->setShortcuts(QKeySequence::Open);
@@ -100,6 +101,8 @@ void HIconMainWindow::createActions()
     showRulerAct->setChecked(true);
 
     showGridAct = new QAction(QIcon(":/images/grid.png"), QStringLiteral("网格(&G)"), this);
+    showGridAct->setCheckable(true);
+    showGridAct->setChecked(true);
     connect(showGridAct,SIGNAL(triggered(bool)),this,SLOT(showGrid()));
 
     showCLineAct = new QAction(QIcon(":/images/center.png"), QStringLiteral("中心线(&C)"), this);
@@ -249,8 +252,9 @@ void HIconMainWindow::createActions()
 
     //QMenu *helpMenu = menuBar()->addMenu(tr("&Help"));
 
-    //QAction *aboutAct = helpMenu->addAction(tr("&About"), this, &HIconMainWindow::about);
-    //aboutAct->setStatusTip(tr("Show the application's About box"));
+    aboutAct = new QAction(QStringLiteral("关于"), this);
+    connect(aboutAct,SIGNAL(triggered()),this,SLOT(about()));
+    aboutAct->setStatusTip(tr("Show the application's About box"));
 
     //QAction *aboutQtAct = helpMenu->addAction(tr("About &Qt"), qApp, &QApplication::aboutQt);
     //aboutQtAct->setStatusTip(tr("Show the Qt library's About box"));
@@ -267,7 +271,7 @@ void HIconMainWindow::createToolBars()
 {
     fileToolBar = addToolBar(tr("fileBar"));
     fileToolBar->setIconSize(QSize(32,32));
-    fileToolBar->addAction(newAct);
+    //fileToolBar->addAction(newAct);
     fileToolBar->addAction(openAct);
     fileToolBar->addAction(saveAct);
     fileToolBar->addAction(quitAct);
@@ -327,15 +331,14 @@ void HIconMainWindow::createToolBars()
 
 void HIconMainWindow::createMenuBars()
 {
-    fileMenu = new QMenu(QStringLiteral("文件(&F)"));
-
-    fileMenu->addAction(newAct);
+    fileMenu = menuBar()->addMenu(QStringLiteral("文件(&F)"));
+    //fileMenu->addAction(newAct);
     fileMenu->addAction(openAct);
     fileMenu->addAction(saveAct);
     fileMenu->addSeparator();
     fileMenu->addAction(quitAct);
 
-    editMenu = new QMenu(QStringLiteral("编辑(&E)"),this);
+    editMenu = menuBar()->addMenu(QStringLiteral("编辑(&E)"));
     editMenu->addAction(undoAct);
     editMenu->addAction(redoAct);
     editMenu->addSeparator();
@@ -344,12 +347,12 @@ void HIconMainWindow::createMenuBars()
     editMenu->addAction(pasteAct);
 
 
-    viewMenu = new QMenu(QStringLiteral("视图(&V)"),this);
+    viewMenu = menuBar()->addMenu(QStringLiteral("视图(&V)"));
     viewMenu->addAction(showRulerAct);
     viewMenu->addAction(showGridAct);
     viewMenu->addAction(showCLineAct);
 
-    toolMenu = new QMenu(QStringLiteral("绘制(&W)"),this);
+    toolMenu = menuBar()->addMenu(QStringLiteral("绘制(&W)"));
     toolMenu->addAction(lineAct);
     toolMenu->addAction(polylineAct);
     toolMenu->addAction(rectAct);
@@ -359,10 +362,8 @@ void HIconMainWindow::createMenuBars()
     toolMenu->addAction(fanAct);
     toolMenu->addAction(textAct);
 
-    menuBar()->addMenu(fileMenu);
-    menuBar()->addMenu(editMenu);
-    menuBar()->addMenu(viewMenu);
-    menuBar()->addMenu(toolMenu);
+    helpMenu = menuBar()->addMenu(QStringLiteral("帮助(&H)"));
+    helpMenu->addAction(aboutAct);
 }
 
 void HIconMainWindow::createDockWindows()
@@ -437,8 +438,9 @@ void HIconMainWindow::quit()
 
 void HIconMainWindow::showGrid()
 {
-    pIconMgr->setShowGrid(false);
-    pIconFrame->iconScene()->update(pIconFrame->getLogicRect());
+    bool bcheck = showGridAct->isChecked();
+    pIconMgr->setShowGrid(bcheck);
+    pIconFrame->update();
 }
 
 void HIconMainWindow::showCenterLine()
@@ -815,7 +817,8 @@ void HIconMainWindow::bringToDown()
 
 void HIconMainWindow::about()
 {
-
+    HAbout about;
+    about.exec();
 }
 
 void HIconMainWindow::resizeEvent(QResizeEvent *event)

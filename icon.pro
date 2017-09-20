@@ -32,7 +32,9 @@ HEADERS       = \
     hiconselectionitem.h \
     hiconcommand.h \
     hiconpolylineitem.h \
-    hiconcircleitem.h
+    hiconcircleitem.h \
+    habout.h \
+    habout.h
     #hlineobj.h \
     #hellipseobj.h
 SOURCES       = main.cpp \
@@ -66,7 +68,8 @@ SOURCES       = main.cpp \
     hiconselectionitem.cpp \
     hiconcommand.cpp \
     hiconpolylineitem.cpp \
-    hiconcircleitem.cpp
+    hiconcircleitem.cpp \
+    habout.cpp
     #hlineobj.cpp \
     #hellipseobj.cpp
 RESOURCES     = \
@@ -77,4 +80,5 @@ QT += xml
 
 FORMS += \
     UI/propertydlg.ui \
-    UI/iconpreview.ui
+    UI/iconpreview.ui \
+    UI/about.ui
