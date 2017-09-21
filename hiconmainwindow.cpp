@@ -21,7 +21,7 @@ HIconMainWindow::HIconMainWindow(HIconMgr *parent) : pIconMgr(parent)
     pIconWidget = new HIconWidget();
 
     setCentralWidget(pIconWidget);
-    setWindowTitle("test");
+    setWindowTitle(QStringLiteral("图元编辑器"));
 
     //pIconDocument = new HIconDocument;
     statusBar()->showMessage("Reday");
@@ -108,6 +108,7 @@ void HIconMainWindow::createActions()
     showCLineAct = new QAction(QIcon(":/images/center.png"), QStringLiteral("中心线(&C)"), this);
     showCLineAct->setCheckable(true);
     showCLineAct->setChecked(true);
+    connect(showCLineAct,SIGNAL(triggered(bool)),this,SLOT(showCenterLine()));
 
     //缩放项
     fitWidthAct = new QAction(QIcon(":/images/zoom_fit_width.png"), QStringLiteral("合适宽度"), this);
@@ -134,10 +135,10 @@ void HIconMainWindow::createActions()
     connect(scaleComboBox,SIGNAL(currentIndexChanged(QString)),this,SLOT(scaleChanged(QString)));
     connect(scaleComboBox->lineEdit(),SIGNAL(editingFinished()),this,SLOT(scaleChanged()));
 
-    toTopAct = new QAction(QIcon(":/images/shape_move_front.png"),QStringLiteral("置顶"),this);
+    toTopAct = new QAction(QIcon(":/images/move_forward.png"),QStringLiteral("置顶"),this);
     connect(toTopAct,SIGNAL(triggered(bool)),this,SLOT(bringToTop()));
 
-    toBottomAct = new QAction(QIcon(":/images/shape_move_back.png"),QStringLiteral("置底"),this);
+    toBottomAct = new QAction(QIcon(":/images/move_backward.png"),QStringLiteral("置底"),this);
     connect(toBottomAct,SIGNAL(triggered(bool)),this,SLOT(bringToBottom()));
 
 
@@ -285,6 +286,10 @@ void HIconMainWindow::createToolBars()
     editToolBar->addAction(copyAct);
     editToolBar->addAction(pasteAct);
     editToolBar->addAction(deleteAct);
+
+    shapeToolBar = addToolBar(tr("shapeToolBar"));
+    shapeToolBar->addAction(toTopAct);
+    shapeToolBar->addAction(toBottomAct);
 
     zoomToolBar = addToolBar(tr("zoomBar"));
     zoomToolBar->setIconSize(QSize(32,32));
@@ -439,13 +444,25 @@ void HIconMainWindow::quit()
 void HIconMainWindow::showGrid()
 {
     bool bcheck = showGridAct->isChecked();
-    pIconMgr->setShowGrid(bcheck);
-    pIconFrame->update();
+    if(pIconMgr && pIconMgr->getIconFrame())
+    {
+        pIconMgr->setShowGrid(bcheck);
+        if(pIconMgr->getIconFrame()->view())
+            pIconMgr->getIconFrame()->view()->resetCachedContent();
+
+    }
 }
 
 void HIconMainWindow::showCenterLine()
 {
+    bool bcheck = showCLineAct->isChecked();
+    if(pIconMgr && pIconMgr->getIconFrame())
+    {
+        pIconMgr->setShowCenterLine(bcheck);
+        if(pIconMgr->getIconFrame()->view())
+            pIconMgr->getIconFrame()->view()->resetCachedContent();
 
+    }
 }
 
 //draw tool
@@ -549,8 +566,6 @@ void HIconMainWindow::Open(const QString &strTemplateName, int nTemplateType, co
     pIconWidget->setIconMgr(pIconMgr);
     pIconWidget->openIconWidget();
     pIconPreview->init();
-
-
 }
 
 void HIconMainWindow::Save()

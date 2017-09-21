@@ -35,6 +35,8 @@ HIconScene::HIconScene(HIconMgr* iconMgr)
 
 void HIconScene::drawBackground(QPainter *painter, const QRectF &rect)
 {
+    if(!pIconMgr && !pIconMgr->getIconFrame())
+        return;
     QRectF rectLogic = pIconMgr->getIconFrame()->getLogicRect();
     QRectF finalRect = rectLogic;//rect.intersected(rectLogic);
     painter->save();
@@ -45,11 +47,27 @@ void HIconScene::drawBackground(QPainter *painter, const QRectF &rect)
     bool bShowGrid = pIconMgr->getShowGrid();
     if(bShowGrid)
     {
-        //int grid = pIcon
         for(qreal x=finalRect.left();x < finalRect.right()+25;x+=25)
             for(qreal y=finalRect.top();y<finalRect.bottom()+25;y+=25)
                 painter->drawPoint(x,y);
     }
+
+    bool bShowCenterLine = pIconMgr->getShowCenterLine();
+    if(bShowCenterLine)
+    {
+        QPointF p1(rectLogic.left()+5,(rectLogic.topLeft().y()+rectLogic.bottomLeft().y())/2);
+        QPointF p2(rectLogic.right()-5,(rectLogic.topLeft().y()+rectLogic.bottomLeft().y())/2);
+        QPointF p3((rectLogic.topLeft().x()+rectLogic.topRight().x())/2,rectLogic.top()+5);
+        QPointF p4((rectLogic.topLeft().x()+rectLogic.topRight().x())/2,rectLogic.bottom()-5);
+        QPen pen(Qt::lightGray);
+        pen.setWidth(1);
+        painter->setPen(pen);
+        painter->drawLine(p1,p2);
+        painter->drawLine(p3,p4);
+    }
+
+
+
     painter->restore();
 }
 
@@ -816,58 +834,6 @@ HIconGraphicsItem* HIconScene::addItemByIconObj(int nPattern,HBaseObj* pObj)
     }
 
     return item;
-}
-
-//移动到顶层
-void HIconScene::bringToTop()
-{
-    int maxZValue = 0;
-    QList<QGraphicsItem*> itemList = selectedItems();
-    if(itemList.count() > 1) return;
-    QGraphicsItem* pItem = itemList.at(0);
-    QList<QGraphicsItem*> collItemList = pItem->collidingItems();
-    if(collItemList.count()<=0) return;
-    maxZValue = collItemList.at(0)->zValue();
-    for(int i = 1; i < collItemList.count();i++)
-    {
-        QGraphicsItem* item = collItemList[i];
-        if(item->zValue() > maxZValue)
-            maxZValue = item->zValue();
-    }
-    if(pItem->zValue() > maxZValue)
-        return;
-    else
-    {
-        maxZValue++;
-        pItem->setZValue(maxZValue);
-        ((HIconGraphicsItem*)pItem)->getItemObj()->setStackOrder(maxZValue);
-    }
-}
-
-//移动到底层
-void HIconScene::bringToBottom()
-{
-    int minZValue = 0;
-    QList<QGraphicsItem*> itemList = selectedItems();
-    if(itemList.count() > 1) return;
-    QGraphicsItem* pItem = itemList.at(0);
-    QList<QGraphicsItem*> collItemList = pItem->collidingItems();
-    if(collItemList.count()<=0) return;
-    minZValue = collItemList.at(0)->zValue();
-    for(int i = 1; i < collItemList.count();i++)
-    {
-        QGraphicsItem* item = collItemList[i];
-        if(item->zValue() < minZValue)
-            minZValue = item->zValue();
-    }
-    if(pItem->zValue() < minZValue)
-        return;
-    else
-    {
-        minZValue--;
-        pItem->setZValue(minZValue);
-        ((HIconGraphicsItem*)pItem)->getItemObj()->setStackOrder(minZValue);
-    }
 }
 
 void HIconScene::addNewIconCommand(HBaseObj *pObj)

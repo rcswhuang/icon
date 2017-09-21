@@ -227,14 +227,58 @@ void HIconFrame::del()
 
 void HIconFrame::bringToTop()
 {
-    if(iconScene())
-        iconScene()->bringToTop();
+    if(!iconScene())
+        return;
+
+    int maxZValue = 0;
+    QList<QGraphicsItem*> itemList = iconScene()->selectedItems();
+    if(itemList.count() > 1) return;
+    QGraphicsItem* pItem = itemList.at(0);
+    QList<QGraphicsItem*> collItemList = pItem->collidingItems();
+    if(collItemList.count()<=0) return;
+    maxZValue = collItemList.at(0)->zValue();
+    for(int i = 1; i < collItemList.count();i++)
+    {
+        QGraphicsItem* item = collItemList[i];
+        if(item->zValue() > maxZValue)
+            maxZValue = item->zValue();
+    }
+    if(pItem->zValue() > maxZValue)
+        return;
+    else
+    {
+        maxZValue++;
+        pItem->setZValue(maxZValue);
+        ((HIconGraphicsItem*)pItem)->getItemObj()->setStackOrder(maxZValue);
+    }
+
 }
 
 void HIconFrame::bringToBottom()
 {
-    if(iconScene())
-        iconScene()->bringToBottom();
+    if(!iconScene())
+        return;
+    int minZValue = 0;
+    QList<QGraphicsItem*> itemList = iconScene()->selectedItems();
+    if(itemList.count() > 1) return;
+    QGraphicsItem* pItem = itemList.at(0);
+    QList<QGraphicsItem*> collItemList = pItem->collidingItems();
+    if(collItemList.count()<=0) return;
+    minZValue = (int)(collItemList.at(0)->zValue());
+    for(int i = 1; i < collItemList.count();i++)
+    {
+        QGraphicsItem* item = collItemList[i];
+        if(item->zValue() < minZValue)
+            minZValue = item->zValue();
+    }
+    if(pItem->zValue() < minZValue)
+        return;
+    else
+    {
+        minZValue--;
+        pItem->setZValue(minZValue);
+        ((HIconGraphicsItem*)pItem)->getItemObj()->setStackOrder(minZValue);
+    }
 }
 
 void HIconFrame::setItemVisible(int nPatternId)
