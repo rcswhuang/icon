@@ -76,6 +76,7 @@ void HIconRectItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
     else
         painter->setPen(Qt::NoPen);
 
+  //  painter->scale(1,1);
     painter->drawRect(rect());
     //需要判断nFillStyle 如果是linear的模式 就要考虑填充方向了
     //
