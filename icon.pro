@@ -56,13 +56,12 @@ FORMS += \
 
 unix{
 
-    LIBS += \
-           -lH5IconGui
+    LIBS += -L ../lib/ -lH5IconGui
 }
 
 win32{
    LIBS += \
-        ../lib/H5IconGui.lib
+         ../lib/H5IconGui.lib
 }
 QT += widgets
 QT += xml
