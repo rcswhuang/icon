@@ -6,7 +6,6 @@
 #include <QDir>
 #include <QScrollBar>
 #include "hiconscene.h"
-#include "hiconobjitem.h"
 #include "hiconmgr.h"
 #include "hiconstate.h"
 #include "hicongraphicsitem.h"

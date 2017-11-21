@@ -1,16 +1,12 @@
 ﻿#ifndef HICONSTATE_H
 #define HICONSTATE_H
-
-#include "hiconapi.h"
-
+#include <QObject>
 #include <QPainterPath>
+#include "hiconapi.h"
 #include "hbaseobj.h"
 #include "hiconmgr.h"
 
-#include <QObject>
 class HIconMgr;
-
-
 class HIconState
 {
 public:
@@ -22,7 +18,6 @@ public:
      void appendObj(HBaseObj* obj);
 
 public:
-
     DRAWSHAPE curDrawShape;//当前绘制对象
     HIconMgr* pIconMgr;
 };
