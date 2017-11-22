@@ -65,9 +65,6 @@ void HIconScene::drawBackground(QPainter *painter, const QRectF &rect)
         painter->drawLine(p1,p2);
         painter->drawLine(p3,p4);
     }
-
-
-
     painter->restore();
 }
 
