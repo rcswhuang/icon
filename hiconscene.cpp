@@ -530,7 +530,7 @@ void HIconScene::setItemVisible(int nPatternId)
     {
         bVisible = false;
         HIconGraphicsItem* pItem = qgraphicsitem_cast<HIconGraphicsItem*>(item);
-        if(pItem->getItemObj()->contains(nPatternId))
+        if(pItem->getItemObj()->contains(nPatternId) && false == pItem->getItemObj()->isDeleted() )
             bVisible = true;
         item->setVisible(bVisible);
      }

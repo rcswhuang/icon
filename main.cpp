@@ -65,7 +65,7 @@ int main(int argc, char *argv[])
     bool ok = trans.load("qt_zh_CN.qm",":/translations/");
     app.installTranslator(&trans);
     HIconMgr* pIconMgr = new HIconMgr();
-    //pIconMgr->getIconDocument()->loadIconDoucument();
+    pIconMgr->getIconDocument()->loadIconDoucument();
     HIconMainWindow *mainWin = new HIconMainWindow(pIconMgr);
     mainWin->show();
     return app.exec();

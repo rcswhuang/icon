@@ -217,6 +217,7 @@ void HIconFrame::del()
         //不能直接删除 改成deleted=TRUE，只有到保存的时候才真正删除对象
         HBaseObj* pObj = ((HIconGraphicsItem*)item)->getItemObj();
         pObj->setDeleted(true);
+        pObj->setVisible(false);
         item->setVisible(false);
         objList.append(pObj);
     }
