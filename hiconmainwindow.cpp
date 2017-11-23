@@ -469,6 +469,7 @@ void HIconMainWindow::showCenterLine()
 void HIconMainWindow::drawLine()
 {
     pIconMgr->getIconState()->setDrawShape(enumLine);
+    setCursor(Qt::CrossCursor);
 }
 
 void HIconMainWindow::drawPolyline()
@@ -509,6 +510,7 @@ void HIconMainWindow::drawFan()
 void HIconMainWindow::drawText()
 {
     pIconMgr->getIconState()->setDrawShape(enumText);
+    setCursor(Qt::CrossCursor);
 }
 
 void HIconMainWindow::drawSelection()
@@ -887,6 +889,7 @@ void HIconMainWindow::scaleChanged()
 void HIconMainWindow::itemInserted(int type)
 {
     selectAct->setChecked(true);
+    setCursor(Qt::ArrowCursor);
 }
 
 
