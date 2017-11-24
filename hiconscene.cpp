@@ -18,6 +18,7 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QCursor>
 #include <QMenu>
+#include <QMessageBox>
 #include <QDebug>
 HIconScene::HIconScene(HIconMgr* iconMgr)
     :pIconMgr(iconMgr)
@@ -509,6 +510,7 @@ void HIconScene::setItemCursor(QGraphicsSceneMouseEvent *mouseEvent)
 {
     QList<QGraphicsItem*> itemList = selectedItems();
     //获取所在item，只要item选择到即可
+    //这个地方要改，只要获取当前选择那个，如果是多个选择则返回
     QTransform transform;
     QPointF pointF = mouseEvent->scenePos();
     QGraphicsItem* item = itemAt(pointF,transform);
@@ -690,6 +692,8 @@ void HIconScene::pasteItem()
 void HIconScene::delItem()
 {
     if(!pIconMgr || !pIconMgr->getIconFrame())
+        return;
+    if(QMessageBox::Cancel == QMessageBox::information(NULL,QStringLiteral("警告"),QStringLiteral("确认删除该图符吗？"),QMessageBox::Ok|QMessageBox::Cancel))
         return;
     pIconMgr->getIconFrame()->del();
 }

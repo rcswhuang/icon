@@ -476,36 +476,43 @@ void HIconMainWindow::drawLine()
 void HIconMainWindow::drawPolyline()
 {
     pIconMgr->getIconState()->setDrawShape(enumPolyline);
+    setCursor(Qt::CrossCursor);
 }
 
 void HIconMainWindow::drawEllipse()
 {
     pIconMgr->getIconState()->setDrawShape(enumEllipse);
+    setCursor(Qt::CrossCursor);
 }
 
 void HIconMainWindow::drawRectangle()
 {
     pIconMgr->getIconState()->setDrawShape(enumRectangle);
+    setCursor(Qt::CrossCursor);
 }
 
 void HIconMainWindow::drawCircle()
 {
     pIconMgr->getIconState()->setDrawShape(enumCircle);
+    setCursor(Qt::CrossCursor);
 }
 
 void HIconMainWindow::drawHexagon()
 {
     pIconMgr->getIconState()->setDrawShape(enumPolygon);
+    setCursor(Qt::CrossCursor);
 }
 
 void HIconMainWindow::drawArc()
 {
     pIconMgr->getIconState()->setDrawShape(enumArc);
+    setCursor(Qt::CrossCursor);
 }
 
 void HIconMainWindow::drawFan()
 {
     pIconMgr->getIconState()->setDrawShape(enumPie);
+    setCursor(Qt::CrossCursor);
 }
 
 void HIconMainWindow::drawText()
@@ -517,6 +524,7 @@ void HIconMainWindow::drawText()
 void HIconMainWindow::drawSelection()
 {
     pIconMgr->getIconState()->setDrawShape(enumSelection);
+    setCursor(Qt::CrossCursor);
 }
 
 void HIconMainWindow::New(const QString& strTemplateName,const QString& strCatalogName,const int& nCatalogType)
