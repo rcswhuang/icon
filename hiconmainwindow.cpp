@@ -377,6 +377,7 @@ void HIconMainWindow::createDockWindows()
     browserIconDock->setAllowedAreas(Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea);
     pIconTreeWidget = new HIconTreeWidget(pIconMgr);
     pIconTreeWidget->setRootIsDecorated(true);
+    pIconTreeWidget->setSortingEnabled(true);
     browserIconDock->setWidget(pIconTreeWidget);
     addDockWidget(Qt::LeftDockWidgetArea,browserIconDock);
     pIconTreeWidget->init();

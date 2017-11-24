@@ -893,8 +893,8 @@ void HIconScene::getIconGraphicsItemPointList(HIconGraphicsItem* item,QList<QPol
     if(nDrawShape == enumLine)
     {
         HIconLineItem* pItem = (HIconLineItem*)item;
-        //QLineF lineF = pItem->line();
-        //pf<<lineF.p1()<<lineF.p2();
+        QLineF lineF = pItem->line();
+        pf<<lineF.p1()<<lineF.p2();
     }
     else if(nDrawShape == enumRectangle)
     {

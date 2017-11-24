@@ -232,7 +232,7 @@ void HIconPreview::drawIcon(QPainter *p)
         {
             HCircleObj* pCircleObj = (HCircleObj*)pObj;
             QPointF pt = QPointF(pCircleObj->topLeft.x()*deltaX,pCircleObj->topLeft.y()*deltaY);
-            p->drawRect(QRectF(pt,QSizeF(pCircleObj->rectWidth*deltaX,pCircleObj->rectHeight*deltaY)));
+            p->drawEllipse(QRectF(pt,QSizeF(pCircleObj->rectWidth*deltaX,pCircleObj->rectHeight*deltaY)));
         }
         else if(shapeType == enumPolyline)
         {
@@ -241,6 +241,12 @@ void HIconPreview::drawIcon(QPainter *p)
             foreach(QPointF pt,pPolylineObj->pylist)
                 pyTempList<<QPointF(pt.x()*deltaX,pt.y()*deltaY);
             //p->drawPolygon(pyTempList);
+            QPolygonF polygon(pyTempList);
+            QPainterPath path;
+            path.moveTo(polygon.at(0));
+            for(int i = 1; i < polygon.size();i++)
+                path.lineTo(polygon.at(i));
+            p->drawPath(path);
         }
         else if(shapeType == enumPolygon)
         {

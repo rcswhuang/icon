@@ -30,6 +30,7 @@ QString HIconTreeWidgetItem::getUuid()
 HIconTreeWidget::HIconTreeWidget(HIconMgr* iconmgr,QWidget* parent,int type):pIconMgr(iconmgr),
     QTreeWidget(parent)
 {
+
 }
 
 HIconTreeWidget::~HIconTreeWidget()

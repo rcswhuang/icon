@@ -181,6 +181,7 @@ void HIconFrame::paste()
      }
 
     //改变选择状态，只选择拷贝后的图元元素
+    int count1 = iconScene()->items().count();
     foreach(QGraphicsItem* item,iconScene()->items())
     {
         item->setSelected(false);
