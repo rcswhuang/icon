@@ -115,6 +115,18 @@ bool HIconDocument::IsIconInFolder(const QString& strFolderName,const quint8& nI
     bool bIn = false;
     if((strFolderName == "digital"||strFolderName == QStringLiteral("遥信")) && nIconType == TEMPLATE_TYPE_DIGITAL)
         bIn = true;
+    else if((strFolderName == "analogue"||strFolderName == QStringLiteral("遥测")) && nIconType == TEMPLATE_TYPE_ANALOGUE)
+        bIn = true;
+    else if((strFolderName == "yk"||strFolderName == QStringLiteral("遥控")) && nIconType == TEMPLATE_TYPE_YK)
+        bIn = true;
+    else if((strFolderName == "pluse"||strFolderName == QStringLiteral("遥脉")) && nIconType == TEMPLATE_TYPE_PLUSE)
+        bIn = true;
+    else if((strFolderName == "tap"||strFolderName == QStringLiteral("档位")) && nIconType == TEMPLATE_TYPE_TAP)
+        bIn = true;
+    else if((strFolderName == "light"||strFolderName == QStringLiteral("光字牌")) && nIconType == TEMPLATE_TYPE_LIGHT)
+        bIn = true;
+    else if((strFolderName == "jdpai"||strFolderName == QStringLiteral("接地牌")) && nIconType == TEMPLATE_TYPE_JDPAI)
+        bIn = true;
     return bIn;
 }
 

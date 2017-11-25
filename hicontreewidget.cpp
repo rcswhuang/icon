@@ -49,7 +49,7 @@ void HIconTreeWidget::init()
     digitalItem->setText(0,QStringLiteral("遥信"));
     //rootItem->addChild(digitalItem);
 
-    analogueItem = new HIconTreeWidgetItem(rootItem,TEMPLATE_TYPE_ANALGOUE);
+    analogueItem = new HIconTreeWidgetItem(rootItem,TEMPLATE_TYPE_ANALOGUE);
     analogueItem->setIcon(0,QIcon(":/images/tree.png"));
     analogueItem->setText(0,QStringLiteral("遥测"));
     //rootItem->addChild(analogueItem);

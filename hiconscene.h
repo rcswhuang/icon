@@ -44,6 +44,7 @@ protected:
     //virtual void wheelEvent(QGraphicsSceneWheelEvent *wheelEvent);
     //virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent);
     virtual void drawBackground(QPainter *painter, const QRectF &rect);
+    virtual void keyPressEvent(QKeyEvent *event);
 
 signals:
     void itemInserted(int type);

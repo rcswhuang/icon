@@ -393,6 +393,16 @@ void HIconScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent)
     QGraphicsScene::mouseDoubleClickEvent(mouseEvent);
 }
 
+void HIconScene::keyPressEvent(QKeyEvent *event)
+{
+    //解决多个item同时移动的问题
+    QList<QGraphicsItem*> itemList = selectedItems();
+    foreach(QGraphicsItem* item,itemList)
+    {
+        sendEvent(item,event);
+    }
+}
+
 void HIconScene::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
 {
     DRAWSHAPE drawShape = pIconMgr->getIconState()->getDrawShape();
@@ -511,12 +521,15 @@ void HIconScene::setItemCursor(QGraphicsSceneMouseEvent *mouseEvent)
     QList<QGraphicsItem*> itemList = selectedItems();
     //获取所在item，只要item选择到即可
     //这个地方要改，只要获取当前选择那个，如果是多个选择则返回
-    QTransform transform;
     QPointF pointF = mouseEvent->scenePos();
+   /* QTransform transform;
+
     QGraphicsItem* item = itemAt(pointF,transform);
     if(itemList.indexOf(item) == -1)
-        return;
-
+        return;*/
+    if(itemList.count()>=2 || itemList.count() == 0) return;
+    QGraphicsItem* item = itemList.at(0);
+    if(!item) return;
     HIconGraphicsItem* pItem = qgraphicsitem_cast<HIconGraphicsItem*>(item);
     int location = pItem->pointInRect(pointF);
     pItem->setItemCursor(location);
@@ -548,10 +561,12 @@ void HIconScene::addItemByPatternId(int nPatternId)
     {
         if(!pObj) continue;
         drawShape = pObj->getShapeType();
+        int nZValue = pObj->getStackOrder();
         if(drawShape == enumLine)
         {
             line = new HIconLineItem(QLineF(((HLineObj*) pObj)->pfHeadPoint,((HLineObj*)pObj)->pfTailPoint));
             line->setItemObj(pObj);
+            line->setZValue(nZValue);
             addItem(line);
 
         }
@@ -560,6 +575,7 @@ void HIconScene::addItemByPatternId(int nPatternId)
             HRectObj* pObj1 = (HRectObj*)pObj;
             rectangle = new HIconRectItem(QRectF(QPointF(pObj1->topLeft),QSizeF(pObj1->rectWidth,pObj1->rectHeight)));
             rectangle->setItemObj(pObj);
+            rectangle->setZValue(nZValue);
             addItem(rectangle);
         }
         else if(drawShape == enumEllipse)
@@ -567,6 +583,7 @@ void HIconScene::addItemByPatternId(int nPatternId)
             HEllipseObj* pObj1 = (HEllipseObj*)pObj;
             ellipse = new HIconEllipseItem(QRectF(QPointF(pObj1->topLeft),QSizeF(pObj1->rectWidth,pObj1->rectHeight)));
             ellipse->setItemObj(pObj);
+            ellipse->setZValue(nZValue);
             addItem(ellipse);
         }
         else if(drawShape == enumCircle)
@@ -574,6 +591,7 @@ void HIconScene::addItemByPatternId(int nPatternId)
             HCircleObj* pObj1 = (HCircleObj*)pObj;
             circle = new HIconCircleItem(QRectF(QPointF(pObj1->topLeft),QSizeF(pObj1->rectWidth,pObj1->rectHeight)));
             circle->setItemObj(pObj);
+            circle->setZValue(nZValue);
             addItem(circle);
         }
         else if(drawShape == enumPolygon)
@@ -581,6 +599,7 @@ void HIconScene::addItemByPatternId(int nPatternId)
             HPolygonObj* pObj1 = (HPolygonObj*)pObj;
             polygon = new HIconPolygonItem(pObj1->pylist);
             polygon->setItemObj(pObj);
+            polygon->setZValue(nZValue);
             addItem(polygon);
         }
         else if(drawShape == enumPolyline)
@@ -588,6 +607,7 @@ void HIconScene::addItemByPatternId(int nPatternId)
             HPolylineObj* pObj1 = (HPolylineObj*)pObj;
             polyline = new HIconPolylineItem(pObj1->pylist);
             polyline->setItemObj(pObj);
+            polyline->setZValue(nZValue);
             addItem(polyline);
         }
         else if(drawShape == enumArc)
@@ -595,6 +615,7 @@ void HIconScene::addItemByPatternId(int nPatternId)
             HArcObj* pObj1 = (HArcObj*)pObj;
             arc = new HIconArcItem(QRectF(QPointF(pObj1->topLeft),QSizeF(pObj1->rectWidth,pObj1->rectHeight)));
             arc->setItemObj(pObj);
+            arc->setZValue(nZValue);
             addItem(arc);
         }
         else if(drawShape == enumPie)
@@ -602,6 +623,7 @@ void HIconScene::addItemByPatternId(int nPatternId)
             HPieObj* pObj1 = (HPieObj*)pObj;
             pie = new HIconPieItem(QRectF(QPointF(pObj1->topLeft),QSizeF(pObj1->rectWidth,pObj1->rectHeight)));
             pie->setItemObj(pObj);
+            pie->setZValue(nZValue);
             addItem(pie);
         }
         else if(drawShape == enumText)
@@ -609,6 +631,7 @@ void HIconScene::addItemByPatternId(int nPatternId)
             HTextObj* pObj1 = (HTextObj*)pObj;
             text = new HIconTextItem(QRectF(QPointF(pObj1->getTopLeftPoint()),QSizeF(pObj1->getRectWidth(),pObj1->getRectHeight())));
             text->setItemObj(pObj);
+            text->setZValue(nZValue);
             addItem(text);
         }
 
