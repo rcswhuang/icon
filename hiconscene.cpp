@@ -245,7 +245,6 @@ void HIconScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
     {
         QLineF newline = QLineF(prePoint,curPoint);
         line->setLine(newline);
-        line->setLine(newline);
     }
     else if(drawShape == enumRectangle && rectangle != 0)
     {
@@ -408,7 +407,6 @@ void HIconScene::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
     DRAWSHAPE drawShape = pIconMgr->getIconState()->getDrawShape();
     if(drawShape == enumPolygon && polygon != 0)
     {
-        emit itemInserted(polygon->type());
         if(polygon->polygon().size()<=2)
         {
             HBaseObj* pObj = polygon->getItemObj();
@@ -423,13 +421,14 @@ void HIconScene::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
             polygon->setPolygon(tempF);
         }
         polygon->getItemObj()->setModify(true);
+        emit itemInserted(polygon->type());
         polygon = 0;
-        pIconMgr->getIconState()->setDrawShape(enumSelection);
+        //pIconMgr->getIconState()->setDrawShape(enumSelection);
         return;
     }
     else if(drawShape == enumPolyline && polyline != 0)
     {
-        emit itemInserted(polyline->type());
+
         if(polyline->polygon().size()<=2)
         {
             HBaseObj* pObj = polyline->getItemObj();
@@ -444,8 +443,10 @@ void HIconScene::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
             polyline->setPolygon(tempF);
         }
         polyline->getItemObj()->setModify(true);
+        emit itemInserted(polyline->type());
         polyline = 0;
-        pIconMgr->getIconState()->setDrawShape(enumSelection);
+
+        //pIconMgr->getIconState()->setDrawShape(enumSelection);
         return;
     }
 

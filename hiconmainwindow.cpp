@@ -524,7 +524,7 @@ void HIconMainWindow::drawText()
 void HIconMainWindow::drawSelection()
 {
     pIconMgr->getIconState()->setDrawShape(enumSelection);
-    setCursor(Qt::CrossCursor);
+    setCursor(Qt::ArrowCursor);
 }
 
 void HIconMainWindow::New(const QString& strTemplateName,const QString& strCatalogName,const int& nCatalogType)
@@ -898,7 +898,8 @@ void HIconMainWindow::scaleChanged()
 void HIconMainWindow::itemInserted(int type)
 {
     selectAct->setChecked(true);
-    setCursor(Qt::ArrowCursor);
+    emit selectAct->triggered();
+    //setCursor(Qt::ArrowCursor);
 }
 
 

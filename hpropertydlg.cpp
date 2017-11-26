@@ -60,11 +60,11 @@ void HPropertyDlg::initTab()
     initLineTab();
     initShapeTab();
     DRAWSHAPE drawShape = pCurObj->getShapeType();
-    if(drawShape == enumText)
-    {
-       ui->propertyTab->removeTab(2);
-    }
-    else if(drawShape == enumLine)
+    //if(drawShape == enumText)
+    //{
+       //ui->propertyTab->removeTab(2);
+    //}
+    if(drawShape == enumLine)
     {   
         ui->propertyTab->removeTab(0);//文字
         ui->propertyTab->removeTab(2);//形状

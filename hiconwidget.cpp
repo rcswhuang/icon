@@ -75,9 +75,8 @@ void HIconWidget::openIconWidget()
         pIconMgr->getIconFrame()->addItemByPatternId(pattern->nPattern);
     }
 
-    pIconMgr->getIconFrame()->setShowRuler(true);
     QSizeF sizeF = pIconMgr->getIconTemplate()->getDefaultSize();//获取默认大小
-    if(sizeF.width() > 0 && sizeF.height())
+    if(sizeF.width() > 0 && sizeF.height()>0)
     {
         QRectF rectF = QRectF(-sizeF.width()*10,-sizeF.height()*10,sizeF.width()*20,sizeF.height()*20);
         pIconMgr->getIconFrame()->setLogicRect(rectF);
@@ -85,6 +84,7 @@ void HIconWidget::openIconWidget()
     emit pTabBar->currentChanged(0);
     pTabBar->show();
     pIconMgr->getIconFrame()->show();
+    pIconMgr->getIconFrame()->setShowRuler(true);
 }
 
 void HIconWidget::delIconWidget()
@@ -99,10 +99,10 @@ void HIconWidget::delIconWidget()
         index--;
     }
     pIconMgr->getIconFrame()->setShowRuler(false);
-    QRectF rectF = QRectF(0,0,0,0);
-    pIconMgr->getIconFrame()->setLogicRect(rectF);
-    pTabBar->hide();
-    pIconMgr->getIconFrame()->hide();
+    //QRectF rectF = QRectF(0,0,0,0);
+    //pIconMgr->getIconFrame()->setLogicRect(rectF);
+    //pTabBar->hide();
+    //pIconMgr->getIconFrame()->hide();
     QVBoxLayout* vBoxLayout = (QVBoxLayout*)layout();
     if(vBoxLayout)
     {
