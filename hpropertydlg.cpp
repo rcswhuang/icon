@@ -60,10 +60,13 @@ void HPropertyDlg::initTab()
     initLineTab();
     initShapeTab();
     DRAWSHAPE drawShape = pCurObj->getShapeType();
-    //if(drawShape == enumText)
-    //{
+    if(drawShape == enumText)
+    {
+        ui->groupBox_2->hide();
+        ui->groupBox_8->hide();
        //ui->propertyTab->removeTab(2);
-    //}
+        ui->groupBox_10->move(ui->groupBox_2->x(),ui->groupBox_2->y());
+    }
     if(drawShape == enumLine)
     {   
         ui->propertyTab->removeTab(0);//文字
@@ -72,18 +75,21 @@ void HPropertyDlg::initTab()
         ui->yCoord_height->setEnabled(false);
         ui->groupBox_8->hide();
         ui->groupBox_8->hide();
+        ui->groupBox_10->hide();
     }
     else if(drawShape == enumRectangle || drawShape == enumEllipse ||drawShape == enumCircle || drawShape == enumPolyline || drawShape == enumPolygon)
     {
         ui->propertyTab->removeTab(0);//文字
         ui->groupBox_2->hide();
         ui->groupBox_8->hide();
+        ui->groupBox_10->move(ui->groupBox_2->x(),ui->groupBox_2->y());
     }
     else if(drawShape == enumArc || drawShape == enumPie)
     {
        ui->propertyTab->removeTab(0);//文字
        ui->groupBox_2->hide();
        ui->groupBox_8->move(ui->groupBox_2->x(),ui->groupBox_2->y());
+       ui->groupBox_10->hide();
     }
     else
     {
@@ -279,6 +285,7 @@ void HPropertyDlg::initLineTab()
     connect(ui->lineCapStyle,SIGNAL(currentIndexChanged(int)),this,SLOT(lineJoinStyle_clicked()));
     connect(ui->lineStartArrow,SIGNAL(currentIndexChanged(int)),this,SLOT(arrowHead_clicked()));
     connect(ui->lineTailArrow,SIGNAL(currentIndexChanged(int)),this,SLOT(arrowTail_clicked()));
+    connect(ui->rectRound,SIGNAL(stateChanged(int)),this,SLOT(round_clicked()));
     //线条颜色
     //QString strLineColor;
     strLineColor = "#FF0000";
@@ -358,9 +365,28 @@ void HPropertyDlg::initLineTab()
 
     ui->bCloseCheck->setVisible(false);
     ui->bCloseCheck->setChecked(false);
+
+    //弯曲度
+    ui->rectRound->setChecked(false);
+    ui->xAxis->setMinimum(0);
+    ui->xAxis->setMaximum(100);
+    ui->yAxis->setMinimum(0);
+    ui->yAxis->setMaximum(100);
+    ui->xAxis->setEnabled(false);
+    ui->yAxis->setEnabled(false);
     if(pCurObj)
     {
         DRAWSHAPE drawShape = pCurObj->getShapeType();
+        bool bRound = pCurObj->getRound();
+        ui->rectRound->setChecked(bRound);
+        if(bRound)
+        {
+            ui->xAxis->setEnabled(true);
+            ui->yAxis->setEnabled(true);
+            ui->xAxis->setValue(pCurObj->getXAxis());
+            ui->yAxis->setValue(pCurObj->getYAxis());
+        }
+
         if(drawShape == enumLine)
         {
             HLineObj* pLineObj = (HLineObj*)pCurObj;
@@ -388,9 +414,6 @@ void HPropertyDlg::initLineTab()
             ui->spanAngle->setValue(pPieObj->getSpanAngle());
         }
     }
-
-
-
 }
 
 void HPropertyDlg::initShapeTab()
@@ -404,6 +427,7 @@ void HPropertyDlg::initShapeTab()
     connect(btnGroup,SIGNAL(buttonClicked(int)),this,SLOT(btnGroup_clicked(int)));
     //边框可见
     ui->frameSee->setChecked(true);
+
     //填充方式
     btnGroup->addButton(ui->noFill,0);
     btnGroup->addButton(ui->colorFill,1);
@@ -650,6 +674,9 @@ void HPropertyDlg::ok_clicked()
     quint8 tt = ui->fillDirection->currentData().toUInt();
     pCurObj->setFillDirection(ui->fillDirection->currentData().toUInt());
     pCurObj->setRotateAngle(ui->x_rotate->value());
+    pCurObj->setRound(ui->rectRound);
+    pCurObj->setXAxis(ui->xAxis->value());
+    pCurObj->setYAxis(ui->yAxis->value());
     if(drawShape == enumLine)
     {
         HLineObj* pLineObj = (HLineObj*)pCurObj;
@@ -841,6 +868,28 @@ void HPropertyDlg::textFont_clicked()
         ui->textFontBtn->setFont(font);
         ui->textFontBtn->setText(QStringLiteral("示范"));
     }
+}
 
+void HPropertyDlg::round_clicked()
+{
+    if(!ui->rectRound->isChecked())
+    {
+        ui->xAxis->setEnabled(false);
+        ui->yAxis->setEnabled(false);
+    }
+    else
+    {
+        ui->xAxis->setEnabled(true);
+        ui->yAxis->setEnabled(true);
+    }
+}
+
+void HPropertyDlg::xAxis_clicked()
+{
+
+}
+
+void HPropertyDlg::yAxis_clicked()
+{
 
 }

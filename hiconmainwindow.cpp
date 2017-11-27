@@ -22,6 +22,7 @@ HIconMainWindow::HIconMainWindow(HIconMgr *parent) : pIconMgr(parent)
 
     setCentralWidget(pIconWidget);
     setWindowTitle(QStringLiteral("图元编辑器"));
+    //setWindowModified(true);
 
     //pIconDocument = new HIconDocument;
     statusBar()->showMessage("Reday");
@@ -577,6 +578,10 @@ void HIconMainWindow::Open(const QString &strTemplateName, int nTemplateType, co
     pIconWidget->setIconMgr(pIconMgr);
     pIconWidget->openIconWidget();
     pIconPreview->init();
+    HIconTemplate *pIconTemplate = pIconMgr->getIconTemplate();
+    QString strTitle = pIconTemplate->getCatalogName() + "/" + pIconTemplate->getSymbol()->getSymolName() + pIconTemplate->getUuid().toString();
+    strTitle = QString("%1[*] - %2").arg(strTitle).arg(QStringLiteral("图元编辑器"));
+    setWindowTitle(strTitle);
 }
 
 void HIconMainWindow::Save()

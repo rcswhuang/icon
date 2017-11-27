@@ -17,7 +17,7 @@ public:
     void loadIconTemplateFile(QString strIconsPath);//加载所有的模板文件
     void saveIconDoucument();
     void saveIconTemplateFile(const QString& strIconsPath,const QString& strFolderName);//保存所有的模板文件
-    void initIconType();
+    QString getIconFolder(int nType);
 
     //通过图元类型来获得存储的文件夹类型
     bool IsIconInFolder(const QString& strFolderName,const quint8& nIconType);

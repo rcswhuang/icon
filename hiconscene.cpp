@@ -350,11 +350,11 @@ void HIconScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
     }
     else if(drawShape == enumPolygon && polygon != 0)
     {
-        return;
+        return QGraphicsScene::mouseReleaseEvent(mouseEvent);;
     }
     else if(drawShape == enumPolyline && polyline !=0)
     {
-        return;
+        return QGraphicsScene::mouseReleaseEvent(mouseEvent);;
     }
     else if(drawShape == enumMulSelection && select != 0)
     {

@@ -67,6 +67,10 @@ public slots:
 
     void textFont_clicked();
     void textColor_clicked();
+
+    void round_clicked();
+    void xAxis_clicked();
+    void yAxis_clicked();
 private:
     QString strLineColor;//线条颜色
     QString strFillColor;//填充颜色

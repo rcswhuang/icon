@@ -81,7 +81,6 @@ void HIconDocument::saveIconDoucument()
     {
         if(info.isFile())continue;
         saveIconTemplateFile(iconsPath,info.fileName());
-
     }
 }
 
@@ -130,11 +129,25 @@ bool HIconDocument::IsIconInFolder(const QString& strFolderName,const quint8& nI
     return bIn;
 }
 
-void HIconDocument::initIconType()
+QString HIconDocument::getIconFolder(int nType)
 {
+    QString strFolderName;
+    if(nType == TEMPLATE_TYPE_DIGITAL)
+            strFolderName = QStringLiteral("遥信");
+    else if(nType == TEMPLATE_TYPE_ANALOGUE)
+            strFolderName = QStringLiteral("遥测");
+    else if(nType == TEMPLATE_TYPE_YK)
+            strFolderName =QStringLiteral("遥控");
+    else if( nType == TEMPLATE_TYPE_PLUSE)
+        strFolderName = QStringLiteral("遥脉");
+    else if(nType == TEMPLATE_TYPE_TAP)
+        strFolderName = QStringLiteral("档位");
+    else if(nType == TEMPLATE_TYPE_LIGHT)
+        strFolderName = QStringLiteral("光字牌");
+    else if(nType == TEMPLATE_TYPE_JDPAI)
+        strFolderName = QStringLiteral("接地牌");
 
-
-
+    return strFolderName;
 }
 
 HIconTemplate* HIconDocument::getCurrentTemplate()
@@ -162,6 +175,13 @@ void HIconDocument::New(const QString& strTemplateName,const QString& strCatalog
 
 void HIconDocument::Del(const QString &strTemplateName, int nTemplateType, const QString &strUuid)
 {
+    QString iconsPath = QString(getenv("wfsystem_dir"));;
+#ifdef WIN32
+    iconsPath = QProcessEnvironment::systemEnvironment().value("wfsystem_dir");
+#else
+    iconsPath = "/users/huangw";
+#endif
+    iconsPath.append("/icons");
     if(pCurIconTemplate->getCatalogType() == nTemplateType && pCurIconTemplate->getUuid().toString() == strUuid)
     {
         pCurIconTemplate->clear();
@@ -174,6 +194,11 @@ void HIconDocument::Del(const QString &strTemplateName, int nTemplateType, const
             return;
         if(pIconTemplate->getCatalogType() == nTemplateType && pIconTemplate->getUuid().toString() == strUuid)
         {
+            QString strFileName = iconsPath + "/" + getIconFolder(pIconTemplate->getCatalogType())+ "/" +pIconTemplate->getUuid().toString() + ".xic";
+            if(QFile::exists(strFileName))
+            {
+                QFile::remove(strFileName);
+            }
             pIconTemplateList.removeOne(pIconTemplate);
             delete pIconTemplate;
             pIconTemplate = NULL;

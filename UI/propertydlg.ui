@@ -41,7 +41,7 @@
     <string notr="true">基本</string>
    </property>
    <property name="currentIndex">
-    <number>3</number>
+    <number>2</number>
    </property>
    <widget class="QWidget" name="textTab">
     <attribute name="title">
@@ -859,6 +859,78 @@
       </property>
       <property name="text">
        <string>闭合</string>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QGroupBox" name="groupBox_10">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>360</y>
+       <width>751</width>
+       <height>61</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string>样式</string>
+     </property>
+     <widget class="QCheckBox" name="rectRound">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>30</y>
+        <width>71</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>圆角</string>
+      </property>
+     </widget>
+     <widget class="QSpinBox" name="xAxis">
+      <property name="geometry">
+       <rect>
+        <x>175</x>
+        <y>28</y>
+        <width>90</width>
+        <height>25</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_29">
+      <property name="geometry">
+       <rect>
+        <x>90</x>
+        <y>24</y>
+        <width>71</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;X轴弯曲度&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+     </widget>
+     <widget class="QSpinBox" name="yAxis">
+      <property name="geometry">
+       <rect>
+        <x>398</x>
+        <y>27</y>
+        <width>90</width>
+        <height>25</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_30">
+      <property name="geometry">
+       <rect>
+        <x>311</x>
+        <y>23</y>
+        <width>71</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Y轴弯曲度&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
      </widget>
     </widget>

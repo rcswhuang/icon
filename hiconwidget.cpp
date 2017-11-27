@@ -101,8 +101,8 @@ void HIconWidget::delIconWidget()
     pIconMgr->getIconFrame()->setShowRuler(false);
     //QRectF rectF = QRectF(0,0,0,0);
     //pIconMgr->getIconFrame()->setLogicRect(rectF);
-    //pTabBar->hide();
-    //pIconMgr->getIconFrame()->hide();
+    pTabBar->hide();
+    pIconMgr->getIconFrame()->hide();
     QVBoxLayout* vBoxLayout = (QVBoxLayout*)layout();
     if(vBoxLayout)
     {
