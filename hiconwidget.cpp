@@ -112,7 +112,6 @@ void HIconWidget::delIconWidget()
     }
 }
 
-
 void HIconWidget::addShowPattern()
 {
     HIconSymbol* pSymbol = (HIconSymbol*)(pIconMgr->getIconTemplate()->getSymbol());
@@ -185,10 +184,7 @@ void HIconWidget::renameShowPattern()
             pTemplate->getSymbol()->getCurrentPatternPtr()->strName = strNewName;
             pTabBar->setTabText(curIndex,strNewName);
         }
-
     }
-
-
 }
 
 void HIconWidget::refreshIconWidget()
