@@ -332,6 +332,8 @@ void HIconMainWindow::createToolBars()
 
     otherBar = addToolBar(tr("other"));
     otherBar->addAction(selectAct);
+    otherBar->addAction(groupObjAct);
+    otherBar->addAction(ungroupObjAct);
     //otherBar->addAction(rotateAct);
 }
 
@@ -783,9 +785,36 @@ void HIconMainWindow::equivalentSize()
 }
 
 //组合
+#include "H5IconGui/hgroupobj.h"
+#include "H5IconGui/hiconitemgroup.h"
 void HIconMainWindow::groupObj()
 {
+    QList<QGraphicsItem*> items = pIconMgr->getIconFrame()->iconScene()->selectedItems();
+    if(items.count() < 2) return;
 
+    HBaseObj* pGroupObj = pIconMgr->getIconTemplate()->getSymbol()->newObj(enumGroup);
+    QRectF groupRect;
+    for(int i = 0; i < items.count();i++)
+    {
+        HIconGraphicsItem* item = (HIconGraphicsItem*)items.at(i);
+        HBaseObj* pObj = item->getItemObj();
+        groupRect = groupRect.united(item->rect());
+        pIconMgr->getIconTemplate()->getSymbol()->takeObj(pObj);//应该是take操作 不是删除
+        ((HGroupObj*)pGroupObj)->addObj(pObj);
+    }
+    //矩形
+    HIconItemGroup *itemGroup = new HIconItemGroup(QRectF(0,0,groupRect.width(),groupRect.height()));
+    pIconMgr->getIconState()->appendObj(pGroupObj);
+    itemGroup->setItemObj(pGroupObj);
+    itemGroup->setRect(groupRect);
+    foreach(QGraphicsItem* item,items)
+    {
+        pIconMgr->getIconFrame()->iconScene()->removeItem(item);
+        HBaseObj* pObj = ((HIconGraphicsItem*)item)->getItemObj();
+        pObj->setIconGraphicsItem(NULL);
+    }
+    pIconMgr->getIconFrame()->iconScene()->addItem(itemGroup);
+    pIconMgr->getIconState()->setDrawShape(enumSelection);
 }
 
 //解除组合
