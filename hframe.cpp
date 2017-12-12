@@ -124,7 +124,6 @@ void HFrame::onHScrollBarChanged(int value)
     drawHRuler();
     QRect rect(m_nVRulerWidth,0,m_vHRuler.width(),m_vHRuler.height());
     update(rect);
-
 }
 
 //垂直滚动条改变
@@ -140,7 +139,7 @@ bool HFrame::eventFilter(QObject* obj,QEvent* event)
 {
     if(obj == m_pView->viewport())
     {
-        switch(event->type())
+        switch(((QMouseEvent*)event)->type())
         {
         case QEvent::MouseButtonDblClick:
         case QEvent::MouseButtonPress:
