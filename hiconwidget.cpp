@@ -11,7 +11,8 @@
 #include "hiconsymbol.h"
 #include "hiconshowpattern.h"
 #include "hiconobj.h"
-#include "hiconlineitem.h"
+#include "hiconrectobj.h"
+//#include "hiconlineitem.h"
 HIconWidget::HIconWidget()
 {
     pTabBar = new QTabBar;

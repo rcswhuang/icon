@@ -2,6 +2,7 @@
 #include "hiconapi.h"
 #include "hbaseobj.h"
 #include "hiconobj.h"
+#include "hiconrectobj.h"
 #include "hiconmgr.h"
 #include "hicongraphicsitem.h"
 #include "hiconlineitem.h"

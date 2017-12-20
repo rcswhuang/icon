@@ -7,6 +7,7 @@
 #include <QButtonGroup>
 #include "hbaseobj.h"
 #include "hiconobj.h"
+#include "hiconrectobj.h"
 namespace Ui {
 class PropertyDlg;
 }

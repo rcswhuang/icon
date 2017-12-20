@@ -142,8 +142,8 @@ void HPropertyDlg::initBaseTab()
         ui->x_rotate->setValue(pObj->getRotateAngle());
         ui->xCoord->setValue(pObj->getOX());
         ui->yCoord->setValue(pObj->getOY());
-        ui->xCoord_width->setValue(pObj->rectWidth);
-        ui->yCoord_height->setValue(pObj->rectHeight);
+        ui->xCoord_width->setValue(pObj->getRectWidth());
+        ui->yCoord_height->setValue(pObj->getRectHeigth());
     }
     else if(pCurObj->getShapeType() == DRAWSHAPE::enumEllipse)
     {
@@ -152,8 +152,8 @@ void HPropertyDlg::initBaseTab()
         ui->x_rotate->setValue(pObj->getRotateAngle());
         ui->xCoord->setValue(pObj->getOX());
         ui->yCoord->setValue(pObj->getOY());
-        ui->xCoord_width->setValue(pObj->rectWidth);
-        ui->yCoord_height->setValue(pObj->rectHeight);
+        ui->xCoord_width->setValue(pObj->getRectWidth());
+        ui->yCoord_height->setValue(pObj->getRectHeigth());
     }
     else if(pCurObj->getShapeType() == DRAWSHAPE::enumCircle)
     {
@@ -162,8 +162,8 @@ void HPropertyDlg::initBaseTab()
         ui->x_rotate->setValue(pObj->getRotateAngle());
         ui->xCoord->setValue(pObj->getOX());
         ui->yCoord->setValue(pObj->getOY());
-        ui->xCoord_width->setValue(pObj->rectWidth);
-        ui->yCoord_height->setValue(pObj->rectHeight);
+        ui->xCoord_width->setValue(pObj->getRectWidth());
+        ui->yCoord_height->setValue(pObj->getRectHeigth());
     }
     else if(pCurObj->getShapeType() == DRAWSHAPE::enumPolygon)
     {
@@ -192,8 +192,8 @@ void HPropertyDlg::initBaseTab()
         ui->x_rotate->setValue(pObj->getRotateAngle());
         ui->xCoord->setValue(pObj->getOX());
         ui->yCoord->setValue(pObj->getOY());
-        ui->xCoord_width->setValue(pObj->rectWidth);
-        ui->yCoord_height->setValue(pObj->rectHeight);
+        ui->xCoord_width->setValue(pObj->getRectWidth());
+        ui->yCoord_height->setValue(pObj->getRectHeigth());
     }
     else if(pCurObj->getShapeType() == DRAWSHAPE::enumPie)
     {
@@ -202,8 +202,8 @@ void HPropertyDlg::initBaseTab()
         ui->x_rotate->setValue(pObj->getRotateAngle());
         ui->xCoord->setValue(pObj->getOX());
         ui->yCoord->setValue(pObj->getOY());
-        ui->xCoord_width->setValue(pObj->rectWidth);
-        ui->yCoord_height->setValue(pObj->rectHeight);
+        ui->xCoord_width->setValue(pObj->getRectWidth());
+        ui->yCoord_height->setValue(pObj->getRectHeigth());
     }
     else if(pCurObj->getShapeType() == DRAWSHAPE::enumText)
     {

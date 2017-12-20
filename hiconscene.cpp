@@ -574,7 +574,7 @@ void HIconScene::addItemByPatternId(int nPatternId)
         else if(drawShape == enumRectangle)
         {
             HRectObj* pObj1 = (HRectObj*)pObj;
-            rectangle = new HIconRectItem(QRectF(QPointF(pObj1->topLeft),QSizeF(pObj1->rectWidth,pObj1->rectHeight)));
+            rectangle = new HIconRectItem(pObj1->getObjRect());
             rectangle->setItemObj(pObj);
             rectangle->setZValue(nZValue);
             addItem(rectangle);
@@ -582,7 +582,7 @@ void HIconScene::addItemByPatternId(int nPatternId)
         else if(drawShape == enumEllipse)
         {
             HEllipseObj* pObj1 = (HEllipseObj*)pObj;
-            ellipse = new HIconEllipseItem(QRectF(QPointF(pObj1->topLeft),QSizeF(pObj1->rectWidth,pObj1->rectHeight)));
+            ellipse = new HIconEllipseItem(pObj1->getObjRect());
             ellipse->setItemObj(pObj);
             ellipse->setZValue(nZValue);
             addItem(ellipse);
@@ -590,7 +590,7 @@ void HIconScene::addItemByPatternId(int nPatternId)
         else if(drawShape == enumCircle)
         {
             HCircleObj* pObj1 = (HCircleObj*)pObj;
-            circle = new HIconCircleItem(QRectF(QPointF(pObj1->topLeft),QSizeF(pObj1->rectWidth,pObj1->rectHeight)));
+            circle = new HIconCircleItem(pObj1->getObjRect());
             circle->setItemObj(pObj);
             circle->setZValue(nZValue);
             addItem(circle);
@@ -614,7 +614,7 @@ void HIconScene::addItemByPatternId(int nPatternId)
         else if(drawShape == enumArc)
         {
             HArcObj* pObj1 = (HArcObj*)pObj;
-            arc = new HIconArcItem(QRectF(QPointF(pObj1->topLeft),QSizeF(pObj1->rectWidth,pObj1->rectHeight)));
+            arc = new HIconArcItem(pObj1->getObjRect());
             arc->setItemObj(pObj);
             arc->setZValue(nZValue);
             addItem(arc);
@@ -622,7 +622,7 @@ void HIconScene::addItemByPatternId(int nPatternId)
         else if(drawShape == enumPie)
         {
             HPieObj* pObj1 = (HPieObj*)pObj;
-            pie = new HIconPieItem(QRectF(QPointF(pObj1->topLeft),QSizeF(pObj1->rectWidth,pObj1->rectHeight)));
+            pie = new HIconPieItem(pObj1->getObjRect());
             pie->setItemObj(pObj);
             pie->setZValue(nZValue);
             addItem(pie);
@@ -630,7 +630,7 @@ void HIconScene::addItemByPatternId(int nPatternId)
         else if(drawShape == enumText)
         {
             HTextObj* pObj1 = (HTextObj*)pObj;
-            text = new HIconTextItem(QRectF(QPointF(pObj1->getTopLeftPoint()),QSizeF(pObj1->getRectWidth(),pObj1->getRectHeight())));
+            text = new HIconTextItem(pObj1->getObjRect());
             text->setItemObj(pObj);
             text->setZValue(nZValue);
             addItem(text);
@@ -757,21 +757,21 @@ HIconGraphicsItem* HIconScene::addItemByIconObj(int nPattern,HBaseObj* pObj)
     else if(drawShape == enumRectangle)
     {
         HRectObj* pObj1 = (HRectObj*)pObj;
-        rectangle = new HIconRectItem(QRectF(QPointF(pObj1->topLeft),QSizeF(pObj1->rectWidth,pObj1->rectHeight)));
+        rectangle = new HIconRectItem(pObj1->getObjRect());
         rectangle->setItemObj(pObj1);
         addItem(rectangle);
     }
     else if(drawShape == enumEllipse)
     {
         HEllipseObj* pObj1 = (HEllipseObj*)pObj;
-        ellipse = new HIconEllipseItem(QRectF(QPointF(pObj1->topLeft),QSizeF(pObj1->rectWidth,pObj1->rectHeight)));
+        ellipse = new HIconEllipseItem(pObj1->getObjRect());
         ellipse->setItemObj(pObj1);
         addItem(ellipse);
     }
     else if(drawShape == enumCircle)
     {
         HCircleObj* pObj1 = (HCircleObj*)pObj;
-        circle = new HIconCircleItem(QRectF(QPointF(pObj1->topLeft),QSizeF(pObj1->rectWidth,pObj1->rectHeight)));
+        circle = new HIconCircleItem(pObj1->getObjRect());
         circle->setItemObj(pObj1);
         addItem(circle);
     }
@@ -792,14 +792,14 @@ HIconGraphicsItem* HIconScene::addItemByIconObj(int nPattern,HBaseObj* pObj)
     else if(drawShape == enumArc)
     {
         HArcObj* pObj1 = (HArcObj*)pObj;
-        arc = new HIconArcItem(QRectF(QPointF(pObj1->topLeft),QSizeF(pObj1->rectWidth,pObj1->rectHeight)));
+        arc = new HIconArcItem(pObj1->getObjRect());
         arc->setItemObj(pObj1);
         addItem(arc);
     }
     else if(drawShape == enumPie)
     {
         HPieObj* pObj1 = (HPieObj*)pObj;
-        pie = new HIconPieItem(QRectF(QPointF(pObj1->topLeft),QSizeF(pObj1->rectWidth,pObj1->rectHeight)));
+        pie = new HIconPieItem(pObj1->getObjRect());
         pie->setItemObj(pObj1);
         addItem(pie);
     }
