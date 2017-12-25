@@ -11,7 +11,6 @@ HAbout::HAbout(QWidget *parent) :
 
 HAbout::~HAbout()
 {
-
     delete ui;
 }
 
