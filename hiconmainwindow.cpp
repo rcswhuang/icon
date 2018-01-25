@@ -798,7 +798,7 @@ void HIconMainWindow::groupObj()
     {
         HIconGraphicsItem* item = (HIconGraphicsItem*)items.at(i);
         HBaseObj* pObj = item->getItemObj();
-        groupRect = groupRect.united(item->rect());
+        groupRect = groupRect.united(item->boundingRect());
         pIconMgr->getIconTemplate()->getSymbol()->takeObj(pObj);//应该是take操作 不是删除
         ((HGroupObj*)pGroupObj)->addObj(pObj);
     }
