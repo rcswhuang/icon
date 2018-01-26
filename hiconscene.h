@@ -15,6 +15,7 @@ class HIconPieItem;
 class HIconTextItem;
 class HIconSelectionItem;
 class HIconGraphicsItem;
+class HIconItemGroup;
 class HBaseObj;
 class HIconScene : public QGraphicsScene
 {
@@ -35,6 +36,12 @@ public:
     void prepareRezieItem(QGraphicsSceneMouseEvent *mouseEvent);
     void addNewIconCommand(HBaseObj* pObj);
     void getIconGraphicsItemPointList(HIconGraphicsItem* item,QList<QPolygonF>& pfList);
+    void addIconGraphicsItem(HBaseObj* pObj);
+
+public:
+    //涉及到在scene上面的操作都移动到此类完成
+    void groupObj();
+    void ungroupObj();
 protected:
     virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
     virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent);

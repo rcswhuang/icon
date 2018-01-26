@@ -125,8 +125,8 @@ void HPropertyDlg::initBaseTab()
     {
         ui->objType->setText(QStringLiteral("直线"));
         HLineObj* pObj = (HLineObj*)pCurObj;
-        QPointF p1 = pObj->pfHeadPoint;
-        QPointF p2 = pObj->pfTailPoint;
+        QPointF p1 = pObj->getHeadPoint();
+        QPointF p2 = pObj->getTailPoint();
         double dx = (p1.x() + p2.x())/2;
         double dy = (p1.y() + p2.y())/2;
         QLineF lineF(p1,p2);

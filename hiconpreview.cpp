@@ -213,8 +213,8 @@ void HIconPreview::drawIcon(QPainter *p)
         if(shapeType == enumLine)
         {
             HLineObj* pLineObj = (HLineObj*)pObj;
-            QPointF pt1 = QPointF(pLineObj->pfHeadPoint.x()*deltaX,pLineObj->pfHeadPoint.y()*deltaY);
-            QPointF pt2 = QPointF(pLineObj->pfTailPoint.x()*deltaX,pLineObj->pfTailPoint.y()*deltaY);
+            QPointF pt1 = QPointF(pLineObj->getHeadPoint().x()*deltaX,pLineObj->getHeadPoint().y()*deltaY);
+            QPointF pt2 = QPointF(pLineObj->getTailPoint().x()*deltaX,pLineObj->getTailPoint().y()*deltaY);
             p->drawLine(pt1,pt2);
         }
         else if(shapeType == enumEllipse)

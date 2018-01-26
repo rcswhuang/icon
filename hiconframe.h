@@ -51,6 +51,12 @@ public:
     //移动到底层
     void bringToBottom();
 
+    //组合
+    void groupObj();
+
+    //取消组合
+    void ungroupObj();
+
     //设置scene的逻辑区域
     void setLogicRect(QRectF& rectF);
 

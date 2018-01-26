@@ -326,6 +326,24 @@ void HIconFrame::delItemByPatternId(int nPatternId)
     }
 }
 
+
+void HIconFrame::groupObj()
+{
+    if(iconScene())
+    {
+        iconScene()->groupObj();
+    }
+}
+
+void HIconFrame::ungroupObj()
+{
+    if(iconScene())
+    {
+        iconScene()->ungroupObj();
+    }
+}
+
+
 QString HIconFrame::getClipboardFile()
 {
     QString clipboardPath = QProcessEnvironment::systemEnvironment().value("wfsystem_dir");

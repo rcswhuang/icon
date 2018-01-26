@@ -8,6 +8,7 @@
 #include "hbaseobj.h"
 #include "hiconobj.h"
 #include "hiconrectobj.h"
+#include "hgroupobj.h"
 namespace Ui {
 class PropertyDlg;
 }

@@ -789,38 +789,17 @@ void HIconMainWindow::equivalentSize()
 #include "H5IconGui/hiconitemgroup.h"
 void HIconMainWindow::groupObj()
 {
-    QList<QGraphicsItem*> items = pIconMgr->getIconFrame()->iconScene()->selectedItems();
-    if(items.count() < 2) return;
-
-    HBaseObj* pGroupObj = pIconMgr->getIconTemplate()->getSymbol()->newObj(enumGroup);
-    QRectF groupRect;
-    for(int i = 0; i < items.count();i++)
-    {
-        HIconGraphicsItem* item = (HIconGraphicsItem*)items.at(i);
-        HBaseObj* pObj = item->getItemObj();
-        groupRect = groupRect.united(item->boundingRect());
-        pIconMgr->getIconTemplate()->getSymbol()->takeObj(pObj);//应该是take操作 不是删除
-        ((HGroupObj*)pGroupObj)->addObj(pObj);
-    }
-    //矩形
-    HIconItemGroup *itemGroup = new HIconItemGroup(QRectF(0,0,groupRect.width(),groupRect.height()));
-    pIconMgr->getIconState()->appendObj(pGroupObj);
-    itemGroup->setItemObj(pGroupObj);
-    itemGroup->setRect(groupRect);
-    foreach(QGraphicsItem* item,items)
-    {
-        pIconMgr->getIconFrame()->iconScene()->removeItem(item);
-        HBaseObj* pObj = ((HIconGraphicsItem*)item)->getItemObj();
-        pObj->setIconGraphicsItem(NULL);
-    }
-    pIconMgr->getIconFrame()->iconScene()->addItem(itemGroup);
-    pIconMgr->getIconState()->setDrawShape(enumSelection);
+    if(!pIconMgr || !pIconMgr->getIconFrame())
+        return;
+    pIconMgr->getIconFrame()->groupObj();
 }
 
 //解除组合
 void HIconMainWindow::ungroupObj()
 {
-
+    if(!pIconMgr || !pIconMgr->getIconFrame())
+        return;
+    pIconMgr->getIconFrame()->ungroupObj();
 }
 
 //翻转--水平翻转
