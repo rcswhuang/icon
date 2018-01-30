@@ -16,6 +16,7 @@
 #include "hiconshowpattern.h"
 #include "hiconselectionitem.h"
 #include "hiconcommand.h"
+#include <cmath>
 #include <QGraphicsSceneMouseEvent>
 #include <QCursor>
 #include <QMenu>
@@ -887,7 +888,7 @@ void HIconScene::prepareMoveItem(QGraphicsSceneMouseEvent *mouseEvent)
     QList<QGraphicsItem*> selectedItemList = selectedItems();
     if(selectedItemList.count() == 0) return;
     QPointF pt = mouseEvent->scenePos();
-    if(abs(pt.x()-prePoint.x()) < 0.0001 && abs(pt.y() - prePoint.y()) < 0.0001)
+    if(fabs(pt.x()-prePoint.x()) < 0.0001 && fabs(pt.y() - prePoint.y()) < 0.0001)
         return;
     qreal dx = pt.x() - prePoint.x();
     qreal dy = pt.y() - prePoint.y();
@@ -911,7 +912,7 @@ void HIconScene::prepareRezieItem(QGraphicsSceneMouseEvent *mouseEvent)
     QGraphicsItem* item = itemAt(pt,transform);
     if(itemList.indexOf(item) == -1)
         return;
-    if(abs(pt.x()-prePoint.x()) < 0.0001 && abs(pt.y() - prePoint.y()) < 0.0001)
+    if(fabs(pt.x()-prePoint.x()) < 0.0001 && fabs(pt.y() - prePoint.y()) < 0.0001)
         return;
     newPolygonF.clear();
     getIconGraphicsItemPointList((HIconGraphicsItem*)item,newPolygonF);
