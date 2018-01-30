@@ -81,6 +81,7 @@ private:
     HIconPieItem* pie;
     HIconTextItem* text;
     HIconSelectionItem* select;
+    HIconItemGroup* group;
     //HIconRectItem
 
 };

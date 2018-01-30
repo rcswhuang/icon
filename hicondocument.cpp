@@ -249,7 +249,6 @@ HIconTemplate* HIconDocument::findIconTemplateByTemplateName(const QString& strT
         if(pIconTemplate && pIconTemplate->getSymbol()->getSymolName() == strTemplateName)
 
             return pIconTemplate;
-
     }
     return NULL;
 }

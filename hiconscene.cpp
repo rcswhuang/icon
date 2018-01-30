@@ -550,7 +550,7 @@ void HIconScene::setItemVisible(int nPatternId)
      }
 }
 
-//增加图元的显示方案
+//增加图元的显示方案 ---能不能把这些拉出来独立成一个函数 huangw
 void HIconScene::addItemByPatternId(int nPatternId)
 {
     if(!pIconMgr && !pIconMgr->getIconTemplate() &&!pIconMgr->getIconTemplate()->getSymbol())
@@ -636,6 +636,14 @@ void HIconScene::addItemByPatternId(int nPatternId)
             text->setZValue(nZValue);
             addItem(text);
         }
+        else if(drawShape == enumGroup)
+        {
+            HGroupObj* pObj1 = (HGroupObj*)pObj;
+            group = new HIconItemGroup(pObj1->getObjRect());
+            group->setItemObj(pObj);
+            group->setZValue(nZValue);
+            addItem(group);
+        }
 
         if(drawShape == enumLine && line != 0)
         {
@@ -672,6 +680,10 @@ void HIconScene::addItemByPatternId(int nPatternId)
         else if(drawShape == enumText && text != 0)
         {
             text = 0;
+        }
+        else if(drawShape == enumGroup && group != 0)
+        {
+            group = 0;
         }
     }
 }
@@ -1098,6 +1110,7 @@ void HIconScene::ungroupObj()
         while(!pGroupObj->isEmpty())
         {
             HBaseObj* pObj = (HBaseObj*)pGroupObj->takeFirst();
+            pIconMgr->getIconState()->appendObj(pObj);
             addIconGraphicsItem(pObj);
         }
         removeItem(item);

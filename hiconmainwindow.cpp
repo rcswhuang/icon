@@ -557,9 +557,6 @@ void HIconMainWindow::New(const QString& strTemplateName,const QString& strCatal
     pIconWidget->newIconWidget();
     pIconTreeWidget->addIconTreeWigetItem();
     pIconPreview->init();
-
-
-
 }
 
 
