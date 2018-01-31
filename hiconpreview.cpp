@@ -221,19 +221,19 @@ void HIconPreview::drawIcon(QPainter *p)
         {
             HEllipseObj* pEllipseObj = (HEllipseObj*)pObj;
             QPointF pt = QPointF(pEllipseObj->getTopLeft().x()*deltaX,pEllipseObj->getTopLeft().y()*deltaY);
-            p->drawEllipse(QRectF(pt,QSizeF(pEllipseObj->getRectWidth()*deltaX,pEllipseObj->getRectHeigth()*deltaY)));
+            p->drawEllipse(QRectF(pt,QSizeF(pEllipseObj->getRectWidth()*deltaX,pEllipseObj->getRectHeight()*deltaY)));
         }
         else if(shapeType == enumRectangle)
         {
             HRectObj* pRectObj = (HRectObj*)pObj;
             QPointF pt = QPointF(pRectObj->getTopLeft().x()*deltaX,pRectObj->getTopLeft().y()*deltaY);
-            p->drawRect(QRectF(pt,QSizeF(pRectObj->getRectWidth()*deltaX,pRectObj->getRectHeigth()*deltaY)));
+            p->drawRect(QRectF(pt,QSizeF(pRectObj->getRectWidth()*deltaX,pRectObj->getRectHeight()*deltaY)));
         }
         else if(shapeType == enumCircle)
         {
             HCircleObj* pCircleObj = (HCircleObj*)pObj;
             QPointF pt = QPointF(pCircleObj->getTopLeft().x()*deltaX,pCircleObj->getTopLeft().y()*deltaY);
-            p->drawEllipse(QRectF(pt,QSizeF(pCircleObj->getRectWidth()*deltaX,pCircleObj->getRectHeigth()*deltaY)));
+            p->drawEllipse(QRectF(pt,QSizeF(pCircleObj->getRectWidth()*deltaX,pCircleObj->getRectHeight()*deltaY)));
         }
         else if(shapeType == enumPolyline)
         {
@@ -262,15 +262,15 @@ void HIconPreview::drawIcon(QPainter *p)
             HArcObj* pArcObj = (HArcObj*)pObj;
             QPointF pt = QPointF(pArcObj->getTopLeft().x()*deltaX,pArcObj->getTopLeft().y()*deltaY);
             if(pArcObj->getCloseStatus())
-                p->drawChord(QRectF(pt,QSizeF(pArcObj->getRectWidth()*deltaX,pArcObj->getRectHeigth()*deltaY)),pArcObj->getStartAngle()*16,pArcObj->getSpanAngle()*16);
+                p->drawChord(QRectF(pt,QSizeF(pArcObj->getRectWidth()*deltaX,pArcObj->getRectHeight()*deltaY)),pArcObj->getStartAngle()*16,pArcObj->getSpanAngle()*16);
             else
-                p->drawArc(QRectF(pt,QSizeF(pArcObj->getRectWidth()*deltaX,pArcObj->getRectHeigth()*deltaY)),pArcObj->getStartAngle()*16,pArcObj->getSpanAngle()*16);
+                p->drawArc(QRectF(pt,QSizeF(pArcObj->getRectWidth()*deltaX,pArcObj->getRectHeight()*deltaY)),pArcObj->getStartAngle()*16,pArcObj->getSpanAngle()*16);
         }
         else if(shapeType == enumPie)
         {
             HPieObj* pPieObj = (HPieObj*)pObj;
             QPointF pt = QPointF(pPieObj->getTopLeft().x()*deltaX,pPieObj->getTopLeft().y()*deltaY);
-            p->drawPie(QRectF(pt,QSizeF(pPieObj->getRectWidth()*deltaX,pPieObj->getRectHeigth()*deltaY)),pPieObj->getStartAngle()*16,pPieObj->getSpanAngle()*16);
+            p->drawPie(QRectF(pt,QSizeF(pPieObj->getRectWidth()*deltaX,pPieObj->getRectHeight()*deltaY)),pPieObj->getStartAngle()*16,pPieObj->getSpanAngle()*16);
         }
         else if(shapeType == enumText)
         {

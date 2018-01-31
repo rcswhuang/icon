@@ -12,6 +12,7 @@
 #include "hiconstate.h"
 #include "hicontextitem.h"
 #include "hiconitemgroup.h"
+#include "hiconcomplexitem.h"
 #include "hpropertydlg.h"
 #include "hiconshowpattern.h"
 #include "hiconselectionitem.h"
