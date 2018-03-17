@@ -10,8 +10,8 @@
 #include "hicontemplate.h"
 #include "hiconsymbol.h"
 #include "hiconshowpattern.h"
-#include "hiconobj.h"
-#include "hiconrectobj.h"
+//#include "hiconobj.h"
+//#include "hiconrectobj.h"
 //#include "hiconlineitem.h"
 HIconWidget::HIconWidget()
 {

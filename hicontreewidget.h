@@ -71,13 +71,28 @@ public slots:
     void openIcon(QTreeWidgetItem*,int);
 
 public:
+    //普通图符
+    HIconTreeWidgetItem* trans2Item;
+    HIconTreeWidgetItem* trans3Item;
+    HIconTreeWidgetItem* generatorItem;
+    HIconTreeWidgetItem* capacitorItem;
+    HIconTreeWidgetItem* otherdeviceItem;
+    HIconTreeWidgetItem* ptItem;
+    HIconTreeWidgetItem* ctItem;
+    HIconTreeWidgetItem* arresterItem;
+    HIconTreeWidgetItem* reactorItem;
+    //测点类
     HIconTreeWidgetItem* digitalItem;
     HIconTreeWidgetItem* analogueItem;
     HIconTreeWidgetItem* lightItem;
-    HIconTreeWidgetItem* controlItem;
+    HIconTreeWidgetItem* relayItem;
     HIconTreeWidgetItem* pulseItem;//遥脉
     HIconTreeWidgetItem* tapItem;
+    HIconTreeWidgetItem* controlItem;
+    //其他类
     HIconTreeWidgetItem* paiItem;
+    HIconTreeWidgetItem* otherItem;
+
 private:
     QAction* newAct;
     QAction* delAct;

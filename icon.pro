@@ -5,7 +5,8 @@ TARGET = icon
 
 INCLUDEPATH += \
     ../include \
-    ../include/H5IconGui
+    ../include/H5IconGui \
+    ../include/H5IconHelp
 
 HEADERS       = \
     hiconmainwindow.h \
@@ -19,7 +20,6 @@ HEADERS       = \
     hiconscene.h \
     hiconmgr.h \
     hiconstate.h \
-    hpropertydlg.h \
     hiconpreview.h \
     #hiconshowpattern.h \
     hiconcommand.h \
@@ -37,7 +37,6 @@ SOURCES       = main.cpp \
     hiconscene.cpp \
     hiconmgr.cpp \
     hiconstate.cpp \
-    hpropertydlg.cpp \
     hiconpreview.cpp \
     #hiconshowpattern.cpp \
     hiconcommand.cpp \
@@ -50,18 +49,19 @@ RESOURCES     = \
 
 
 FORMS += \
-    UI/propertydlg.ui \
+    #UI/propertydlg.ui \
     UI/iconpreview.ui \
     UI/about.ui
 
 unix{
 
-    LIBS += -L ../lib/ -lH5IconGui
+    LIBS += -L ../lib/ -lH5IconGui -lH5IconHelp
 }
 
 win32{
    LIBS += \
-         ../lib/H5IconGui.lib
+         ../lib/H5IconGui.lib \
+         ../lib/H5IconHelp.lib
 }
 QT += widgets
 QT += xml

@@ -30,7 +30,7 @@ QString HIconTreeWidgetItem::getUuid()
 HIconTreeWidget::HIconTreeWidget(HIconMgr* iconmgr,QWidget* parent,int type):pIconMgr(iconmgr),
     QTreeWidget(parent)
 {
-
+    setSortingEnabled(false);
 }
 
 HIconTreeWidget::~HIconTreeWidget()
@@ -40,44 +40,95 @@ HIconTreeWidget::~HIconTreeWidget()
 
 void HIconTreeWidget::init()
 {
-    HIconTreeWidgetItem *rootItem = new HIconTreeWidgetItem(this);
-    rootItem->setText(0,QStringLiteral("测点"));
-    addTopLevelItem(rootItem);
-    expandItem(rootItem);
-    digitalItem = new HIconTreeWidgetItem(rootItem,TEMPLATE_TYPE_DIGITAL);
+    setHeaderLabel(QStringLiteral("图元浏览"));
+    HIconTreeWidgetItem *normalItem = new HIconTreeWidgetItem(this);
+    normalItem->setText(0,QStringLiteral("普通类"));
+    addTopLevelItem(normalItem);
+    HIconTreeWidgetItem *measureItem = new HIconTreeWidgetItem(this);
+    measureItem->setText(0,QStringLiteral("测点类"));
+    addTopLevelItem(measureItem);
+    HIconTreeWidgetItem *otherAllItem = new HIconTreeWidgetItem(this);
+    otherAllItem->setText(0,QStringLiteral("其他类"));
+    addTopLevelItem(otherAllItem);
+    expandItem(normalItem);
+    expandItem(measureItem);
+    expandItem(otherAllItem);
+
+    //普通类
+    trans2Item = new HIconTreeWidgetItem(normalItem,TEMPLATE_TYPE_TRANSFORMER2);
+    trans2Item->setIcon(0,QIcon(":/images/tree.png"));
+    trans2Item->setText(0,QStringLiteral("两卷变"));
+
+    trans3Item = new HIconTreeWidgetItem(normalItem,TEMPLATE_TYPE_TRANSFORMER3);
+    trans3Item->setIcon(0,QIcon(":/images/tree.png"));
+    trans3Item->setText(0,QStringLiteral("三卷变"));
+
+    generatorItem = new HIconTreeWidgetItem(normalItem,TEMPLATE_TYPE_GENERATOR);
+    generatorItem->setIcon(0,QIcon(":/images/tree.png"));
+    generatorItem->setText(0,QStringLiteral("发电机"));
+
+    capacitorItem = new HIconTreeWidgetItem(normalItem,TEMPLATE_TYPE_CAPACITOR);
+    capacitorItem->setIcon(0,QIcon(":/images/tree.png"));
+    capacitorItem->setText(0,QStringLiteral("电容器"));
+
+    otherdeviceItem = new HIconTreeWidgetItem(normalItem,TEMPLATE_TYPE_OTHERDEVICE);
+    otherdeviceItem->setIcon(0,QIcon(":/images/tree.png"));
+    otherdeviceItem->setText(0,QStringLiteral("其他设备"));
+
+    ptItem = new HIconTreeWidgetItem(normalItem,TEMPLATE_TYPE_PT);
+    ptItem->setIcon(0,QIcon(":/images/tree.png"));
+    ptItem->setText(0,QStringLiteral("电压互感器"));
+
+    ctItem = new HIconTreeWidgetItem(normalItem,TEMPLATE_TYPE_CT);
+    ctItem->setIcon(0,QIcon(":/images/tree.png"));
+    ctItem->setText(0,QStringLiteral("电流互感器"));
+
+    arresterItem = new HIconTreeWidgetItem(normalItem,TEMPLATE_TYPE_ARRESTER);
+    arresterItem->setIcon(0,QIcon(":/images/tree.png"));
+    arresterItem->setText(0,QStringLiteral("避雷器"));
+
+    reactorItem = new HIconTreeWidgetItem(normalItem,TEMPLATE_TYPE_REACTOR);
+    reactorItem->setIcon(0,QIcon(":/images/tree.png"));
+    reactorItem->setText(0,QStringLiteral("容抗器"));
+
+    //测点类
+    digitalItem = new HIconTreeWidgetItem(measureItem,TEMPLATE_TYPE_DIGITAL);
     digitalItem->setIcon(0,QIcon(":/images/tree.png"));
     digitalItem->setText(0,QStringLiteral("遥信"));
-    //rootItem->addChild(digitalItem);
 
-    analogueItem = new HIconTreeWidgetItem(rootItem,TEMPLATE_TYPE_ANALOGUE);
+    analogueItem = new HIconTreeWidgetItem(measureItem,TEMPLATE_TYPE_ANALOGUE);
     analogueItem->setIcon(0,QIcon(":/images/tree.png"));
     analogueItem->setText(0,QStringLiteral("遥测"));
-    //rootItem->addChild(analogueItem);
 
-    controlItem = new HIconTreeWidgetItem(rootItem,TEMPLATE_TYPE_YK);
-    controlItem->setIcon(0,QIcon(":/images/tree.png"));
-    controlItem->setText(0,QStringLiteral("遥控"));
-    //rootItem->addChild(controlItem);
+    relayItem = new HIconTreeWidgetItem(measureItem,TEMPLATE_TYPE_RELAY);
+    relayItem->setIcon(0,QIcon(":/images/tree.png"));
+    relayItem->setText(0,QStringLiteral("遥控"));
 
-    pulseItem = new HIconTreeWidgetItem(rootItem,TEMPLATE_TYPE_PLUSE);
+    pulseItem = new HIconTreeWidgetItem(measureItem,TEMPLATE_TYPE_PLUSE);
     pulseItem->setIcon(0,QIcon(":/images/tree.png"));
     pulseItem->setText(0,QStringLiteral("遥脉"));
-    //rootItem->addChild(pulseItem);
 
-    tapItem = new HIconTreeWidgetItem(rootItem,TEMPLATE_TYPE_TAP);
+    tapItem = new HIconTreeWidgetItem(measureItem,TEMPLATE_TYPE_TAP);
     tapItem->setIcon(0,QIcon(":/images/tree.png"));
     tapItem->setText(0,QStringLiteral("档位"));
     //rootItem->addChild(tapItem);
 
-    lightItem = new HIconTreeWidgetItem(rootItem,TEMPLATE_TYPE_LIGHT);
+    lightItem = new HIconTreeWidgetItem(measureItem,TEMPLATE_TYPE_LIGHT);
     lightItem->setIcon(0,QIcon(":/images/tree.png"));
     lightItem->setText(0,QStringLiteral("光字牌"));
-    //rootItem->addChild(lightItem);
 
-    paiItem = new HIconTreeWidgetItem(rootItem,TEMPLATE_TYPE_JDPAI);
+    controlItem = new HIconTreeWidgetItem(measureItem,TEMPLATE_TYPE_CONTROL);
+    controlItem->setIcon(0,QIcon(":/images/tree.png"));
+    controlItem->setText(0,QStringLiteral("控制点"));
+
+    //其他类
+    paiItem = new HIconTreeWidgetItem(otherAllItem,TEMPLATE_TYPE_JDPAI);
     paiItem->setIcon(0,QIcon(":/images/tree.png"));
     paiItem->setText(0,QStringLiteral("接地牌"));
-    //rootItem->addChild(paiItem);
+
+    otherItem = new HIconTreeWidgetItem(otherAllItem,TEMPLATE_TYPE_OTHER);
+    otherItem->setIcon(0,QIcon(":/images/tree.png"));
+    otherItem->setText(0,QStringLiteral("其他"));
 
     //connect(this,SIGNAL(itemSelectionChanged()),SLOT(openIcon()));
     connect(this,SIGNAL(itemClicked(QTreeWidgetItem*,int)),SLOT(openIcon(QTreeWidgetItem*,int)));
@@ -161,6 +212,8 @@ void HIconTreeWidget::openIcon(QTreeWidgetItem* item,int col)
     {
         QString strTemplateName = pCurItem->text(col);
         QString strTemplateUuid = pCurItem->getUuid();
+        if(!pCurItem->parent())
+            return;
         nTemplateType = pCurItem->parent()->type();
         if(strTemplateName.isEmpty() || strTemplateUuid.isEmpty())
             return;
@@ -255,21 +308,26 @@ void HIconTreeWidget::initTemplateFile()
         newItem->setText(0,pTemplate->getSymbol()->getSymolName());
         treeItem->addChild(newItem);
 
-        collapseItem(treeItem);
+        //collapseItem(treeItem);
     }
 }
 
 HIconTreeWidgetItem* HIconTreeWidget::findIconTreeWigetItem(int treeData)
 {
-    int count = topLevelItemCount();
-    HIconTreeWidgetItem* rootItem = static_cast<HIconTreeWidgetItem*>(topLevelItem(0));
-    if(!rootItem) return NULL;
-    for(int i = 0;i < rootItem->childCount();i++)
+    //int count = topLevelItemCount();
+    int index = 0;
+    while(index < topLevelItemCount())
     {
-        HIconTreeWidgetItem* childItem = static_cast<HIconTreeWidgetItem*>(rootItem->child(i));
-        if(!childItem) continue;
-        if(treeData == childItem->type())
-            return childItem;
+        HIconTreeWidgetItem* rootItem = static_cast<HIconTreeWidgetItem*>(topLevelItem(index));
+        if(!rootItem) return NULL;
+        for(int i = 0;i < rootItem->childCount();i++)
+        {
+            HIconTreeWidgetItem* childItem = static_cast<HIconTreeWidgetItem*>(rootItem->child(i));
+            if(!childItem) continue;
+            if(treeData == childItem->type())
+                return childItem;
+        }
+        index++;
     }
     return NULL;
 }
@@ -277,13 +335,15 @@ HIconTreeWidgetItem* HIconTreeWidget::findIconTreeWigetItem(int treeData)
 void HIconTreeWidget::expandIconItem(HIconTreeWidgetItem* item)
 {
     int count = topLevelItemCount();
-    HIconTreeWidgetItem* rootItem = static_cast<HIconTreeWidgetItem*>(topLevelItem(0));
-    if(!rootItem) return;
-    int c = rootItem->childCount();
-    for(int i = 0;i < rootItem->childCount();i++)
+    for(int k = 0; k < count;k++)
     {
-        HIconTreeWidgetItem* childItem = static_cast<HIconTreeWidgetItem*>(rootItem->child(i));
-        collapseItem(childItem);
+        HIconTreeWidgetItem* rootItem = static_cast<HIconTreeWidgetItem*>(topLevelItem(k));
+        if(!rootItem) continue;
+        for(int i = 0;i < rootItem->childCount();i++)
+        {
+            HIconTreeWidgetItem* childItem = static_cast<HIconTreeWidgetItem*>(rootItem->child(i));
+            collapseItem(childItem);
+        }
     }
     expandItem(item);
 }

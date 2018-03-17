@@ -262,10 +262,6 @@ void HIconMainWindow::createActions()
     //aboutQtAct->setStatusTip(tr("Show the Qt library's About box"));
 
  //////////draw Toool/////////////////////
-
-
-
-
 }
 
 
@@ -380,7 +376,7 @@ void HIconMainWindow::createDockWindows()
     browserIconDock->setAllowedAreas(Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea);
     pIconTreeWidget = new HIconTreeWidget(pIconMgr);
     pIconTreeWidget->setRootIsDecorated(true);
-    pIconTreeWidget->setSortingEnabled(true);
+    pIconTreeWidget->setSortingEnabled(false);
     browserIconDock->setWidget(pIconTreeWidget);
     addDockWidget(Qt::LeftDockWidgetArea,browserIconDock);
     pIconTreeWidget->init();
@@ -585,7 +581,6 @@ void HIconMainWindow::Open(const QString &strTemplateName, int nTemplateType, co
 
 void HIconMainWindow::Save()
 {
-
     pIconMgr->Save();
 }
 

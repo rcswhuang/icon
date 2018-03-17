@@ -4,7 +4,7 @@
 #include "hiconshowpattern.h"
 #include "hbaseobj.h"
 #include "hiconobj.h"
-#include "hiconrectobj.h"
+//#include "hiconrectobj.h"
 #include <QIntValidator>
 HIconPreview::HIconPreview(HIconMgr* iconMgr,QWidget *parent) :
     QDialog(parent),
@@ -212,32 +212,32 @@ void HIconPreview::drawIcon(QPainter *p)
         DRAWSHAPE shapeType = pObj->getShapeType();
         if(shapeType == enumLine)
         {
-            HLineObj* pLineObj = (HLineObj*)pObj;
+            HLine* pLineObj = (HLine*)pObj;
             QPointF pt1 = QPointF(pLineObj->getHeadPoint().x()*deltaX,pLineObj->getHeadPoint().y()*deltaY);
             QPointF pt2 = QPointF(pLineObj->getTailPoint().x()*deltaX,pLineObj->getTailPoint().y()*deltaY);
             p->drawLine(pt1,pt2);
         }
         else if(shapeType == enumEllipse)
         {
-            HEllipseObj* pEllipseObj = (HEllipseObj*)pObj;
+            HEllipse* pEllipseObj = (HEllipse*)pObj;
             QPointF pt = QPointF(pEllipseObj->getTopLeft().x()*deltaX,pEllipseObj->getTopLeft().y()*deltaY);
             p->drawEllipse(QRectF(pt,QSizeF(pEllipseObj->getRectWidth()*deltaX,pEllipseObj->getRectHeight()*deltaY)));
         }
         else if(shapeType == enumRectangle)
         {
-            HRectObj* pRectObj = (HRectObj*)pObj;
+            HRectangle* pRectObj = (HRectangle*)pObj;
             QPointF pt = QPointF(pRectObj->getTopLeft().x()*deltaX,pRectObj->getTopLeft().y()*deltaY);
             p->drawRect(QRectF(pt,QSizeF(pRectObj->getRectWidth()*deltaX,pRectObj->getRectHeight()*deltaY)));
         }
         else if(shapeType == enumCircle)
         {
-            HCircleObj* pCircleObj = (HCircleObj*)pObj;
+            HCircle* pCircleObj = (HCircle*)pObj;
             QPointF pt = QPointF(pCircleObj->getTopLeft().x()*deltaX,pCircleObj->getTopLeft().y()*deltaY);
             p->drawEllipse(QRectF(pt,QSizeF(pCircleObj->getRectWidth()*deltaX,pCircleObj->getRectHeight()*deltaY)));
         }
         else if(shapeType == enumPolyline)
         {
-            HPolylineObj* pPolylineObj = (HPolylineObj*)pObj;
+            HPolyline* pPolylineObj = (HPolyline*)pObj;
             QPolygonF pyTempList;
             foreach(QPointF pt,pPolylineObj->pylist)
                 pyTempList<<QPointF(pt.x()*deltaX,pt.y()*deltaY);
@@ -251,7 +251,7 @@ void HIconPreview::drawIcon(QPainter *p)
         }
         else if(shapeType == enumPolygon)
         {
-            HPolygonObj* pPolyObj = (HPolygonObj*)pObj;
+            HPolygon* pPolyObj = (HPolygon*)pObj;
             QPolygonF pyTempList;
             foreach(QPointF pt,pPolyObj->pylist)
                 pyTempList<<QPointF(pt.x()*deltaX,pt.y()*deltaY);
@@ -259,7 +259,7 @@ void HIconPreview::drawIcon(QPainter *p)
         }
         else if(shapeType == enumArc)
         {
-            HArcObj* pArcObj = (HArcObj*)pObj;
+            HArc* pArcObj = (HArc*)pObj;
             QPointF pt = QPointF(pArcObj->getTopLeft().x()*deltaX,pArcObj->getTopLeft().y()*deltaY);
             if(pArcObj->getCloseStatus())
                 p->drawChord(QRectF(pt,QSizeF(pArcObj->getRectWidth()*deltaX,pArcObj->getRectHeight()*deltaY)),pArcObj->getStartAngle()*16,pArcObj->getSpanAngle()*16);
@@ -268,13 +268,13 @@ void HIconPreview::drawIcon(QPainter *p)
         }
         else if(shapeType == enumPie)
         {
-            HPieObj* pPieObj = (HPieObj*)pObj;
+            HPie* pPieObj = (HPie*)pObj;
             QPointF pt = QPointF(pPieObj->getTopLeft().x()*deltaX,pPieObj->getTopLeft().y()*deltaY);
             p->drawPie(QRectF(pt,QSizeF(pPieObj->getRectWidth()*deltaX,pPieObj->getRectHeight()*deltaY)),pPieObj->getStartAngle()*16,pPieObj->getSpanAngle()*16);
         }
         else if(shapeType == enumText)
         {
-            HTextObj* pTextObj = (HTextObj*)pObj;
+            HText* pTextObj = (HText*)pObj;
             QString strFontName = pTextObj->getTextFontName();
             int pointSize = pTextObj->getPointSize();
 
