@@ -111,12 +111,16 @@ bool HIconDocument::Save(bool savefile)
     {
         pTemplate->clear();
         pCurIconTemplate->copyTo(pTemplate);
-        pTemplate->setModify(false);
-        pCurIconTemplate->setModify(false);
     }
 
     if(savefile)
         saveIconDoucument();
+    //一定要保存之后再修改
+    if(pTemplate)
+    {
+        pTemplate->setModify(false);
+        pCurIconTemplate->setModify(false);
+    }
     return true;
 }
 
