@@ -4,7 +4,7 @@
 #include "hiconshowpattern.h"
 #include "hbaseobj.h"
 #include "hiconobj.h"
-//#include "hiconrectobj.h"
+#include "hiconhelper.h"
 #include <QIntValidator>
 HIconPreview::HIconPreview(HIconMgr* iconMgr,QWidget *parent) :
     QDialog(parent),
@@ -68,21 +68,10 @@ void HIconPreview::onRefreshChanged()
     HIconTemplate* pTemplate = pIconMgr->getIconTemplate();
     if(!pTemplate) return;
     QSizeF tempSize = pTemplate->getDefaultSize();
-    pixRect = QRectF(QPointF(0,0),tempSize*2);
-    pixRect.moveCenter(QPointF(ui->widget->size().width()/2,ui->widget->size().height()/2));
-    pixMap = QPixmap(ui->widget->size());
-    if(pixMap.isNull()) return;
-    QPainter p(&pixMap);
-    p.setRenderHint(QPainter::Antialiasing,true);
-    p.fillRect(QRect(QPoint(0,0),ui->widget->size()),Qt::white);
-    p.save();
-    p.setPen(QPen(Qt::DotLine));
-    p.drawRect(pixRect);
-    p.restore();
-    //pIconMgr->getIconFrame()->view()->render(&p);
-    //pIconMgr->getIconFrame()->iconScene()->render(&p,pIconMgr->getIconFrame()->getLogicRect(),pixRect);
-
-    drawIcon(&p);
+    pixRect = QRectF(QPointF(0,0),tempSize);
+    int nCurPattern = pTemplate->getSymbol()->getCurrentPattern();
+    pixMap = HIconHelper::Instance()->iconPixmap(pTemplate->getCatalogName(),pTemplate->getUuid().toString(),tempSize,nCurPattern);
+    QSize size = pixMap.size();
     ui->widget->update();//重绘操作
 }
 
@@ -90,211 +79,12 @@ void HIconPreview::drawIcon(QPainter *p)
 {
     HIconTemplate* pTemplate = pIconMgr->getIconTemplate();
     if(!pTemplate) return;
-    HIconShowPattern* pShowPattern = pTemplate->getSymbol()->getCurrentPatternPtr();
-    if(!pShowPattern) return;
-    qreal deltaX = pixRect.width()/pIconMgr->getIconFrame()->getLogicRect().width();
-    qreal deltaY = pixRect.height()/pIconMgr->getIconFrame()->getLogicRect().height();
-    p->save();
-    p->translate(ui->widget->size().width()/2,ui->widget->size().height()/2);
-    QPen pen(Qt::NoPen);
-    QList<HBaseObj*>::iterator it;
-    for(it = pShowPattern->pObjList.begin();it != pShowPattern->pObjList.end();++it)
-    {
-        HBaseObj* pObj = (HBaseObj*)*it;
-        pen.setColor(QColor(pObj->getLineColorName()));
-        pen.setWidth(1);
-        pen.setStyle(pObj->getLineStyle());
-        if(pObj->getFrameSee())
-            p->setPen(pen);
-        else
-            p->setPen(Qt::NoPen);
-
-        quint8 nFillWay = pObj->getFillWay();//填充选择
-        quint8 nFillStyle = pObj->getFillStyle(); //填充风格
-        quint8 nTransparency = pObj->getTransparency(); //透明度
-        quint8 nFillDir = pObj->getFillDirection();//填充方向
-        QColor fillClr = QColor(pObj->getFillColorName());//填充颜色
-        QBrush brush;
-
-        if(nFillWay >= 1)
-        {
-            p->setOpacity(1-(qreal)nTransparency/100.00);
-            if(nFillStyle == Qt::LinearGradientPattern)
-            {
-                QPointF ps1,ps2;
-                switch(nFillDir)
-                {
-                    case DIRECT_BOTTOM_TO_TOP:
-                    {
-                        ps2 = rect().topLeft();
-                        ps1 = rect().bottomLeft();
-                        break;
-                    }
-                    case DIRECT_TOP_TO_BOTTOM: //有顶到底
-                    {
-                        ps1 = rect().topLeft();
-                        ps2 = rect().bottomLeft();
-                        break;
-                    }
-                    case DIRECT_LEFT_TO_RIGHT: //由左到右
-                    {
-                        ps1 = rect().topLeft();
-                        ps2 = rect().topRight();
-                        break;
-                    }
-                    case DIRECT_RIGHT_TO_LEFT: //由右到左
-                    {
-                        ps1 = rect().topRight();
-                        ps2 = rect().topLeft();
-                        break;
-                    }
-                    case DIRECT_VER_TO_OUT: //垂直到外
-                    {
-                        ps1 = QPointF(rect().center().x(),rect().top());
-                        ps2 = rect().topLeft();
-                        break;
-                    }
-                    case DIRECT_HORi_TO_OUT: //水平向外
-                    {
-                        ps1 = QPointF(rect().left(),rect().center().y());
-                        ps2 = rect().topLeft();
-                        break;
-                    }
-                    case DIRECT_VER_TO_IN: //垂直向里
-                    {
-                        ps2 = QPointF(rect().center().x(),rect().top());
-                        ps1 = rect().topLeft();
-                        break;
-                    }
-                    case DIRECT_HORI_TO_IN: //垂直向里
-                    {
-                        ps2 = QPointF(rect().left(),rect().center().y());
-                        ps1 = rect().topLeft();
-                        break;
-                    }
-                }
-                QLinearGradient lgrd(ps1,ps2);
-                lgrd.setColorAt(0.0,fillClr);
-                lgrd.setColorAt(0.5,fillClr.lighter(150));
-                lgrd.setColorAt(1.0,fillClr.lighter(250));
-                lgrd.setSpread(QGradient::ReflectSpread);
-                QBrush brush2(lgrd);
-                brush = brush2;
-            }
-            else if(nFillStyle == Qt::RadialGradientPattern)
-            {
-                QRadialGradient lgrd(rect().center(),qMin(rect().width(),rect().height())/2);
-                lgrd.setColorAt(0.0,fillClr);
-                lgrd.setColorAt(0.5,fillClr.dark(150));
-                lgrd.setColorAt(1.0,fillClr.dark(250));
-                lgrd.setSpread(QGradient::ReflectSpread);
-                QBrush brush2(lgrd);
-                brush = brush2;
-            }
-            else if(nFillStyle == Qt::ConicalGradientPattern)
-            {
-                QConicalGradient lgrd(rect().center(),270);
-                lgrd.setColorAt(0.0,fillClr);
-                lgrd.setColorAt(0.5,fillClr.lighter(150));
-                lgrd.setColorAt(1.0,fillClr.lighter(250));
-                lgrd.setSpread(QGradient::ReflectSpread);
-                QBrush brush2(lgrd);
-                brush = brush2;
-            }
-            else
-            {
-                Qt::BrushStyle bs = (Qt::BrushStyle)nFillStyle;
-                QBrush brush1(fillClr,bs);
-                brush = brush1;
-            }
-        }
-        p->setBrush(brush);
-        DRAWSHAPE shapeType = pObj->getShapeType();
-        if(shapeType == enumLine)
-        {
-            HLine* pLineObj = (HLine*)pObj;
-            QPointF pt1 = QPointF(pLineObj->getHeadPoint().x()*deltaX,pLineObj->getHeadPoint().y()*deltaY);
-            QPointF pt2 = QPointF(pLineObj->getTailPoint().x()*deltaX,pLineObj->getTailPoint().y()*deltaY);
-            p->drawLine(pt1,pt2);
-        }
-        else if(shapeType == enumEllipse)
-        {
-            HEllipse* pEllipseObj = (HEllipse*)pObj;
-            QPointF pt = QPointF(pEllipseObj->getTopLeft().x()*deltaX,pEllipseObj->getTopLeft().y()*deltaY);
-            p->drawEllipse(QRectF(pt,QSizeF(pEllipseObj->getRectWidth()*deltaX,pEllipseObj->getRectHeight()*deltaY)));
-        }
-        else if(shapeType == enumRectangle)
-        {
-            HRectangle* pRectObj = (HRectangle*)pObj;
-            QPointF pt = QPointF(pRectObj->getTopLeft().x()*deltaX,pRectObj->getTopLeft().y()*deltaY);
-            p->drawRect(QRectF(pt,QSizeF(pRectObj->getRectWidth()*deltaX,pRectObj->getRectHeight()*deltaY)));
-        }
-        else if(shapeType == enumCircle)
-        {
-            HCircle* pCircleObj = (HCircle*)pObj;
-            QPointF pt = QPointF(pCircleObj->getTopLeft().x()*deltaX,pCircleObj->getTopLeft().y()*deltaY);
-            p->drawEllipse(QRectF(pt,QSizeF(pCircleObj->getRectWidth()*deltaX,pCircleObj->getRectHeight()*deltaY)));
-        }
-        else if(shapeType == enumPolyline)
-        {
-            HPolyline* pPolylineObj = (HPolyline*)pObj;
-            QPolygonF pyTempList;
-            foreach(QPointF pt,pPolylineObj->pylist)
-                pyTempList<<QPointF(pt.x()*deltaX,pt.y()*deltaY);
-            //p->drawPolygon(pyTempList);
-            QPolygonF polygon(pyTempList);
-            QPainterPath path;
-            path.moveTo(polygon.at(0));
-            for(int i = 1; i < polygon.size();i++)
-                path.lineTo(polygon.at(i));
-            p->drawPath(path);
-        }
-        else if(shapeType == enumPolygon)
-        {
-            HPolygon* pPolyObj = (HPolygon*)pObj;
-            QPolygonF pyTempList;
-            foreach(QPointF pt,pPolyObj->pylist)
-                pyTempList<<QPointF(pt.x()*deltaX,pt.y()*deltaY);
-            p->drawPolygon(pyTempList);
-        }
-        else if(shapeType == enumArc)
-        {
-            HArc* pArcObj = (HArc*)pObj;
-            QPointF pt = QPointF(pArcObj->getTopLeft().x()*deltaX,pArcObj->getTopLeft().y()*deltaY);
-            if(pArcObj->getCloseStatus())
-                p->drawChord(QRectF(pt,QSizeF(pArcObj->getRectWidth()*deltaX,pArcObj->getRectHeight()*deltaY)),pArcObj->getStartAngle()*16,pArcObj->getSpanAngle()*16);
-            else
-                p->drawArc(QRectF(pt,QSizeF(pArcObj->getRectWidth()*deltaX,pArcObj->getRectHeight()*deltaY)),pArcObj->getStartAngle()*16,pArcObj->getSpanAngle()*16);
-        }
-        else if(shapeType == enumPie)
-        {
-            HPie* pPieObj = (HPie*)pObj;
-            QPointF pt = QPointF(pPieObj->getTopLeft().x()*deltaX,pPieObj->getTopLeft().y()*deltaY);
-            p->drawPie(QRectF(pt,QSizeF(pPieObj->getRectWidth()*deltaX,pPieObj->getRectHeight()*deltaY)),pPieObj->getStartAngle()*16,pPieObj->getSpanAngle()*16);
-        }
-        else if(shapeType == enumText)
-        {
-            HText* pTextObj = (HText*)pObj;
-            QString strFontName = pTextObj->getTextFontName();
-            int pointSize = pTextObj->getPointSize();
-
-            int weight = pTextObj->getWeigth();
-            bool italic = pTextObj->getItalic();
-            QFont font(strFontName,pointSize,weight,italic);
-
-            QPen textPen = QPen(QColor(pTextObj->getTextColorName()));
-            p->setPen(textPen);
-            p->setFont(font);
-            QPointF pt = QPointF(pTextObj->getTopLeftPoint().x()*deltaX,pTextObj->getTopLeftPoint().y()*deltaY);
-            int nAlign = pTextObj->getHorizontalAlign()|pTextObj->getVerticalAlign();
-            p->drawText(QRectF(pt,QSizeF(pTextObj->getRectWidth()*deltaX,pTextObj->getRectHeight()*deltaY)),nAlign,pTextObj->getTextContent());
-        }
-    }
-    p->restore();
+    pixMap = HIconHelper::Instance()->iconPixmap(pTemplate->getCatalogName(),pTemplate->getUuid().toString());
 }
 
 bool HIconPreview::eventFilter(QObject *obj, QEvent *event)
 {
+    //return false;
     if(obj == ui->widget)
     {
         if(event->type() == QEvent::Paint)
@@ -302,7 +92,13 @@ bool HIconPreview::eventFilter(QObject *obj, QEvent *event)
             if(!pixMap.isNull())
             {
                 QPainter p(ui->widget);
-                p.drawPixmap(QPoint(0,0),pixMap);
+                QPen pen(Qt::red);
+                pen.setStyle(Qt::DotLine);
+                p.setPen(pen);
+                pixRect.moveCenter(QPointF(ui->widget->size().width()/2,ui->widget->size().height()/2));
+                p.drawRect(pixRect);
+                p.drawPixmap(pixRect.topLeft(),pixMap);
+
             }
             return true;
         }
