@@ -293,7 +293,7 @@ void HIconScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
         QRectF newRect = QRectF(prePoint,curPoint).normalized();
         text->setRect(newRect);
     }
-    else if(drawShape == enumMulSelection)
+    else if(drawShape == enumMulSelection && select != 0)
     {
         QRectF newRect = QRectF(prePoint,curPoint).normalized();
         select->setRect(newRect.normalized());
@@ -462,7 +462,6 @@ void HIconScene::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
         menu.addAction(QStringLiteral("删除"),this,SLOT(delItem()));
         menu.addAction(QStringLiteral("粘贴"),this,SLOT(pasteItem()));
         menu.addAction(QStringLiteral("属性"),this,SLOT(showProperty()));
-
         menu.exec(event->screenPos());
     }
     else
@@ -475,7 +474,6 @@ void HIconScene::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
         {
             QMenu menu;
             menu.addAction(QStringLiteral("粘贴"),this,SLOT(pasteItem()));
-
             menu.exec(event->screenPos());
         }
     }
@@ -694,13 +692,17 @@ void HIconScene::addItemByPatternId(int nPatternId)
 //删除图元的显示方案
 void HIconScene::delItemByPatternId(int nPatternId)
 {
+    if(!pIconMgr || !pIconMgr->getIconTemplate() || !pIconMgr->getIconTemplate()->getSymbol())
+        return;
     foreach (QGraphicsItem *item, items())
     {
         HIconGraphicsItem* pItem = qgraphicsitem_cast<HIconGraphicsItem*>(item);
         if(!pItem) continue;
         HBaseObj *pObj = pItem->getItemObj();
+        //必须先从pIconSymbol里面删除掉
         if(pObj->contains(nPatternId))
         {
+            pIconMgr->getIconTemplate()->getSymbol()->takeObj(pObj);
             removeItem(item);
             delete item;
         }

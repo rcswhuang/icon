@@ -95,6 +95,7 @@ void HIconWidget::delIconWidget()
     while(index)
     {
         QVariant data = pTabBar->tabData(index-1);
+        pIconMgr->getIconTemplate()->getSymbol()->setCurrentPattern(data.toInt());
         pIconMgr->getIconFrame()->delItemByPatternId(data.toInt());
         pTabBar->removeTab(index-1);
         index--;
