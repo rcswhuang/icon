@@ -171,9 +171,9 @@ void HIconFrame::paste()
         {
             delete pObj;
             pObj = NULL;
-            iconScene()->removeItem(item);
-            delete item;
-            item = NULL;
+            //iconScene()->removeItem(item);
+            //delete item;
+            //item = NULL;
             continue;
         }
         copyItemList.append(item);
