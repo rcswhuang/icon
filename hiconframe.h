@@ -28,35 +28,6 @@ public:
     //鼠标的改变
     void cursorChanged(const QCursor& cursor);
 
-    //合适宽度
-    void fitWidth();
-
-    //合适高度
-    void fitHeight();
-
-    //剪切
-    void cut();
-
-    //复制
-    void copy();
-
-    //粘贴
-    void paste();
-
-    void del();
-
-    //移动到顶层
-    void bringToTop();
-
-    //移动到底层
-    void bringToBottom();
-
-    //组合
-    void groupObj();
-
-    //取消组合
-    void ungroupObj();
-
     //设置scene的逻辑区域
     void setLogicRect(QRectF& rectF);
 
@@ -78,14 +49,8 @@ public:
     //设置显示方案对象的显示和隐藏功能
     void setItemVisible(int nPatternId);
 
-    QString getClipboardFile();
-
     //获取item
     HIconGraphicsItem* getIconGraphicsItemByObj(HBaseObj* pObj);
-
-
-public slots:
-
 
 protected:
 

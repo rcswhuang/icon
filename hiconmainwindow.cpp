@@ -614,48 +614,48 @@ void HIconMainWindow::redo()
 //剪切
 void HIconMainWindow::cut()
 {
-    if(!pIconMgr || !pIconMgr->getIconFrame())
+    if(!pIconMgr || !pIconMgr->getIconOp())
         return;
-    pIconMgr->getIconFrame()->cut();
+    pIconMgr->getIconOp()->cut();
 
 }
 
 //复制
 void HIconMainWindow::copy()
 {
-    if(!pIconMgr || !pIconMgr->getIconFrame())
+    if(!pIconMgr || !pIconMgr->getIconOp())
         return;
-    pIconMgr->getIconFrame()->copy();
+    pIconMgr->getIconOp()->copy();
 
 }
 
 //粘贴
 void HIconMainWindow::paste()
 {
-    if(!pIconMgr || !pIconMgr->getIconFrame())
+    if(!pIconMgr || !pIconMgr->getIconOp())
         return;
-    pIconMgr->getIconFrame()->paste();
+    pIconMgr->getIconOp()->paste();
 
 }
 
 //删除
 void HIconMainWindow::del()
 {
-    if(!pIconMgr || !pIconMgr->getIconFrame())
+    if(!pIconMgr || !pIconMgr->getIconOp())
         return;
     if(QMessageBox::Cancel == QMessageBox::information(NULL,QStringLiteral("警告"),QStringLiteral("确认删除该图符吗？"),QMessageBox::Ok|QMessageBox::Cancel))
         return;
-    pIconMgr->getIconFrame()->del();
+    pIconMgr->getIconOp()->del();
 }
 
 //合适宽度
 void HIconMainWindow::fitWidth()
 {
-    if(!pIconMgr || !pIconMgr->getIconFrame())
+    if(!pIconMgr || !pIconMgr->getIconOp() || !pIconMgr->getIconFrame())
         return;
 
     double oldscale = pIconMgr->getIconFrame()->scale();
-    pIconMgr->getIconFrame()->fitWidth();
+    pIconMgr->getIconOp()->fitWidth();
     double newscale = pIconMgr->getIconFrame()->scale();
     double deltascale = newscale/oldscale;
     pIconMgr->getIconFrame()->view()->scale(deltascale,deltascale);
@@ -666,11 +666,11 @@ void HIconMainWindow::fitWidth()
 //合适高度
 void HIconMainWindow::fitHeight()
 {
-    if(!pIconMgr || !pIconMgr->getIconFrame())
+    if(!pIconMgr || !pIconMgr->getIconOp() || !pIconMgr->getIconFrame())
         return;
 
     double oldscale = pIconMgr->getIconFrame()->scale();
-    pIconMgr->getIconFrame()->fitHeight();
+    pIconMgr->getIconOp()->fitHeight();
     double newscale = pIconMgr->getIconFrame()->scale();
     double deltascale = newscale/oldscale;
     pIconMgr->getIconFrame()->view()->scale(deltascale,deltascale);
@@ -781,17 +781,17 @@ void HIconMainWindow::equivalentSize()
 #include "H5IconGui/hiconitemgroup.h"
 void HIconMainWindow::groupObj()
 {
-    if(!pIconMgr || !pIconMgr->getIconFrame())
+    if(!pIconMgr || !pIconMgr->getIconOp())
         return;
-    pIconMgr->getIconFrame()->groupObj();
+    pIconMgr->getIconOp()->groupObj();
 }
 
 //解除组合
 void HIconMainWindow::ungroupObj()
 {
-    if(!pIconMgr || !pIconMgr->getIconFrame())
+    if(!pIconMgr || !pIconMgr->getIconOp())
         return;
-    pIconMgr->getIconFrame()->ungroupObj();
+    pIconMgr->getIconOp()->ungroupObj();
 }
 
 //翻转--水平翻转
@@ -821,17 +821,17 @@ void HIconMainWindow::rotateRight()
 //移动到顶层
 void HIconMainWindow::bringToTop()
 {
-    if(!pIconMgr || !pIconMgr->getIconFrame())
+    if(!pIconMgr || !pIconMgr->getIconOp())
         return;
-    pIconMgr->getIconFrame()->bringToTop();
+    pIconMgr->getIconOp()->bringToTop();
 }
 
 //移动到底层
 void HIconMainWindow::bringToBottom()
 {
-    if(!pIconMgr || !pIconMgr->getIconFrame())
+    if(!pIconMgr || !pIconMgr->getIconOp())
         return;
-    pIconMgr->getIconFrame()->bringToBottom();
+    pIconMgr->getIconOp()->bringToBottom();
 }
 
 //上移一层

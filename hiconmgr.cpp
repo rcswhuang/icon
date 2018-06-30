@@ -7,6 +7,7 @@ HIconMgr::HIconMgr()
     //pIconFrame->setIconMgr(this);
     pIconDocument = new HIconDocument(this);
     pIconState = new HIconState(this);
+    pIconOp = new HIconOp(this);
     pIconUndoStack = new QUndoStack;
     bShowGrid = true;
     bShowCenterLine = true;
@@ -45,6 +46,13 @@ QUndoStack* HIconMgr::getIconUndoStack()
 {
     if(pIconUndoStack)
         return pIconUndoStack;
+    return NULL;
+}
+
+HIconOp* HIconMgr::getIconOp()
+{
+    if(pIconOp)
+        return pIconOp;
     return NULL;
 }
 

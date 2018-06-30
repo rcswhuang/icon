@@ -4,10 +4,12 @@
 #include "hiconframe.h"
 #include "hicondocument.h"
 #include "hiconstate.h"
+#include "hiconop.h"
 #include <QUndoStack>
 class HIconFrame;
 class HIconDocument;
 class HIconState;
+class HIconOp;
 class HIconMgr
 {
 public:
@@ -17,6 +19,7 @@ public:
     HIconState* getIconState();
     HIconFrame* getIconFrame();
     QUndoStack* getIconUndoStack();
+    HIconOp* getIconOp();
 
     void setBackgroundColor(QString clrName);
     QString getBackgroundColor();
@@ -36,6 +39,7 @@ private:
     HIconFrame* pIconFrame;
     HIconDocument* pIconDocument;
     HIconState* pIconState;
+    HIconOp* pIconOp;
     QUndoStack* pIconUndoStack;
 };
 

@@ -1,5 +1,6 @@
 ﻿#include "hiconstate.h"
 #include "hiconobj.h"
+
 HIconState::HIconState(HIconMgr* pMgr):pIconMgr(pMgr)
 {
     curDrawShape = enumSelection;
@@ -17,9 +18,4 @@ void HIconState::appendObj(HBaseObj *obj)
     if(pIconMgr && pIconMgr->getIconTemplate() && pIconMgr->getIconTemplate()->getSymbol())
         pIconMgr->getIconTemplate()->getSymbol()->addObj(obj);
 }
-
-
-
-
-
 

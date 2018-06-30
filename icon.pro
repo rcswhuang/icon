@@ -23,7 +23,8 @@ HEADERS       = \
     hiconpreview.h \
     #hiconshowpattern.h \
     hiconcommand.h \
-    habout.h
+    habout.h \
+    hiconop.h
 
 SOURCES       = main.cpp \
     hiconmainwindow.cpp \
@@ -40,7 +41,8 @@ SOURCES       = main.cpp \
     hiconpreview.cpp \
     #hiconshowpattern.cpp \
     hiconcommand.cpp \
-    habout.cpp
+    habout.cpp \
+    hiconop.cpp
 
 RESOURCES     = \
     icon.qrc \

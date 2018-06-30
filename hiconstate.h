@@ -22,4 +22,5 @@ public:
     HIconMgr* pIconMgr;
 };
 
+
 #endif // HICONSTATE_H

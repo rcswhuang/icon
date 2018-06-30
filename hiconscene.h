@@ -5,7 +5,7 @@
 class HIconFrame;
 class HIconMgr;
 class HIconLineItem;
-class HIconRectItem;
+class HIconRectangleItem;
 class HIconEllipseItem;
 class HIconCircleItem;
 class HIconPolygonItem;
@@ -38,10 +38,6 @@ public:
     void getIconGraphicsItemPointList(HIconGraphicsItem* item,QList<QPolygonF>& pfList);
     void addIconGraphicsItem(HBaseObj* pObj);
 
-public:
-    //涉及到在scene上面的操作都移动到此类完成
-    void groupObj();
-    void ungroupObj();
 protected:
     virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
     virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *mouseEvent);
@@ -72,7 +68,7 @@ private:
 
     HIconMgr* pIconMgr;
     HIconLineItem* line;
-    HIconRectItem* rectangle;
+    HIconRectangleItem* rectangle;
     HIconEllipseItem* ellipse;
     HIconCircleItem* circle;
     HIconPolygonItem* polygon;
