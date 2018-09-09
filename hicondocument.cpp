@@ -2,6 +2,7 @@
 #include <QDir>
 #include <QProcessEnvironment>
 #include <QMessageBox>
+#include "publicdata.h"
 HIconDocument::HIconDocument(HIconMgr* iconMgr):pIconMgr(iconMgr)
 {
     pCurIconTemplate = new HIconTemplate("0000");
@@ -52,13 +53,10 @@ void HIconDocument::New(const QString& strTemplateName,const QString& strCatalog
 
 void HIconDocument::Del(const QString &strTemplateName, int nTemplateType, const QString &strUuid)
 {
-    QString iconsPath = QString(getenv("wfsystem_dir"));;
-#ifdef WIN32
-    iconsPath = QProcessEnvironment::systemEnvironment().value("wfsystem_dir");
-#else
-    iconsPath = "/users/huangw";
-#endif
-    iconsPath.append("/icons");
+
+    char szIconPath[128];
+    getDataFilePath(DFPATH_ICON,szIconPath);
+    QString iconsPath = QString(szIconPath);
     if(pCurIconTemplate->getCatalogType() == nTemplateType && pCurIconTemplate->getUuid().toString() == strUuid)
     {
         pCurIconTemplate->clear();

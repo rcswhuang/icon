@@ -55,16 +55,22 @@ FORMS += \
     UI/iconpreview.ui \
     UI/about.ui
 
+LIBS += -L../lib -lH5IconGui -lH5IconHelp -ldatafile
 unix{
+    UI_DIR = temp/ui
+    MOC_DIR = temp/moc
+    OBJECTS_DIR	= temp/obj
+    LIBS += \
 
-    LIBS += -L ../lib/ -lH5IconGui -lH5IconHelp
 }
 
 win32{
-   LIBS += \
-         ../lib/H5IconGui.lib \
-         ../lib/H5IconHelp.lib
+    UI_DIR = temp/ui
+    MOC_DIR = temp/moc
+    OBJECTS_DIR	= temp/obj
+    LIBS += \
 }
+
 QT += widgets
 QT += xml
 

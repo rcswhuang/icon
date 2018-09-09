@@ -4,12 +4,13 @@
 #include <QDir>
 #include "hiconcommand.h"
 #include "hiconitemgroup.h"
+#include "publicdata.h"
+
 HIconOp::HIconOp(HIconMgr* mgr)
     :pIconMgr(mgr)
 {
 
 }
-
 
 void HIconOp::fitWidth()
 {
@@ -168,8 +169,10 @@ void HIconOp::del()
 
 QString HIconOp::getClipboardFile()
 {
-    QString clipboardPath = QString("wfsystem_dir");//---huangw
-    clipboardPath.append("/data/icon");
+    char szDataPath[128];
+    getDataFilePath(DFPATH_DATA,szDataPath);
+    QString clipboardPath = QString(szDataPath);
+    clipboardPath.append("/icon");
     QDir dirClipboard(clipboardPath);
     if(!dirClipboard.exists())
         dirClipboard.mkdir(clipboardPath);
