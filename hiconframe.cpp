@@ -12,15 +12,15 @@
 HIconFrame::HIconFrame(QWidget * parent, Qt::WindowFlags f )
     :HFrame(parent,f)
 {
-    pIconMgr = NULL;
+    m_pIconMgr = NULL;
     m_pView->setInteractive(false);
     m_pView->setDragMode(QGraphicsView::NoDrag);
 }
 
 HIconFrame::HIconFrame(HIconMgr* pMgr,QWidget * parent, Qt::WindowFlags f)
-:pIconMgr(pMgr),HFrame(parent,f)
+:m_pIconMgr(pMgr),HFrame(parent,f)
 {
-    m_pView->setScene(new HIconScene(pIconMgr));
+    m_pView->setScene(new HIconScene(m_pIconMgr));
 }
 
 HIconFrame::~HIconFrame()
@@ -30,14 +30,14 @@ HIconFrame::~HIconFrame()
 
 void HIconFrame::setIconMgr(HIconMgr *iconmgr)
 {
-    pIconMgr = iconmgr;
+    m_pIconMgr = iconmgr;
 }
 
 void HIconFrame::setLogicRect(QRectF &rectF)
 {
-    if(rectF == sceneRect)
+    if(rectF == m_sceneRect)
         return;
-    sceneRect = rectF;
+    m_sceneRect = rectF;
     if(m_pView)
     {
         m_pView->setSceneRect(rectF);
@@ -50,10 +50,10 @@ void HIconFrame::setLogicRect(QRectF &rectF)
 
 QRectF HIconFrame::getLogicRect()
 {
-    return sceneRect;
+    return m_sceneRect;
 }
 
-HIconScene* HIconFrame::iconScene()
+HIconScene* HIconFrame::getIconScene()
 {
     if(m_pView)
         return (HIconScene*)m_pView->scene();
@@ -72,52 +72,43 @@ void HIconFrame::cursorChanged(const QCursor& cursor)
 
 void HIconFrame::setItemVisible(int nPatternId)
 {
-    if(iconScene())
-    {
-        iconScene()->setItemVisible(nPatternId);
-    }
-}
-/*
-bool HIconFrame::eventFilter( QObject *obj, QEvent *event)
-{
-    HFrame::eventFilter(obj,event);
-
-
-
-    return false;
-}*/
-
-HIconGraphicsItem* HIconFrame::addItemByIconObj(int nPattern,HBaseObj* pObj)
-{
-    if(iconScene())
-    {
-        return iconScene()->addItemByIconObj(nPattern,pObj);
-    }
-    return NULL;
+    HIconScene* pIconScene = getIconScene();
+    if(!m_pIconMgr && !pIconScene)
+        return;
+    pIconScene->setItemVisible(nPatternId);
 }
 
-
-//？？ 应该是刷新函数
-void HIconFrame::addItemByPatternId(int nPatternId)
+//粘贴
+HIconGraphicsItem* HIconFrame::addItemByIconObj(HBaseObj* pObj)
 {
-    if(iconScene())
-    {
-        iconScene()->addItemByPatternId(nPatternId);
-    }
+    HIconScene* pIconScene = getIconScene();
+    if(!m_pIconMgr && !pIconScene)
+        return NULL;
+    return pIconScene->addItemByIconObj(pObj);
 }
 
-void HIconFrame::delItemByPatternId(int nPatternId)
+//切换nPattern
+void HIconFrame::refreshSceneByPatternId(int nPatternId)
 {
-    if(iconScene())
-    {
-        iconScene()->delItemByPatternId(nPatternId);
-    }
+    HIconScene* pIconScene = getIconScene();
+    if(!m_pIconMgr && !pIconScene)
+        return;
+    pIconScene->refreshItemByPatternId(nPatternId);
+
+}
+
+void HIconFrame::clearSceneByPatternId(int nPatternId)
+{
+    HIconScene* pIconScene = getIconScene();
+    if(!m_pIconMgr && !pIconScene)
+        return;
+    pIconScene->clearItemByPatternId(nPatternId);
 }
 
 HIconGraphicsItem* HIconFrame::getIconGraphicsItemByObj(HBaseObj *pObj)
 {
-    if(!pObj || !iconScene()) return NULL;
-    QList<QGraphicsItem*> items = iconScene()->items();
+    if(!pObj || !getIconScene()) return NULL;
+    QList<QGraphicsItem*> items = getIconScene()->items();
     foreach (QGraphicsItem *item1, items)
     {
         HIconGraphicsItem* item = qgraphicsitem_cast<HIconGraphicsItem*>(item1);

@@ -126,7 +126,7 @@ public slots:
 
     //原始大小
     //void normalSize();
-
+/*
     //对齐方式--左对齐
     void alignLeft();
 
@@ -160,12 +160,6 @@ public slots:
     //同等大小
     void equivalentSize();
 
-    //组合
-    void groupObj();
-
-    //解除组合
-    void ungroupObj();
-
     //翻转--水平翻转
     void horizontalTurn();
 
@@ -177,6 +171,12 @@ public slots:
 
     //右旋转
     void rotateRight();
+*/
+    //组合
+    void groupObj();
+
+    //解除组合
+    void ungroupObj();
 
     //移动到顶层
     void bringToTop();

@@ -53,12 +53,12 @@ void HIconOp::cut()
 
 void HIconOp::copy()
 {
-    if(!pIconMgr || !pIconMgr->getIconFrame() || !pIconMgr->getIconFrame()->iconScene())
+    if(!pIconMgr || !pIconMgr->getIconFrame() || !pIconMgr->getIconFrame()->getIconScene())
         return;
     //寻找当前页面的所有选择的图元
     QByteArray bytes;
     QDataStream stream(&bytes,QIODevice::WriteOnly);
-    QList<QGraphicsItem*> itemSelectList = pIconMgr->getIconFrame()->iconScene()->selectedItems();
+    QList<QGraphicsItem*> itemSelectList = pIconMgr->getIconFrame()->getIconScene()->selectedItems();
     stream<<itemSelectList.count();
     stream<<pIconMgr->getIconTemplate()->getSymbol()->getCurrentPattern();
     for(int i =0; i < itemSelectList.count();i++)
@@ -88,7 +88,7 @@ void HIconOp::copy()
 
 void HIconOp::paste()
 {
-    if(!pIconMgr || !pIconMgr->getIconFrame() || !pIconMgr->getIconFrame()->iconScene())
+    if(!pIconMgr || !pIconMgr->getIconFrame() || !pIconMgr->getIconFrame()->getIconScene())
         return;
     QString clipboardPath = getClipboardFile();
     QFile file(clipboardPath);
@@ -109,7 +109,8 @@ void HIconOp::paste()
         if(!pObj) continue;
         pObj->readData(&stream);
         objList.append(pObj);
-        HIconGraphicsItem* item = pIconMgr->getIconFrame()->addItemByIconObj(pIconMgr->getIconTemplate()->getSymbol()->getCurrentPattern(),pObj);
+        HIconGraphicsItem* item = pIconMgr->getIconFrame()->addItemByIconObj(pObj);
+        pObj->nPattern = pIconMgr->getIconTemplate()->getSymbol()->getCurrentPattern();
         if(!item)
         {
             delete pObj;
@@ -121,7 +122,7 @@ void HIconOp::paste()
      }
 
     //改变选择状态，只选择拷贝后的图元元素
-    foreach(QGraphicsItem* item,pIconMgr->getIconFrame()->iconScene()->items())
+    foreach(QGraphicsItem* item,pIconMgr->getIconFrame()->getIconScene()->items())
     {
         item->setSelected(false);
     }
@@ -141,16 +142,16 @@ void HIconOp::paste()
             pItem->getItemObj()->moveBy(pt.x(),pt.y());
         }
     }
-    pIconMgr->getIconFrame()->iconScene()->update(pIconMgr->getIconFrame()->getLogicRect());
+    pIconMgr->getIconFrame()->getIconScene()->update(pIconMgr->getIconFrame()->getLogicRect());
     HPasteIconCommand* pasteIconCommand = new HPasteIconCommand(pIconMgr,objList);
     pIconMgr->getIconUndoStack()->push(pasteIconCommand);
 }
 
 void HIconOp::del()
 {
-    if(!pIconMgr || !pIconMgr->getIconFrame() || !pIconMgr->getIconFrame()->iconScene())
+    if(!pIconMgr || !pIconMgr->getIconFrame() || !pIconMgr->getIconFrame()->getIconScene())
         return;
-    QList<QGraphicsItem*> itemSelectList = pIconMgr->getIconFrame()->iconScene()->selectedItems();
+    QList<QGraphicsItem*> itemSelectList = pIconMgr->getIconFrame()->getIconScene()->selectedItems();
     QList<HBaseObj*> objList;
     foreach(QGraphicsItem* item,itemSelectList)
     {
@@ -182,11 +183,11 @@ QString HIconOp::getClipboardFile()
 
 void HIconOp::bringToTop()
 {
-    if(!pIconMgr || !pIconMgr->getIconFrame() || !pIconMgr->getIconFrame()->iconScene())
+    if(!pIconMgr || !pIconMgr->getIconFrame() || !pIconMgr->getIconFrame()->getIconScene())
         return;
 
     int maxZValue = 0;
-    QList<QGraphicsItem*> itemList = pIconMgr->getIconFrame()->iconScene()->selectedItems();
+    QList<QGraphicsItem*> itemList = pIconMgr->getIconFrame()->getIconScene()->selectedItems();
     if(itemList.count() > 1) return;
     QGraphicsItem* pItem = itemList.at(0);
     QList<QGraphicsItem*> collItemList = pItem->collidingItems();
@@ -211,10 +212,10 @@ void HIconOp::bringToTop()
 
 void HIconOp::bringToBottom()
 {
-    if(!pIconMgr || !pIconMgr->getIconFrame() || !pIconMgr->getIconFrame()->iconScene())
+    if(!pIconMgr || !pIconMgr->getIconFrame() || !pIconMgr->getIconFrame()->getIconScene())
         return;
     int minZValue = 0;
-    QList<QGraphicsItem*> itemList = pIconMgr->getIconFrame()->iconScene()->selectedItems();
+    QList<QGraphicsItem*> itemList = pIconMgr->getIconFrame()->getIconScene()->selectedItems();
     if(itemList.count() > 1) return;
     QGraphicsItem* pItem = itemList.at(0);
     QList<QGraphicsItem*> collItemList = pItem->collidingItems();
@@ -238,9 +239,9 @@ void HIconOp::bringToBottom()
 
 void HIconOp::groupObj()
 {
-    if(!pIconMgr || !pIconMgr->getIconFrame() || !pIconMgr->getIconFrame()->iconScene())
+    if(!pIconMgr || !pIconMgr->getIconFrame() || !pIconMgr->getIconFrame()->getIconScene() ||!pIconMgr->getIconTemplate() || !pIconMgr->getIconTemplate()->getSymbol())
         return;
-    QList<QGraphicsItem*> items = pIconMgr->getIconFrame()->iconScene()->selectedItems();
+    QList<QGraphicsItem*> items = pIconMgr->getIconFrame()->getIconScene()->selectedItems();
     if(items.count() < 2) return;
 
     HBaseObj* pGroupObj = pIconMgr->getIconTemplate()->getSymbol()->newObj(enumGroup);
@@ -256,24 +257,24 @@ void HIconOp::groupObj()
     //矩形
     ((HGroupObj*)pGroupObj)->setObjRect(QRectF(0,0,groupRect.width(),groupRect.height()));
     HIconItemGroup *itemGroup = new HIconItemGroup(pGroupObj);
-    pIconMgr->getIconState()->appendObj(pGroupObj);
+    pIconMgr->getIconTemplate()->getSymbol()->addObj(pGroupObj);
     itemGroup->setItemObj(pGroupObj);
     itemGroup->setRect(groupRect);
     foreach(QGraphicsItem* item,items)
     {
-        pIconMgr->getIconFrame()->iconScene()->removeItem(item);
+        pIconMgr->getIconFrame()->getIconScene()->removeItem(item);
         HBaseObj* pObj = ((HIconGraphicsItem*)item)->getItemObj();
         pObj->setIconGraphicsItem(NULL);
     }
-    pIconMgr->getIconFrame()->iconScene()->addItem(itemGroup);
-    pIconMgr->getIconState()->setDrawShape(enumSelection);
+    pIconMgr->getIconFrame()->getIconScene()->addItem(itemGroup);
+    pIconMgr->setDrawShape(enumSelection);
 }
 
 void HIconOp::ungroupObj()
 {
-    if(!pIconMgr || !pIconMgr->getIconFrame() || !pIconMgr->getIconFrame()->iconScene())
+    if(!pIconMgr || !pIconMgr->getIconFrame() || !pIconMgr->getIconFrame()->getIconScene()||!pIconMgr->getIconTemplate() || !pIconMgr->getIconTemplate()->getSymbol())
         return;
-    QList<QGraphicsItem*> items = pIconMgr->getIconFrame()->iconScene()->selectedItems();
+    QList<QGraphicsItem*> items = pIconMgr->getIconFrame()->getIconScene()->selectedItems();
     for(int i = 0; i < items.count();i++)
     {
         HIconGraphicsItem* item = (HIconGraphicsItem*)items.at(i);
@@ -283,11 +284,22 @@ void HIconOp::ungroupObj()
         while(!pGroupObj->isEmpty())
         {
             HBaseObj* pObj = (HBaseObj*)pGroupObj->takeFirst();
-            pIconMgr->getIconState()->appendObj(pObj);
-            pIconMgr->getIconFrame()->iconScene()->addIconGraphicsItem(pObj);
+            pIconMgr->getIconTemplate()->getSymbol()->addObj(pObj);
+            pIconMgr->getIconFrame()->getIconScene()->addItemByIconObj(pObj);
         }
-        pIconMgr->getIconFrame()->iconScene()->removeItem(item);
+        pIconMgr->getIconFrame()->getIconScene()->removeItem(item);
         pIconMgr->getIconTemplate()->getSymbol()->delObj(pObj);
     }
-    pIconMgr->getIconState()->setDrawShape(enumSelection);
+    pIconMgr->setDrawShape(enumSelection);
+}
+
+void HIconOp::zoomIn()
+{
+
+
+}
+
+void HIconOp::zoomOut()
+{
+
 }

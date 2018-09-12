@@ -26,9 +26,9 @@ public:
     bool getItemAt(const QPointF& pos);
     void setItemProperty(QGraphicsItem *item);
     void setItemCursor(QGraphicsSceneMouseEvent *mouseEvent);
-    HIconGraphicsItem* addItemByIconObj(int nPattern,HBaseObj* pObj);
-    void addItemByPatternId(int nPatternId);
-    void delItemByPatternId(int nPatternId);
+    HIconGraphicsItem* addItemByIconObj(HBaseObj* pObj);
+    void refreshItemByPatternId(int nPatternId);
+    void clearItemByPatternId(int nPatternId);
     void setItemVisible(int nPatternId);
     void calcSelectedItem(const QRectF& rectF);
     int pointInRect(QPointF& pointF);
@@ -36,7 +36,6 @@ public:
     void prepareRezieItem(QGraphicsSceneMouseEvent *mouseEvent);
     void addNewIconCommand(HBaseObj* pObj);
     void getIconGraphicsItemPointList(HIconGraphicsItem* item,QList<QPolygonF>& pfList);
-    void addIconGraphicsItem(HBaseObj* pObj);
 
 protected:
     virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
@@ -78,8 +77,6 @@ private:
     HIconTextItem* text;
     HIconSelectionItem* select;
     HIconItemGroup* group;
-    //HIconRectItem
-
 };
 
 #endif // HGRAPHICSSCENE_H

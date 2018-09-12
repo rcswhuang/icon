@@ -1,110 +1,125 @@
 ﻿#include "hiconmgr.h"
 
 HIconMgr::HIconMgr()
-    :bShowGrid(true),bShowCenterLine(true)
+    :m_bShowGrid(true),m_bShowCenterLine(true)
 {
-    pIconFrame = new HIconFrame(this);
+    m_pIconFrame = new HIconFrame(this);
     //pIconFrame->setIconMgr(this);
-    pIconDocument = new HIconDocument(this);
-    pIconState = new HIconState(this);
-    pIconOp = new HIconOp(this);
-    pIconUndoStack = new QUndoStack;
-    bShowGrid = true;
-    bShowCenterLine = true;
-    strBgClr = "#FFFFFF";
+    m_pIconDocument = new HIconDocument(this);
+    m_pIconState = new HIconState(this);
+    m_pIconOp = new HIconOp(this);
+    m_pIconUndoStack = new QUndoStack;
+    m_bShowGrid = true;
+    m_bShowCenterLine = true;
+    m_strBgClr = "#FFFFFF";
+    m_drawShape = enumNo;
+    m_selectMode = enumSelect;
 }
 
 HIconDocument* HIconMgr::getIconDocument()
 {
-    if(pIconDocument)
-        return pIconDocument;
+    if(m_pIconDocument)
+        return m_pIconDocument;
     return NULL;
 }
 
 HIconTemplate* HIconMgr::getIconTemplate()
 {
-    if(pIconDocument)
-        return pIconDocument->getCurrentTemplate();
-    return NULL;
-}
-
-HIconState* HIconMgr::getIconState()
-{
-    if(pIconState)
-        return pIconState;
+    if(m_pIconDocument)
+        return m_pIconDocument->getCurrentTemplate();
     return NULL;
 }
 
 HIconFrame* HIconMgr::getIconFrame()
 {
-    if(pIconFrame)
-        return pIconFrame;
+    if(m_pIconFrame)
+        return m_pIconFrame;
     return NULL;
 }
 
 QUndoStack* HIconMgr::getIconUndoStack()
 {
-    if(pIconUndoStack)
-        return pIconUndoStack;
+    if(m_pIconUndoStack)
+        return m_pIconUndoStack;
     return NULL;
 }
 
 HIconOp* HIconMgr::getIconOp()
 {
-    if(pIconOp)
-        return pIconOp;
+    if(m_pIconOp)
+        return m_pIconOp;
     return NULL;
 }
 
 void HIconMgr::setBackgroundColor(QString clrName)
 {
-    strBgClr = clrName;
+    m_strBgClr = clrName;
 }
 
 QString HIconMgr::getBackgroundColor()
 {
-    return strBgClr;
+    return m_strBgClr;
 }
 
 void HIconMgr::setShowGrid(bool show)
 {
-    bShowGrid = show;
+    m_bShowGrid = show;
 }
 
 bool HIconMgr::getShowGrid()
 {
-    return bShowGrid;
+    return m_bShowGrid;
 }
 
 void HIconMgr::setShowCenterLine(bool show)
 {
-    bShowCenterLine = show;
+    m_bShowCenterLine = show;
 }
 
 bool HIconMgr::getShowCenterLine()
 {
-    return bShowCenterLine;
+    return m_bShowCenterLine;
+}
+
+void HIconMgr::setDrawShape(DRAWSHAPE ds)
+{
+    m_drawShape = ds;
+}
+
+DRAWSHAPE HIconMgr::getDrawShape()
+{
+    return m_drawShape;
+}
+
+void HIconMgr::setSelectMode(SELECTMODE ds)
+{
+    m_selectMode = ds;
+}
+
+SELECTMODE HIconMgr::getSelectMode()
+{
+    return m_selectMode;
 }
 
 
 void HIconMgr::New(const QString& strTemplateName,const QString& strCatalogName,const int& nCatalogType)
 {
-    pIconDocument->New(strTemplateName,strCatalogName,nCatalogType);
+    m_pIconDocument->New(strTemplateName,strCatalogName,nCatalogType);
 }
 
 void HIconMgr::Del(const QString &strTemplateName, int nTemplateType, const QString &strUuid)
 {
-    pIconDocument->Del(strTemplateName,nTemplateType,strUuid);
+    m_pIconDocument->Del(strTemplateName,nTemplateType,strUuid);
 }
 
 bool HIconMgr::Save(bool savefile)
 {
-    return pIconDocument->Save(savefile);
+    return m_pIconDocument->Save(savefile);
 }
 
 void HIconMgr::Open(const QString &strTemplateName, int nTemplateType, const QString &strUuid)
 {
-    pIconDocument->Open(strTemplateName,nTemplateType,strUuid);
+    m_pIconDocument->Open(strTemplateName,nTemplateType,strUuid);
 }
 
 

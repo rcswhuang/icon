@@ -42,7 +42,8 @@ SOURCES       = main.cpp \
     #hiconshowpattern.cpp \
     hiconcommand.cpp \
     habout.cpp \
-    hiconop.cpp
+    hiconop.cpp \
+    hiconmainwindowactions.cpp
 
 RESOURCES     = \
     icon.qrc \

@@ -31,20 +31,20 @@ public:
     //设置scene的逻辑区域
     void setLogicRect(QRectF& rectF);
 
-    //在pattern增加Item对象
-    HIconGraphicsItem* addItemByIconObj(int nPattern,HBaseObj* pObj);
+    //在pattern获取Item对象
+    HIconGraphicsItem* addItemByIconObj(HBaseObj* pObj);
 
     //增加scene的显示方案
-    void addItemByPatternId(int nPatternId);
+    void refreshSceneByPatternId(int nPatternId);
 
     //删除scene的显示方案
-    void delItemByPatternId(int nPatternId);
+    void clearSceneByPatternId(int nPatternId);
 
     //获取scene的区域
     QRectF getLogicRect();
 
     //获取frame里面的scene对象
-    HIconScene* iconScene();
+    HIconScene* getIconScene();
 
     //设置显示方案对象的显示和隐藏功能
     void setItemVisible(int nPatternId);
@@ -58,8 +58,8 @@ protected:
    // virtual bool eventFilter( QObject *obj, QEvent *event);//过滤的对象，过滤的事件
 
 private:
-    QRectF sceneRect;
-    HIconMgr* pIconMgr;
+    QRectF m_sceneRect;
+    HIconMgr* m_pIconMgr;
 
 };
 
