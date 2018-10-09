@@ -202,6 +202,7 @@ void HIconTreeWidget::newIcon()
 void HIconTreeWidget::openIcon(QTreeWidgetItem* item,int col)
 {
     HIconTreeWidgetItem* pCurItem = dynamic_cast<HIconTreeWidgetItem*> (item);
+    setCurrentItem(pCurItem);
     if(!pCurItem) return;
     int nTemplateType = pCurItem->type();
     if(nTemplateType > TEMPLATE_TYPE_NULL && nTemplateType < TEMPLATE_TYPE_MAX)
@@ -260,8 +261,10 @@ void HIconTreeWidget::addIconTreeWigetItem()
     if(!pIconMgr)
         return;
     HIconTreeWidgetItem *parentItem = (HIconTreeWidgetItem*)currentItem();
+    if(!parentItem)
+        return;
     ushort type = parentItem->type();
-    if(!parentItem || (type <= TEMPLATE_TYPE_NULL || type >= TEMPLATE_TYPE_MAX))
+    if((type <= TEMPLATE_TYPE_NULL || type >= TEMPLATE_TYPE_MAX))
         return;
 
     QString strUuid =  pIconMgr->getIconTemplate()->getUuid().toString();
@@ -281,8 +284,10 @@ void HIconTreeWidget::delIconTreeWidgetItem()
     HIconTreeWidgetItem *curItem = (HIconTreeWidgetItem*)currentItem();
     if(!curItem || curItem->type() != TEMPLATE_TYPE_CHILD) return;
     HIconTreeWidgetItem* parentItem = (HIconTreeWidgetItem*)curItem->parent();
+    if(!parentItem)
+        return;
     ushort type = parentItem->type();
-    if(!curItem || (type <= TEMPLATE_TYPE_NULL || type >= TEMPLATE_TYPE_MAX))
+    if((type <= TEMPLATE_TYPE_NULL || type >= TEMPLATE_TYPE_MAX))
         return;
     parentItem->removeChild(curItem);
     setCurrentItem(parentItem);
